@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 import logo from '@/assets/images/logo.png.jpg';
-
+import prestadores from '@/assets/images/prestadores-de-serviços.jpg';
 
 type FieldError = { email?: string; password?: string };
 
@@ -74,10 +74,10 @@ export default function LoginPage() {
       <div className="w-full max-w-5xl rounded-2xl overflow-hidden shadow-xl shadow-black/15 grid md:grid-cols-[1fr_1fr]">
 
         {/* ── LEFT PANEL ────────────────────────────────────── */}
-        <div className="relative hidden md:flex flex-col p-10 bg-gradient-to-br from-[#064E2A] via-[#0B7A45] to-[#10A05C] overflow-hidden">
-
-          {/* decorative circles */}
-          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-white/5" />
+        <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1000px 650px' }}>
+          
+          {/* overlay for text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
 
          
 
@@ -107,7 +107,7 @@ export default function LoginPage() {
               </div>
               <h2 className="text-2xl text-center font-bold text-gray-900">Acessa a tua Conta</h2>
               <p className="text-sm text-gray-500 mt-1.5">
-                Introduza as suas credenciais para aceder à plataforma.
+                Preencha os campos a baixo para acessar a plataforma.
               </p>
             </div>
 
