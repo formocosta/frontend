@@ -101,7 +101,7 @@ export default function LoginPage() {
             {/* Header */}
             <div className="mb-8">
               <div className="flex justify-center mb-5">
-                <div className="w-25 h-25 rounded-xl bg-[#0B7A45]/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-25 h-25 rounded-xl bg-[#0B7A45]/10 flex items-center justify-center overflow-hidden shrink-0">
                   <Image src={logo} alt="Formocosta" width={100} height={50} className="object-contain" />
                 </div>
               </div>
