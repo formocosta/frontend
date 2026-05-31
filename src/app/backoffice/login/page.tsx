@@ -70,14 +70,14 @@ export default function LoginPage() {
     }`;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center p-4">
+    <main className="min-h-screen bg-linear-to-br from-slate-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl rounded-2xl overflow-hidden shadow-xl shadow-black/15 grid md:grid-cols-[1fr_1fr]">
 
         {/* ── LEFT PANEL ────────────────────────────────────── */}
         <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1000px 620px' }}>
           
           {/* overlay for text visibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
+          <div className="absolute inset-0 bg-linear-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
 
          
 
