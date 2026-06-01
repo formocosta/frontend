@@ -3,7 +3,7 @@ let tokens: { access: string; refresh: string } | null = null;
 
 // Mock users — substituir pela resposta real do backend quando disponível
 export const MOCK_USERS: Record<string, { id: string; name: string; role: string }> = {
-  'admin@gmail.com':       { id: '1', name: 'alia', role: 'admin' },
+  'aliadinis@gmail.com':       { id: '1', name: 'alia', role: 'admin' },
   'operador@gmail.com':    { id: '2', name: 'emalungo', role: 'operador' },
   'financeiro@gmail.com':  { id: '3', name: 'adinis', role: 'operador_financeiro' },
   'suporte@gmail.com':     { id: '4', name: 'ansebast Suporte',  role: 'suporte' },
