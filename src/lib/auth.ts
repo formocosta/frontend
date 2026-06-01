@@ -1,9 +1,16 @@
-// Tokens live only in module scope — never written to localStorage or sessionStorage
 let tokens: { access: string; refresh: string } | null = null;
 
-// Mock backend: tracks whether the user has completed 2FA setup and stores the secret
 let twoFAConfigured = false;
 let twoFASecret = "";
+
+export type UserRole = "admin" | "operador" | "operador_financeiro" | "suporte";
+
+export type AuthUser = {
+  name: string;
+  role: UserRole;
+};
+
+let currentUser: AuthUser | null = null;
 
 export function isAuthenticated() {
   return tokens !== null;
@@ -15,6 +22,15 @@ export function storeTokens(access: string, refresh: string) {
 
 export function clearTokens() {
   tokens = null;
+  currentUser = null;
+}
+
+export function storeUser(user: AuthUser) {
+  currentUser = user;
+}
+
+export function getUser(): AuthUser | null {
+  return currentUser;
 }
 
 export function hasTwoFA() {
@@ -29,3 +45,4 @@ export function activateTwoFA(secret: string) {
 export function getTwoFASecret() {
   return twoFASecret;
 }
+
