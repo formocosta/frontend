@@ -1,19 +1,10 @@
-"use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { isAuthenticated, clearTokens } from "@/lib/auth";
+'use client';
 
 export default function DashboardPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.replace("/backoffice/login");
-    }
-  }, [router]);
-
-  function logout() {
-    clearTokens();
-    router.replace("/backoffice/login");
-  }
+  return (
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+      <p className="text-gray-500">Bem-vindo ao backoffice.</p>
+    </div>
+  );
 }

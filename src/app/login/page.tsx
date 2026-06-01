@@ -13,7 +13,7 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react';
-  
+
 import logo from '@/assets/images/logo.png.jpg';
 import prestadores from '@/assets/images/prestadores-de-serviços.jpg';
 
@@ -88,13 +88,9 @@ export default function LoginPage() {
 
         {/* ── LEFT PANEL ────────────────────────────────────── */}
         <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1400px 600px' }}>
-          
-          {/* overlay for text visibility */}
+
           <div className="absolute inset-0 bg-linear-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
 
-         
-
-          {/* Headline */}
           <div className="relative mt-8 z-10 space-y-4">
             <h1 className="text-4xl font-bold text-white leading-tight">
               Bem-vindo à<br />
@@ -110,8 +106,7 @@ export default function LoginPage() {
         {/* ── RIGHT PANEL ───────────────────────────────────── */}
         <div className="flex items-center justify-center px-8 md:px-12 py-12">
           <div className="w-85 max-w-xs">
-    
-            {/* Header */}
+
             <div className="mb-8">
               <div className="flex justify-center mb-5">
                 <div className="w-25 h-25 rounded-xl bg-[#0B7A45]/10 flex items-center justify-center overflow-hidden shrink-0">
@@ -124,17 +119,14 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Server error */}
             {serverError && (
               <div className="mb-5 flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200">
                 <span>{serverError}</span>
               </div>
             )}
 
-            {/* Form */}
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
 
-              {/* Email */}
               <div className="space-y-1.5">
                 <label htmlFor="email" className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   Email
@@ -169,7 +161,6 @@ export default function LoginPage() {
                 )}
               </div>
 
-              {/* Password */}
               <div className="space-y-1.5">
                 <label htmlFor="password" className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   Palavra-passe
@@ -212,7 +203,6 @@ export default function LoginPage() {
                 )}
               </div>
 
-              {/* Forgot password */}
               <div className="flex justify-end -mt-1">
                 <button
                   type="button"
@@ -223,7 +213,6 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -243,7 +232,6 @@ export default function LoginPage() {
               </button>
             </form>
 
-            {/* Terms */}
             <p className="text-center text-xs text-gray-400 mt-4 leading-relaxed">
               Ao entrar, aceita os nossos{' '}
               <button className="underline underline-offset-2 hover:text-gray-600 transition-colors">

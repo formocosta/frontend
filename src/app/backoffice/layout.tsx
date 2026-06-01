@@ -1,10 +1,10 @@
 import { AuthProvider } from '@/lib/auth-context';
-import BackofficeShell from '@/components/BackofficeShell';
+import AppShell from '@/components/AppShell';
 
 export default function BackofficeLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <BackofficeShell>{children}</BackofficeShell>
+      <AppShell>{children}</AppShell>
     </AuthProvider>
   );
 }

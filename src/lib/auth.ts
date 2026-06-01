@@ -9,7 +9,6 @@ export const MOCK_USERS: Record<string, { id: string; name: string; role: string
   'suporte@gmail.com':     { id: '4', name: 'ansebast Suporte',  role: 'suporte' },
 };
 
-// NOVO: user atual (com role)
 let currentUser: {
   id: string;
   name: string;
@@ -21,13 +20,6 @@ let currentUser: {
 let twoFAConfigured = false;
 let twoFASecret = "";
 
-// ---------------- AUTH CORE ----------------
-
-export function isAuthenticated() {
-  return tokens !== null;
-}
-
-// ATUALIZADO: agora também guarda o user
 export function storeTokens(
   access: string,
   refresh: string,
@@ -39,14 +31,12 @@ export function storeTokens(
 
 export function clearTokens() {
   tokens = null;
-  currentUser = null; // importante limpar user também
+  currentUser = null;
 }
 
 export function getUser() {
   return currentUser;
 }
-
-// ---------------- 2FA ----------------
 
 export function hasTwoFA() {
   return twoFAConfigured;
