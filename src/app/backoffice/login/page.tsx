@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
+import { MOCK_USERS } from '@/lib/auth';
 import Image from 'next/image';
 import {
   Eye,
@@ -11,7 +13,7 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react';
-
+  
 import logo from '@/assets/images/logo.png.jpg';
 import prestadores from '@/assets/images/prestadores-de-serviços.jpg';
 
@@ -19,6 +21,7 @@ type FieldError = { email?: string; password?: string };
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,6 +59,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await new Promise((r) => setTimeout(r, 1500));
+      const mockUser = MOCK_USERS[email];
+      if (!mockUser) {
+        setServerError('Credenciais inválidas. Verifique e tente novamente.');
+        return;
+      }
+      login(
+        { id: mockUser.id, name: mockUser.name, email, role: mockUser.role },
+        'mock-access-token',
+        'mock-refresh-token',
+      );
       router.push('/backoffice/dashboard');
     } catch {
       setServerError('Credenciais inválidas. Verifique e tente novamente.');
@@ -74,7 +87,7 @@ export default function LoginPage() {
       <div className="w-full max-w-5xl rounded-2xl overflow-hidden shadow-xl shadow-black/15 grid md:grid-cols-[1fr_1fr]">
 
         {/* ── LEFT PANEL ────────────────────────────────────── */}
-        <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1000px 620px' }}>
+        <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1400px 600px' }}>
           
           {/* overlay for text visibility */}
           <div className="absolute inset-0 bg-linear-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
