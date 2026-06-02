@@ -69,7 +69,7 @@ export default function LoginPage() {
         'mock-access-token',
         'mock-refresh-token',
       );
-      router.push('/backoffice/dashboard');
+      router.push('/dashboard');
     } catch {
       setServerError('Credenciais inválidas. Verifique e tente novamente.');
     } finally {
@@ -206,7 +206,7 @@ export default function LoginPage() {
               <div className="flex justify-end -mt-1">
                 <button
                   type="button"
-                  onClick={() => router.push('/backoffice/forgot-password')}
+                  onClick={() => router.push('/forgot-password')}
                   className="text-xs text-[#0B7A45] hover:text-[#064E2A] font-medium transition-colors"
                 >
                   Esqueceu a palavra-passe?

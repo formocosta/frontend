@@ -12,6 +12,9 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const MOCK_UNREAD = 3;
+type HeaderProps = {
+  onToggleSidebar: () => void;
+};
 
 export default function Header() {
   const { user, logout } = useAuth();

@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
 
   useEffect(() => {
     if (!user || !allowedRoles.includes(user.role)) {
-      router.push('/backoffice/login');
+      router.push('/login');
     }
   }, [user, allowedRoles, router]);
 

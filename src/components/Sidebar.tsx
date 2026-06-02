@@ -1,5 +1,6 @@
 'use client';
-
+import Image from 'next/image';
+import logo from '@/assets/images/logo.png.jpg';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
@@ -21,16 +22,16 @@ import {
 } from 'lucide-react';
 
 const MAIN_NAV = [
-  { label: 'Dashboard',             href: '/backoffice/dashboard',    icon: LayoutDashboard,  allowedRoles: ['admin','operador','operador_financeiro','suporte'] },
-  { label: 'Candidaturas KYC',      href: '/backoffice/kyc',          icon: FileCheck,        allowedRoles: ['admin','operador'] },
-  { label: 'Solicitações',          href: '/backoffice/solicitacoes', icon: ClipboardList,    allowedRoles: ['admin','operador'] },
-  { label: 'Mensagens',             href: '/backoffice/mensagens',    icon: MessageSquare,    allowedRoles: ['admin','operador'] },
-  { label: 'Pagamentos',            href: '/backoffice/pagamentos',   icon: CreditCard,       allowedRoles: ['admin','operador_financeiro'] },
-  { label: 'Repasses',              href: '/backoffice/repasses',     icon: ArrowLeftRight,   allowedRoles: ['admin','operador_financeiro'] },
-  { label: 'Avaliações',            href: '/backoffice/avaliacoes',   icon: Star,             allowedRoles: ['admin','operador'] },
-  { label: 'Disputas',              href: '/backoffice/disputas',     icon: Scale,            allowedRoles: ['admin','suporte'] },
-  { label: 'Catálogo',              href: '/backoffice/catalogo',     icon: BookOpen,         allowedRoles: ['admin'] },
-  { label: 'Utilizadores internos', href: '/backoffice/utilizadores', icon: Users,            allowedRoles: ['admin'] },
+  { label: 'Dashboard',             href: '/dashboard',    icon: LayoutDashboard,  allowedRoles: ['admin','operador','operador_financeiro','suporte'] },
+  { label: 'Candidaturas KYC',      href: '/kyc',          icon: FileCheck,        allowedRoles: ['admin','operador'] },
+  { label: 'Solicitações',          href: '/solicitacoes', icon: ClipboardList,    allowedRoles: ['admin','operador'] },
+  { label: 'Mensagens',             href: '/mensagens',    icon: MessageSquare,    allowedRoles: ['admin','operador'] },
+  { label: 'Pagamentos',            href: '/pagamentos',   icon: CreditCard,       allowedRoles: ['admin','operador_financeiro'] },
+  { label: 'Repasses',              href: '/repasses',     icon: ArrowLeftRight,   allowedRoles: ['admin','operador_financeiro'] },
+  { label: 'Avaliações',            href: '/avaliacoes',   icon: Star,             allowedRoles: ['admin','operador'] },
+  { label: 'Disputas',              href: '/disputas',     icon: Scale,            allowedRoles: ['admin','suporte'] },
+  { label: 'Catálogo',              href: '/catalogo',     icon: BookOpen,         allowedRoles: ['admin'] },
+  { label: 'Utilizadores internos', href: '/utilizadores', icon: Users,            allowedRoles: ['admin'] },
   { label: 'Relatórios',            href: '/backoffice/relatorios',   icon: BarChart3,        allowedRoles: ['admin','operador_financeiro'] },
 ];
 
@@ -54,8 +55,10 @@ function NavItem({ href, icon: Icon, label, active }: { href: string; icon: Reac
     </Link>
   );
 }
-
-export default function Sidebar() {
+type SidebarProps = {
+  onToggleSidebar?: () => void;
+};
+export default function Sidebar({ onToggleSidebar }: SidebarProps) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
@@ -74,13 +77,22 @@ export default function Sidebar() {
 
       {/* Logo */}
       <div className="px-6 h-16 flex items-center border-b border-gray-100 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-[#0E8A4B] rounded-lg flex items-center justify-center">
-            <LayoutDashboard size={16} className="text-white" />
+        
+        <button
+            onClick={onToggleSidebar}
+            className="flex items-center gap-2.5"
+        >
+          <div className="w-8 h-8 relative">
+            <Image
+              src={logo}
+              alt="Formocosta"
+              fill
+              className="object-contain"
+            />
           </div>
           <span className="font-bold text-gray-900 text-lg">Formocosta</span>
+          </button>
         </div>
-      </div>
 
       {/* Main nav */}
       <div className="flex-1 overflow-y-auto px-4 py-5 space-y-0.5">
