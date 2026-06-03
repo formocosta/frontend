@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LayoutDashboard, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { clearTokens, isAuthenticated } from "@/lib/auth";
+import { clearTokens, getCurrentUser, isAuthenticated } from "@/lib/auth";
 
 type BackofficeShellProps = {
   children: React.ReactNode;
@@ -20,6 +20,12 @@ const MENU_ITEMS = [
   { href: "/backoffice/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
+const APP_NAME = "Formocosta";
+const COLLAPSED_SIDEBAR_WIDTH = "w-20";
+const EXPANDED_SIDEBAR_WIDTH = "w-72";
+const COLLAPSED_CONTENT_OFFSET = "ml-20";
+const EXPANDED_CONTENT_OFFSET = "ml-72";
+
 export default function BackofficeShell({ children }: BackofficeShellProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -29,7 +35,7 @@ export default function BackofficeShell({ children }: BackofficeShellProps) {
 
   useEffect(() => {
     if (isAuthRoute) return;
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() || !getCurrentUser()) {
       router.replace("/backoffice/login");
     }
   }, [isAuthRoute, router]);
@@ -43,8 +49,15 @@ export default function BackofficeShell({ children }: BackofficeShellProps) {
     return <>{children}</>;
   }
 
-  const sidebarWidth = isCollapsed ? "w-20" : "w-72";
-  const sidebarOffset = isCollapsed ? "ml-20" : "ml-72";
+  const sidebarWidth = isCollapsed ? COLLAPSED_SIDEBAR_WIDTH : EXPANDED_SIDEBAR_WIDTH;
+  const sidebarOffset = isCollapsed ? COLLAPSED_CONTENT_OFFSET : EXPANDED_CONTENT_OFFSET;
+  const user = getCurrentUser();
+  const trimmedName = user?.name.trim() ?? "";
+  const userInitial = trimmedName.charAt(0).toUpperCase() || "U";
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -61,7 +74,7 @@ export default function BackofficeShell({ children }: BackofficeShellProps) {
           ) : (
             <PanelLeftClose className="h-5 w-5 shrink-0" />
           )}
-          {!isCollapsed && <span>Formocosta</span>}
+          {!isCollapsed && <span>{APP_NAME}</span>}
         </button>
 
         <nav className="mt-5 flex-1 space-y-1">
@@ -89,12 +102,12 @@ export default function BackofficeShell({ children }: BackofficeShellProps) {
         <div className="space-y-2 border-t border-slate-200 pt-4">
           <div className="flex items-center gap-3 px-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-sm font-semibold text-emerald-700">
-              A
+              {userInitial}
             </div>
             {!isCollapsed && (
               <div>
-                <p className="text-sm font-semibold text-slate-800">Administrador</p>
-                <p className="text-xs text-slate-500">Back-office</p>
+                <p className="text-sm font-semibold text-slate-800">{user.name}</p>
+                <p className="text-xs text-slate-500">{user.email}</p>
               </div>
             )}
           </div>
