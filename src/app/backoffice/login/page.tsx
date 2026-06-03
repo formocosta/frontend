@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react';
+import { storeCurrentUser, storeTokens } from '@/lib/auth';
 
 import logo from '@/assets/images/logo.png.jpg';
 import prestadores from '@/assets/images/prestadores-de-serviços.jpg';
@@ -56,6 +57,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await new Promise((r) => setTimeout(r, 1500));
+      storeTokens('mock-access-token', 'mock-refresh-token');
+      storeCurrentUser('Utilizador', email);
       router.push('/backoffice/dashboard');
     } catch {
       setServerError('Credenciais inválidas. Verifique e tente novamente.');
