@@ -172,7 +172,7 @@ function ResetPasswordForm() {
           <div className="flex justify-center mt-6">
             <button
               type="button"
-              onClick={() => router.push('/backoffice/login')}
+              onClick={() => router.push('/login')}
               className="text-xs text-[#0B7A45] hover:text-[#064E2A] font-medium transition-colors"
             >
               Voltar ao login
@@ -197,7 +197,7 @@ function ResetPasswordForm() {
           </p>
 
           <button
-            onClick={() => router.push('/backoffice/login')}
+            onClick={() => router.push('/login')}
             className="w-full bg-[#0B7A45] hover:bg-[#064E2A] text-white text-sm font-semibold py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-[#0B7A45]/25 hover:shadow-xl hover:shadow-[#0B7A45]/30 hover:-translate-y-0.5 active:translate-y-0 mt-6"
           >
             Ir para o login
