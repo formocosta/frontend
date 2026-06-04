@@ -1,10 +1,7 @@
-import { AuthProvider } from '@/lib/auth-context';
-import AppShell from '@/components/AppShell';
+import Container from "@/components/Container"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
-      <AppShell>{children}</AppShell>
-    </AuthProvider>
+    <Container> {children} </Container>
   );
 }

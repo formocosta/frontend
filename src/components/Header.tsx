@@ -1,90 +1,143 @@
 'use client';
 
 import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
-import { Search, Bell, LogOut } from 'lucide-react';
-
-const ROLE_LABELS: Record<string, string> = {
-  admin:               'Admin',
-  operador:            'Operador',
-  operador_financeiro: 'Financeiro',
-  suporte:             'Suporte',
-};
+import { usePathname, useRouter } from 'next/navigation';
+import { Bell, Info, Download } from 'lucide-react';
 
 const MOCK_UNREAD = 3;
-type HeaderProps = {
-  onToggleSidebar: () => void;
-};
 
 export default function Header() {
-  const { user, logout } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
+  const pathname = usePathname();
 
   if (!user) return null;
 
-  const initials = user.name
-    .split(' ')
-    .map((n: string) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+  // Map pathnames to dynamic page headers
+  const getHeaderInfo = () => {
+    const firstName = user.name.split(' ')[0];
+    switch (pathname) {
+      case '/dashboard':
+        return {
+          title: 'Dashboard',
+          subtitle: `Welcome back ${firstName}`,
+        };
+      case '/kyc':
+        return {
+          title: 'Candidaturas KYC',
+          subtitle: 'Análise e aprovação de documentação de utilizadores',
+        };
+      case '/solicitacoes':
+        return {
+          title: 'Solicitações',
+          subtitle: 'Gestão de pedidos e requerimentos pendentes',
+        };
+      case '/mensagens':
+        return {
+          title: 'Mensagens',
+          subtitle: 'Comunicação direta com prestadores e clientes',
+        };
+      case '/pagamentos':
+        return {
+          title: 'Pagamentos',
+          subtitle: 'Controle de transações e movimentações financeiras',
+        };
+      case '/repasses':
+        return {
+          title: 'Repasses',
+          subtitle: 'Controle de transferências e comissões',
+        };
+      case '/avaliacoes':
+        return {
+          title: 'Avaliações',
+          subtitle: 'Histórico de notas e comentários de serviços',
+        };
+      case '/disputas':
+        return {
+          title: 'Disputas',
+          subtitle: 'Moderação de disputas entre utilizadores',
+        };
+      case '/catalogo':
+        return {
+          title: 'Catálogo de Serviços',
+          subtitle: 'Gestão de categorias, tags e serviços ativos',
+        };
+      case '/utilizadores':
+        return {
+          title: 'Utilizadores',
+          subtitle: 'Gestão de utilizadores internos e permissões',
+        };
+      case '/backoffice/relatorios':
+        return {
+          title: 'Relatórios',
+          subtitle: 'Relatórios consolidados de desempenho e uso',
+        };
+      case '/backoffice/definicoes':
+        return {
+          title: 'Definições',
+          subtitle: 'Configurações de sistema e segurança',
+        };
+      case '/backoffice/suporte':
+        return {
+          title: 'Suporte Técnico',
+          subtitle: 'Central de ajuda e chamados de suporte',
+        };
+      default:
+        return {
+          title: 'Painel Geral',
+          subtitle: 'Bem-vindo ao Formocosta',
+        };
+    }
+  };
 
-  function handleLogout() {
-    logout();
-    router.push('/login');
-  }
+  const { title, subtitle } = getHeaderInfo();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0">
-
-      {/* Search */}
-      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 w-72">
-        <Search size={15} className="text-gray-400 shrink-0" />
-        <input
-          type="text"
-          placeholder="Pesquisar..."
-          className="bg-transparent text-sm text-gray-700 placeholder:text-gray-400 outline-none w-full"
-        />
+    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shrink-0 select-none">
+      
+      {/* Title & Subtitle */}
+      <div className="flex flex-col">
+        <h1 className="text-xl font-extrabold text-gray-900 leading-tight tracking-tight">{title}</h1>
+        <p className="text-xs text-gray-400 font-medium mt-0.5">{subtitle}</p>
       </div>
 
-      {/* Right side */}
-      <div className="flex items-center gap-3">
+      {/* Right side utilities */}
+      <div className="flex items-center gap-4">
+        
+        {/* Overlapping User Avatars */}
+        <div className="flex items-center -space-x-2 mr-2">
+          <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-200 overflow-hidden relative shadow-sm">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80" alt="Team member" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-300 overflow-hidden relative shadow-sm">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80" alt="Team member" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-400 overflow-hidden relative shadow-sm">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80" alt="Team member" className="w-full h-full object-cover" />
+          </div>
+          <button className="w-7 h-7 rounded-full border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:border-gray-300 transition-colors text-xs font-semibold cursor-pointer shadow-sm">
+            +
+          </button>
+        </div>
 
-        {/* Notification bell with unread count */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-xl text-gray-500 hover:bg-gray-100 transition-colors">
-          <Bell size={18} />
+        <div className="w-px h-6 bg-gray-100" />
+
+        {/* Info Icon */}
+        <button className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer">
+          <Info size={17} />
+        </button>
+
+        {/* Notification bell */}
+        <button className="relative w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer">
+          <Bell size={17} />
           {MOCK_UNREAD > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
-              {MOCK_UNREAD}
-            </span>
+            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full ring-2 ring-white" />
           )}
         </button>
 
-        <div className="w-px h-6 bg-gray-200" />
-
-        {/* User info */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-[#0E8A4B] rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
-            {initials}
-          </div>
-          <div className="hidden lg:block">
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-900 leading-none">{user.name}</p>
-              <span className="text-[10px] font-semibold text-[#0E8A4B] bg-emerald-50 px-2 py-0.5 rounded-lg">
-                {ROLE_LABELS[user.role] ?? user.role}
-              </span>
-            </div>
-            <p className="text-xs text-gray-400 mt-0.5 leading-none">{user.email}</p>
-          </div>
-        </div>
-
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 hover:bg-red-50 px-3 py-2 rounded-xl transition-all duration-150 ml-1"
-        >
-          <LogOut size={15} />
-          Sair
+        {/* Export Button */}
+        <button className="flex items-center gap-2 bg-[#06241C] hover:bg-[#0B392E] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm active:scale-[0.98] cursor-pointer">
+          <span>Exportar</span>
+          <Download size={14} />
         </button>
 
       </div>
