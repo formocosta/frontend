@@ -40,21 +40,19 @@ export default function LoginPage() {
   return (
     <main className="h-screen w-screen bg-[#4a5450] flex items-center justify-center p-3 md:p-6 font-sans overflow-hidden">
       <div className="w-full max-w-5xl bg-white rounded-sm p-2 grid md:grid-cols-2 shadow-2xl border border-gray-100 h-full max-h-[580px] md:max-h-[640px] transition-all duration-300">
-        
+
         {/* ── LEFT COLUMN (Login Form) ──────────────────────── */}
         <div className="flex flex-col justify-between p-6 md:p-8 h-full overflow-y-auto">
           {/* Logo / Brand Header */}
-          <div className="text-gray-300 font-serif italic text-xl tracking-wider select-none">
-            Formocosta
+          <div className="w-42  h-12">
+            <Image src={icon} alt="Formocosta Logo" className="w-full h-full object-contain" />
           </div>
 
           {/* Form Content */}
           <div className="max-w-sm w-full mx-auto my-auto space-y-4">
             <div className="space-y-1.5">
               {/* Green Icon Box */}
-              <div className="w-12 h-12 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20 p-2">
-                <Image src={icon} alt="Formocosta Logo" className="w-full h-full object-contain filter brightness-0 invert" />
-              </div>
+
               <h2 className="text-xl font-bold text-gray-900 tracking-tight">Acessar Painel</h2>
               <p className="text-xs text-gray-400">
                 Bem-vindo ao Backoffice. Faça login na sua conta.
@@ -154,7 +152,7 @@ export default function LoginPage() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)] pointer-events-none" />
             <div className="absolute -top-[30%] -right-[30%] w-[80%] h-[80%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none" />
             <div className="absolute -bottom-[30%] -left-[30%] w-[80%] h-[80%] rounded-full bg-[#059669]/10 blur-[100px] pointer-events-none" />
-            
+
             {/* Wavy light overlay */}
             <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none">
               <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -205,7 +203,7 @@ export default function LoginPage() {
                     </svg>
                   </div>
                 </div>
-                
+
                 <div className="space-y-0.5 mb-3">
                   <div className="text-xl font-bold text-gray-900 tracking-tight">
                     12.347,23 Kz
