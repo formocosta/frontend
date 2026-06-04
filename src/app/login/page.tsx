@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
 import {
   Eye,
   EyeOff,
@@ -12,10 +11,11 @@ import {
   LayoutGrid,
   Settings,
 } from 'lucide-react';
+import Image from 'next/image';
+import icon from '@/assets/images/icon2.png';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,12 +29,6 @@ export default function LoginPage() {
     try {
       // Simulate direct redirect
       await new Promise((r) => setTimeout(r, 800));
-      
-      login(
-        { id: '1', name: 'Administrador', email: email || 'admin@formocosta.com', role: 'admin' },
-        'mock-access-token',
-        'mock-refresh-token',
-      );
       router.push('/dashboard');
     } catch {
       router.push('/dashboard');
@@ -58,12 +52,8 @@ export default function LoginPage() {
           <div className="max-w-sm w-full mx-auto my-auto space-y-4">
             <div className="space-y-1.5">
               {/* Green Icon Box */}
-              <div className="w-12 h-12 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20">
-                {/* Overlapping loops SVG icon */}
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-emerald-300">
-                  <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
-                  <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
-                </svg>
+              <div className="w-12 h-12 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20 p-2">
+                <Image src={icon} alt="Formocosta Logo" className="w-full h-full object-contain filter brightness-0 invert" />
               </div>
               <h2 className="text-xl font-bold text-gray-900 tracking-tight">Acessar Painel</h2>
               <p className="text-xs text-gray-400">
@@ -192,11 +182,8 @@ export default function LoginPage() {
             <div className="relative h-48 mt-auto w-full select-none">
               {/* Bottom-left logo icon square */}
               <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md p-2 rounded-sm shadow-xl border border-white/20 z-20 animate-float-delayed">
-                <div className="w-7 h-7 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-md">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-emerald-300">
-                    <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
-                    <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
-                  </svg>
+                <div className="w-7 h-7 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-md p-1.5">
+                  <Image src={icon} alt="Formocosta Logo" className="w-full h-full object-contain filter brightness-0 invert" />
                 </div>
               </div>
 
