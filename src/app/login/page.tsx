@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { MOCK_USERS } from '@/lib/auth';
 import {
   Eye,
   EyeOff,
@@ -22,75 +21,61 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setServerError('');
     setLoading(true);
 
     try {
-      // Simulate network request
-      await new Promise((r) => setTimeout(r, 1200));
-      const mockUser = MOCK_USERS[email];
+      // Simulate direct redirect
+      await new Promise((r) => setTimeout(r, 800));
       
-      if (!mockUser) {
-        setServerError('Credenciais inválidas. Verifique e tente novamente.');
-        return;
-      }
-
       login(
-        { id: mockUser.id, name: mockUser.name, email, role: mockUser.role },
+        { id: '1', name: 'Administrador', email: email || 'admin@formocosta.com', role: 'admin' },
         'mock-access-token',
         'mock-refresh-token',
       );
       router.push('/dashboard');
     } catch {
-      setServerError('Ocorreu um erro no servidor. Tente novamente mais tarde.');
+      router.push('/dashboard');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen bg-[#4a5450] flex items-center justify-center p-4 md:p-8 font-sans">
-      <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-3 grid md:grid-cols-2 shadow-2xl border border-gray-100 min-h-[640px] md:min-h-[700px] transition-all duration-300">
+    <main className="h-screen w-screen bg-[#4a5450] flex items-center justify-center p-3 md:p-6 font-sans overflow-hidden">
+      <div className="w-full max-w-5xl bg-white rounded-sm p-2 grid md:grid-cols-2 shadow-2xl border border-gray-100 h-full max-h-[580px] md:max-h-[640px] transition-all duration-300">
         
         {/* ── LEFT COLUMN (Login Form) ──────────────────────── */}
-        <div className="flex flex-col justify-between p-8 md:p-12 min-h-[500px]">
+        <div className="flex flex-col justify-between p-6 md:p-8 h-full overflow-y-auto">
           {/* Logo / Brand Header */}
-          <div className="text-gray-300/80 font-serif italic text-2xl tracking-wider select-none">
+          <div className="text-gray-300 font-serif italic text-xl tracking-wider select-none">
             Formocosta
           </div>
 
           {/* Form Content */}
-          <div className="max-w-sm w-full mx-auto my-auto space-y-6">
-            <div className="space-y-2">
+          <div className="max-w-sm w-full mx-auto my-auto space-y-4">
+            <div className="space-y-1.5">
               {/* Green Icon Box */}
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20">
+              <div className="w-12 h-12 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20">
                 {/* Overlapping loops SVG icon */}
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-emerald-300">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-emerald-300">
                   <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
                   <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Acessar Painel</h2>
-              <p className="text-sm text-gray-400">
+              <h2 className="text-xl font-bold text-gray-900 tracking-tight">Acessar Painel</h2>
+              <p className="text-xs text-gray-400">
                 Bem-vindo ao Backoffice. Faça login na sua conta.
               </p>
             </div>
 
-            <div className="w-full border-t border-gray-100 my-4" />
+            <div className="w-full border-t border-gray-100 my-2" />
 
-            {serverError && (
-              <div className="text-center text-xs text-red-600 font-medium bg-red-50 border border-red-100 rounded-xl p-3 animate-in fade-in duration-200">
-                {serverError}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               {/* Email Input */}
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <label htmlFor="email" className="text-xs font-semibold text-gray-700">
                   Email
                 </label>
@@ -100,13 +85,13 @@ export default function LoginPage() {
                   placeholder="exemplo@formocosta.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white"
+                  className="w-full px-3 py-2.5 rounded-sm border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white"
                   required
                 />
               </div>
 
               {/* Password Input */}
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <label htmlFor="password" className="text-xs font-semibold text-gray-700">
                     Palavra-passe
@@ -114,7 +99,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => router.push('/forgot-password')}
-                    className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors"
+                    className="text-xs text-gray-400 hover:text-gray-900 font-medium transition-colors"
                   >
                     Esqueceu?
                   </button>
@@ -126,7 +111,7 @@ export default function LoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white pr-10"
+                    className="w-full px-3 py-2.5 rounded-sm border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white pr-10"
                     required
                   />
                   <button
@@ -144,12 +129,12 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-[#03321f] to-[#0b482e] hover:from-[#0b482e] hover:to-[#03321f] text-white text-sm font-semibold rounded-xl transition-all duration-300 shadow-md shadow-[#0b482e]/20 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer pt-6"
+                className="w-full py-2.5 bg-gradient-to-r from-[#03321f] to-[#0b482e] hover:from-[#0b482e] hover:to-[#03321f] text-white text-sm font-semibold rounded-sm transition-all duration-300 shadow-md shadow-[#0b482e]/20 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-4"
               >
                 {loading ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    A autenticar…
+                    A entrar…
                   </>
                 ) : (
                   <>
@@ -163,7 +148,7 @@ export default function LoginPage() {
 
           {/* Support / Privacy Footer */}
           <div className="text-center">
-            <span className="text-xs text-gray-400">
+            <span className="text-[11px] text-gray-400">
               Área restrita. Precisa de ajuda?{' '}
               <button type="button" className="text-[#064e3b] font-semibold hover:underline">
                 Contactar Suporte
@@ -173,8 +158,8 @@ export default function LoginPage() {
         </div>
 
         {/* ── RIGHT COLUMN (Premium Card) ────────────────────── */}
-        <div className="p-3 hidden md:flex">
-          <div className="w-full h-full rounded-[2.2rem] bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] relative overflow-hidden flex flex-col justify-between p-12 shadow-inner">
+        <div className="p-2 hidden md:flex h-full">
+          <div className="w-full h-full rounded-sm bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] relative overflow-hidden flex flex-col justify-between p-8 shadow-inner">
             {/* Glossy gradient reflection background blobs */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)] pointer-events-none" />
             <div className="absolute -top-[30%] -right-[30%] w-[80%] h-[80%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none" />
@@ -188,27 +173,27 @@ export default function LoginPage() {
             </div>
 
             {/* Premium Typography Header */}
-            <div className="relative z-10 mt-6 space-y-1.5 select-none">
-              <div className="font-serif italic text-white/90 text-4xl lg:text-[2.75rem] font-medium leading-none">
+            <div className="relative z-10 mt-2 space-y-1 select-none">
+              <div className="font-serif italic text-white/90 text-3xl lg:text-[2.2rem] font-medium leading-none">
                 Gerencie
               </div>
-              <div className="font-serif italic text-white/90 text-4xl lg:text-[2.75rem] font-medium leading-none">
+              <div className="font-serif italic text-white/90 text-3xl lg:text-[2.2rem] font-medium leading-none">
                 o Futuro
               </div>
-              <div className="font-sans font-light text-white text-4xl lg:text-[2.75rem] leading-none pt-2 tracking-tight">
+              <div className="font-sans font-light text-white text-3xl lg:text-[2.2rem] leading-none pt-1 tracking-tight">
                 dos Serviços,
               </div>
-              <div className="font-sans font-normal text-emerald-300 text-4xl lg:text-[2.75rem] leading-none tracking-tight">
+              <div className="font-sans font-normal text-emerald-300 text-3xl lg:text-[2.2rem] leading-none tracking-tight">
                 hoje
               </div>
             </div>
 
             {/* Floating Widgets Area */}
-            <div className="relative h-64 mt-auto w-full select-none">
+            <div className="relative h-48 mt-auto w-full select-none">
               {/* Bottom-left logo icon square */}
-              <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-white/20 z-20 animate-float-delayed">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-md">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-emerald-300">
+              <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md p-2 rounded-sm shadow-xl border border-white/20 z-20 animate-float-delayed">
+                <div className="w-7 h-7 rounded-sm bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-md">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-emerald-300">
                     <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
                     <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
                   </svg>
@@ -216,39 +201,39 @@ export default function LoginPage() {
               </div>
 
               {/* Vertical Menu Widget */}
-              <div className="absolute bottom-6 left-24 bg-white/95 backdrop-blur-md py-4 px-3 rounded-2xl flex flex-col gap-4 shadow-xl border border-white/20 z-20 animate-float">
-                <Home size={18} className="text-[#064e3b] cursor-pointer hover:scale-110 transition-transform" />
-                <LayoutGrid size={18} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
-                <Settings size={18} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
+              <div className="absolute bottom-4 left-16 bg-white/95 backdrop-blur-md py-3.5 px-2 rounded-sm flex flex-col gap-3.5 shadow-xl border border-white/20 z-20 animate-float">
+                <Home size={16} className="text-[#064e3b] cursor-pointer hover:scale-110 transition-transform" />
+                <LayoutGrid size={16} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
+                <Settings size={16} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
               </div>
 
               {/* Larger Statistics Card */}
-              <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md p-5 rounded-[2rem] w-64 shadow-2xl border border-white/30 z-10 animate-float">
-                <div className="flex justify-between items-start mb-4">
+              <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-sm w-56 shadow-2xl border border-white/30 z-10 animate-float">
+                <div className="flex justify-between items-start mb-2">
                   {/* Stylized Logo symbol */}
                   <div className="text-emerald-800/25">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                       <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
                       <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
                     </svg>
                   </div>
                 </div>
                 
-                <div className="space-y-1 mb-4">
-                  <div className="text-2xl font-bold text-gray-900 tracking-tight">
+                <div className="space-y-0.5 mb-3">
+                  <div className="text-xl font-bold text-gray-900 tracking-tight">
                     12.347,23 Kz
                   </div>
-                  <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+                  <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">
                     Faturamento do Dia
                   </div>
                 </div>
 
-                <div className="border-t border-gray-100 pt-3 flex justify-between items-center">
+                <div className="border-t border-gray-100 pt-2 flex justify-between items-center">
                   <div>
-                    <div className="text-[10px] text-gray-400 font-medium">Prestadores Ativos</div>
+                    <div className="text-[9px] text-gray-400 font-medium">Prestadores</div>
                     <div className="text-xs font-semibold text-gray-800">3.495</div>
                   </div>
-                  <button type="button" className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-[10px] font-bold rounded-full text-gray-700 transition-colors cursor-pointer">
+                  <button type="button" className="px-2 py-0.5 bg-gray-100 hover:bg-gray-200 text-[9px] font-bold rounded-sm text-gray-700 transition-colors cursor-pointer">
                     Ver todos
                   </button>
                 </div>
