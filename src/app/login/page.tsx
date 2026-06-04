@@ -4,20 +4,15 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { MOCK_USERS } from '@/lib/auth';
-import Image from 'next/image';
 import {
   Eye,
   EyeOff,
-  Mail,
-  Lock,
   ArrowRight,
   Loader2,
+  Home,
+  LayoutGrid,
+  Settings,
 } from 'lucide-react';
-
-import logo from '@/assets/images/logo.png.jpg';
-import prestadores from '@/assets/images/prestadores-de-serviços.jpg';
-
-type FieldError = { email?: string; password?: string };
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,43 +22,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<FieldError>({});
   const [serverError, setServerError] = useState('');
-  const [touched, setTouched] = useState<{ email?: boolean; password?: boolean }>({});
-
-  function validate(): FieldError {
-    const e: FieldError = {};
-    if (!email) e.email = 'O email é obrigatório.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = 'Introduza um email válido.';
-    if (!password) e.password = 'A palavra-passe é obrigatória.';
-    else if (password.length < 6) e.password = 'Mínimo de 6 caracteres.';
-    return e;
-  }
-
-  function handleBlur(field: 'email' | 'password') {
-    setTouched((t) => ({ ...t, [field]: true }));
-    const e = validate();
-    setErrors((prev) => ({ ...prev, [field]: e[field] }));
-  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setTouched({ email: true, password: true });
-    const fieldErrors = validate();
-    if (Object.keys(fieldErrors).length) {
-      setErrors(fieldErrors);
-      return;
-    }
-    setErrors({});
     setServerError('');
     setLoading(true);
+
     try {
-      await new Promise((r) => setTimeout(r, 1500));
+      // Simulate network request
+      await new Promise((r) => setTimeout(r, 1200));
       const mockUser = MOCK_USERS[email];
+      
       if (!mockUser) {
         setServerError('Credenciais inválidas. Verifique e tente novamente.');
         return;
       }
+
       login(
         { id: mockUser.id, name: mockUser.name, email, role: mockUser.role },
         'mock-access-token',
@@ -71,152 +46,105 @@ export default function LoginPage() {
       );
       router.push('/dashboard');
     } catch {
-      setServerError('Credenciais inválidas. Verifique e tente novamente.');
+      setServerError('Ocorreu um erro no servidor. Tente novamente mais tarde.');
     } finally {
       setLoading(false);
     }
   }
 
-  const fieldClass = (hasError: boolean) =>
-    `w-full pl-8 pr-4 py-2 bg-transparent border-b text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-all duration-200 ${
-      hasError ? 'border-red-400' : 'border-gray-300 focus:border-[#0B7A45]'
-    }`;
-
   return (
-    <main className="min-h-screen bg-linear-to-br from-slate-50 to-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl rounded-2xl overflow-hidden shadow-xl shadow-black/15 grid md:grid-cols-[1fr_1fr]">
-
-        {/* ── LEFT PANEL ────────────────────────────────────── */}
-        <div className="relative hidden md:flex flex-col p-10 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${prestadores.src})`, backgroundAttachment: 'fixed', backgroundSize: '1400px 600px' }}>
-
-          <div className="absolute inset-0 bg-linear-to-r from-[#064E2A]/85 via-[#0B7A45]/75 to-[#10A05C]/60" />
-
-          <div className="relative mt-8 z-10 space-y-4">
-            <h1 className="text-4xl font-bold text-white leading-tight">
-              Bem-vindo à<br />
-              <span className="text-emerald-200">sua plataforma</span>
-            </h1>
-            <p className="text-white/70 text-sm mt-8 leading-relaxed max-w-xs">
-              Solução completa para gestão de serviços profissionais em Angola.
-            </p>
+    <main className="min-h-screen bg-[#4a5450] flex items-center justify-center p-4 md:p-8 font-sans">
+      <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-3 grid md:grid-cols-2 shadow-2xl border border-gray-100 min-h-[640px] md:min-h-[700px] transition-all duration-300">
+        
+        {/* ── LEFT COLUMN (Login Form) ──────────────────────── */}
+        <div className="flex flex-col justify-between p-8 md:p-12 min-h-[500px]">
+          {/* Logo / Brand Header */}
+          <div className="text-gray-300/80 font-serif italic text-2xl tracking-wider select-none">
+            Formocosta
           </div>
 
-        </div>
-
-        {/* ── RIGHT PANEL ───────────────────────────────────── */}
-        <div className="flex items-center justify-center px-8 md:px-12 py-12">
-          <div className="w-85 max-w-xs">
-
-            <div className="mb-8">
-              <div className="flex justify-center mb-5">
-                <div className="w-25 h-25 rounded-xl bg-[#0B7A45]/10 flex items-center justify-center overflow-hidden shrink-0">
-                  <Image src={logo} alt="Formocosta" width={100} height={50} className="object-contain" />
-                </div>
+          {/* Form Content */}
+          <div className="max-w-sm w-full mx-auto my-auto space-y-6">
+            <div className="space-y-2">
+              {/* Green Icon Box */}
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-lg shadow-[#064e3b]/20">
+                {/* Overlapping loops SVG icon */}
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-emerald-300">
+                  <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
+                  <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
+                </svg>
               </div>
-              <h2 className="text-2xl text-center font-bold text-gray-900">Acessa a tua Conta</h2>
-              <p className="text-sm text-gray-500 mt-1.5">
-                Preencha os campos a baixo para acessar a plataforma.
+              <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Acessar Painel</h2>
+              <p className="text-sm text-gray-400">
+                Bem-vindo ao Backoffice. Faça login na sua conta.
               </p>
             </div>
 
+            <div className="w-full border-t border-gray-100 my-4" />
+
             {serverError && (
-              <div className="mb-5 flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                <span>{serverError}</span>
+              <div className="text-center text-xs text-red-600 font-medium bg-red-50 border border-red-100 rounded-xl p-3 animate-in fade-in duration-200">
+                {serverError}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} noValidate className="space-y-5">
-
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email Input */}
               <div className="space-y-1.5">
-                <label htmlFor="email" className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                <label htmlFor="email" className="text-xs font-semibold text-gray-700">
                   Email
                 </label>
-                <div className="relative">
-                  <Mail
-                    size={16}
-                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${
-                      touched.email && errors.email && email !== '' ? 'text-red-400' : 'text-gray-400'
-                    }`}
-                  />
-                  <input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="email@gmail.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (touched.email) setErrors((prev) => ({ ...prev, email: undefined }));
-                    }}
-                    onBlur={() => handleBlur('email')}
-                    className={fieldClass(!!touched.email && !!errors.email && email !== '')}
-                    aria-invalid={!!touched.email && !!errors.email && email !== ''}
-                    aria-describedby={errors.email ? 'email-error' : undefined}
-                  />
-                </div>
-                {touched.email && errors.email && email !== '' && (
-                  <p id="email-error" role="alert" className="text-xs text-red-500 flex items-center gap-1 animate-in fade-in duration-150">
-                    {errors.email}
-                  </p>
-                )}
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="exemplo@formocosta.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white"
+                  required
+                />
               </div>
 
+              {/* Password Input */}
               <div className="space-y-1.5">
-                <label htmlFor="password" className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                  Palavra-passe
-                </label>
+                <div className="flex justify-between items-center">
+                  <label htmlFor="password" className="text-xs font-semibold text-gray-700">
+                    Palavra-passe
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => router.push('/forgot-password')}
+                    className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors"
+                  >
+                    Esqueceu?
+                  </button>
+                </div>
                 <div className="relative">
-                  <Lock
-                    size={16}
-                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${
-                      touched.password && errors.password && password !== '' ? 'text-red-400' : 'text-gray-400'
-                    }`}
-                  />
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (touched.password) setErrors((prev) => ({ ...prev, password: undefined }));
-                    }}
-                    onBlur={() => handleBlur('password')}
-                    className={`${fieldClass(!!touched.password && !!errors.password && password !== '')} pr-10`}
-                    aria-invalid={!!touched.password && !!errors.password && password !== ''}
-                    aria-describedby={errors.password ? 'password-error' : undefined}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b] outline-none text-sm text-gray-800 placeholder:text-gray-300 transition-all bg-white pr-10"
+                    required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
+                    onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label={showPassword ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-                {touched.password && errors.password && password !== '' && (
-                  <p id="password-error" role="alert" className="text-xs text-red-500 animate-in fade-in duration-150">
-                    {errors.password}
-                  </p>
-                )}
               </div>
 
-              <div className="flex justify-end -mt-1">
-                <button
-                  type="button"
-                  onClick={() => router.push('/forgot-password')}
-                  className="text-xs text-[#0B7A45] hover:text-[#064E2A] font-medium transition-colors"
-                >
-                  Esqueceu a palavra-passe?
-                </button>
-              </div>
-
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="relative w-60 mx-auto flex items-center justify-center gap-2 bg-[#0B7A45] hover:bg-[#064E2A] disabled:bg-[#0B7A45]/70 text-white text-sm font-semibold py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-[#0B7A45]/25 hover:shadow-xl hover:shadow-[#0B7A45]/30 hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full py-3.5 bg-gradient-to-r from-[#03321f] to-[#0b482e] hover:from-[#0b482e] hover:to-[#03321f] text-white text-sm font-semibold rounded-xl transition-all duration-300 shadow-md shadow-[#0b482e]/20 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer pt-6"
               >
                 {loading ? (
                   <>
@@ -225,26 +153,111 @@ export default function LoginPage() {
                   </>
                 ) : (
                   <>
-                    Entrar na conta
-                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                    Entrar no Painel
+                    <ArrowRight size={16} />
                   </>
                 )}
               </button>
             </form>
+          </div>
 
-            <p className="text-center text-xs text-gray-400 mt-4 leading-relaxed">
-              Ao entrar, aceita os nossos{' '}
-              <button className="underline underline-offset-2 hover:text-gray-600 transition-colors">
-                Termos de Serviço
-              </button>{' '}
-              e{' '}
-              <button className="underline underline-offset-2 hover:text-gray-600 transition-colors">
-                Política de Privacidade
+          {/* Support / Privacy Footer */}
+          <div className="text-center">
+            <span className="text-xs text-gray-400">
+              Área restrita. Precisa de ajuda?{' '}
+              <button type="button" className="text-[#064e3b] font-semibold hover:underline">
+                Contactar Suporte
               </button>
-              .
-            </p>
+            </span>
           </div>
         </div>
+
+        {/* ── RIGHT COLUMN (Premium Card) ────────────────────── */}
+        <div className="p-3 hidden md:flex">
+          <div className="w-full h-full rounded-[2.2rem] bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] relative overflow-hidden flex flex-col justify-between p-12 shadow-inner">
+            {/* Glossy gradient reflection background blobs */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)] pointer-events-none" />
+            <div className="absolute -top-[30%] -right-[30%] w-[80%] h-[80%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none" />
+            <div className="absolute -bottom-[30%] -left-[30%] w-[80%] h-[80%] rounded-full bg-[#059669]/10 blur-[100px] pointer-events-none" />
+            
+            {/* Wavy light overlay */}
+            <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="white" />
+              </svg>
+            </div>
+
+            {/* Premium Typography Header */}
+            <div className="relative z-10 mt-6 space-y-1.5 select-none">
+              <div className="font-serif italic text-white/90 text-4xl lg:text-[2.75rem] font-medium leading-none">
+                Gerencie
+              </div>
+              <div className="font-serif italic text-white/90 text-4xl lg:text-[2.75rem] font-medium leading-none">
+                o Futuro
+              </div>
+              <div className="font-sans font-light text-white text-4xl lg:text-[2.75rem] leading-none pt-2 tracking-tight">
+                dos Serviços,
+              </div>
+              <div className="font-sans font-normal text-emerald-300 text-4xl lg:text-[2.75rem] leading-none tracking-tight">
+                hoje
+              </div>
+            </div>
+
+            {/* Floating Widgets Area */}
+            <div className="relative h-64 mt-auto w-full select-none">
+              {/* Bottom-left logo icon square */}
+              <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-white/20 z-20 animate-float-delayed">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#064e3b] to-[#022c22] flex items-center justify-center shadow-md">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-emerald-300">
+                    <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
+                    <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Vertical Menu Widget */}
+              <div className="absolute bottom-6 left-24 bg-white/95 backdrop-blur-md py-4 px-3 rounded-2xl flex flex-col gap-4 shadow-xl border border-white/20 z-20 animate-float">
+                <Home size={18} className="text-[#064e3b] cursor-pointer hover:scale-110 transition-transform" />
+                <LayoutGrid size={18} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
+                <Settings size={18} className="text-gray-400 cursor-pointer hover:scale-110 transition-transform" />
+              </div>
+
+              {/* Larger Statistics Card */}
+              <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md p-5 rounded-[2rem] w-64 shadow-2xl border border-white/30 z-10 animate-float">
+                <div className="flex justify-between items-start mb-4">
+                  {/* Stylized Logo symbol */}
+                  <div className="text-emerald-800/25">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                      <path d="M8 6h3a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v0a6 6 0 0 1 6-6zm3 10a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h3z" opacity="0.6" />
+                      <path d="M16 6h-3a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v0a6 6 0 0 0-6-6zm-3 10a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-3z" />
+                    </svg>
+                  </div>
+                </div>
+                
+                <div className="space-y-1 mb-4">
+                  <div className="text-2xl font-bold text-gray-900 tracking-tight">
+                    12.347,23 Kz
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+                    Faturamento do Dia
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 pt-3 flex justify-between items-center">
+                  <div>
+                    <div className="text-[10px] text-gray-400 font-medium">Prestadores Ativos</div>
+                    <div className="text-xs font-semibold text-gray-800">3.495</div>
+                  </div>
+                  <button type="button" className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-[10px] font-bold rounded-full text-gray-700 transition-colors cursor-pointer">
+                    Ver todos
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </main>
   );
