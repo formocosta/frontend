@@ -15,6 +15,12 @@ export default function Header() {
   // Map pathnames to dynamic page headers
   const getHeaderInfo = () => {
     const firstName = user.name.split(' ')[0];
+    if (pathname.startsWith('/kyc/')) {
+      return {
+        title: 'Detalhes da Candidatura',
+        subtitle: 'Auditoria e validação de documentos do prestador',
+      };
+    }
     switch (pathname) {
       case '/dashboard':
         return {
@@ -24,7 +30,7 @@ export default function Header() {
       case '/kyc':
         return {
           title: 'Candidaturas KYC',
-          subtitle: 'Análise e aprovação de documentação de utilizadores',
+          subtitle: 'Gestão e acompanhamento de candidaturas de prestadores pendentes',
         };
       case '/solicitacoes':
         return {
