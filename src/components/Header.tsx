@@ -30,7 +30,7 @@ export default function Header() {
       case '/kyc':
         return {
           title: 'Candidaturas KYC',
-          subtitle: 'Análise e aprovação de documentação de utilizadores',
+          subtitle: 'Gestão e acompanhamento de candidaturas de prestadores pendentes',
         };
       case '/solicitacoes':
         return {

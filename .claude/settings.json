@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf \"c:/Users/aliad/Downloads/adinis/frontend/src/app/\\(backoffice\\)/kyc/[id]\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\aliad\\Downloads\\adinis\\frontend\\src\\app\\(backoffice)\\kyc\\[id]"
+    ]
+  }
+}
