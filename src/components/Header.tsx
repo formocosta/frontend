@@ -2,11 +2,15 @@
 
 import { useAuth } from '@/lib/auth-context';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bell, Info, Download } from 'lucide-react';
+import { Bell, Info, Download, Menu } from 'lucide-react';
 
 const MOCK_UNREAD = 3;
 
-export default function Header() {
+interface HeaderProps {
+  onOpenMobileMenu?: () => void;
+}
+
+export default function Header({ onOpenMobileMenu }: HeaderProps) {
   const { user } = useAuth();
   const pathname = usePathname();
 
@@ -98,19 +102,28 @@ export default function Header() {
   const { title, subtitle } = getHeaderInfo();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shrink-0 select-none">
-      
+    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 md:px-8 shrink-0 select-none">
+
+      {/* Mobile hamburger */}
+      <button
+        onClick={onOpenMobileMenu}
+        className="md:hidden w-9 h-9 flex items-center justify-center rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer mr-2 shrink-0"
+        aria-label="Abrir menu"
+      >
+        <Menu size={20} />
+      </button>
+
       {/* Title & Subtitle */}
-      <div className="flex flex-col">
-        <h1 className="text-xl font-extrabold text-gray-900 leading-tight tracking-tight">{title}</h1>
-        <p className="text-xs text-gray-400 font-medium mt-0.5">{subtitle}</p>
+      <div className="flex flex-col min-w-0 flex-1">
+        <h1 className="text-lg md:text-xl font-extrabold text-gray-900 leading-tight tracking-tight truncate">{title}</h1>
+        <p className="text-xs text-gray-400 font-medium mt-0.5 truncate hidden sm:block">{subtitle}</p>
       </div>
 
       {/* Right side utilities */}
-      <div className="flex items-center gap-4">
-        
-        {/* Overlapping User Avatars */}
-        <div className="flex items-center -space-x-2 mr-2">
+      <div className="flex items-center gap-2 md:gap-4">
+
+        {/* Overlapping User Avatars — hidden on mobile */}
+        <div className="hidden md:flex items-center -space-x-2 mr-2">
           <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-200 overflow-hidden relative shadow-sm">
             <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80" alt="Team member" className="w-full h-full object-cover" />
           </div>
@@ -125,7 +138,7 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="w-px h-6 bg-gray-100" />
+        <div className="hidden md:block w-px h-6 bg-gray-100" />
 
         {/* Info Icon */}
         <button className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer">
