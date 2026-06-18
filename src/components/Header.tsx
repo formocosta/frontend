@@ -102,12 +102,12 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
   const { title, subtitle } = getHeaderInfo();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 md:px-8 shrink-0 select-none">
+    <header className="h-14 bg-white border-b border-slate-200/70 flex items-center justify-between px-4 md:px-6 shrink-0 select-none shadow-sm">
 
       {/* Mobile hamburger */}
       <button
         onClick={onOpenMobileMenu}
-        className="md:hidden w-9 h-9 flex items-center justify-center rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer mr-2 shrink-0"
+        className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all cursor-pointer mr-2 shrink-0"
         aria-label="Abrir menu"
       >
         <Menu size={20} />
@@ -115,8 +115,8 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
 
       {/* Title & Subtitle */}
       <div className="flex flex-col min-w-0 flex-1">
-        <h1 className="text-lg md:text-xl font-extrabold text-gray-900 leading-tight tracking-tight truncate">{title}</h1>
-        <p className="text-xs text-gray-400 font-medium mt-0.5 truncate hidden sm:block">{subtitle}</p>
+        <h1 className="text-sm md:text-[15px] font-bold text-slate-900 leading-tight tracking-tight truncate">{title}</h1>
+        <p className="text-[11px] text-slate-400 font-medium mt-0.5 truncate hidden sm:block">{subtitle}</p>
       </div>
 
       {/* Right side utilities */}
@@ -138,25 +138,25 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
           </button>
         </div>
 
-        <div className="hidden md:block w-px h-6 bg-gray-100" />
+        <div className="hidden md:block w-px h-5 bg-slate-200" />
 
         {/* Info Icon */}
-        <button className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer">
-          <Info size={17} />
+        <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer">
+          <Info size={15} />
         </button>
 
         {/* Notification bell */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer">
-          <Bell size={17} />
+        <button className="relative w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer">
+          <Bell size={15} />
           {MOCK_UNREAD > 0 && (
             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full ring-2 ring-white" />
           )}
         </button>
 
         {/* Export Button */}
-        <button className="flex items-center gap-2 bg-[#06241C] hover:bg-[#0B392E] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm active:scale-[0.98] cursor-pointer">
+        <button className="flex items-center gap-1.5 bg-[#06241C] hover:bg-[#0B392E] text-white text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-all duration-150 shadow-sm active:scale-[0.98] cursor-pointer">
           <span>Exportar</span>
-          <Download size={14} />
+          <Download size={12} />
         </button>
 
       </div>

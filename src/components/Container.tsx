@@ -37,7 +37,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
   const effectiveWidth = collapsed ? SIDEBAR_ICONS : SIDEBAR_DEFAULT;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#F4F7F6]">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-100">
 
       {/* ── Mobile overlay backdrop ──────────────────────── */}
       <div

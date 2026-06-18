@@ -60,49 +60,45 @@ function NavItem({ href, icon: Icon, label, active, badge, collapsed }: NavItemP
     <div className="relative group">
       <Link
         href={href}
-        className={`relative flex items-center rounded-xl text-sm font-medium transition-all duration-150 ${
+        className={`relative flex items-center rounded-lg text-[13px] font-medium transition-all duration-150 ${
           collapsed
-            ? 'justify-center p-3.5'
-            : 'justify-between gap-3 px-3.5 py-2.5'
+            ? 'justify-center p-3'
+            : 'justify-between gap-3 px-3 py-2.5'
         } ${
           active
-            ? 'bg-[#0B392E] text-[#34D399]'
-            : 'text-emerald-100/60 hover:bg-white/5 hover:text-white'
+            ? 'bg-emerald-500/[0.12] text-emerald-400'
+            : 'text-emerald-100/50 hover:bg-white/[0.05] hover:text-emerald-100/80'
         }`}
       >
-        {/* Icon + label */}
         <div className={`flex items-center ${collapsed ? '' : 'gap-3'}`}>
-          <Icon size={17} strokeWidth={active ? 2.5 : 2} className="shrink-0" />
+          <Icon
+            size={16}
+            strokeWidth={active ? 2.5 : 1.75}
+            className="shrink-0"
+          />
           {!collapsed && (
-            <span className="truncate leading-none">{label}</span>
+            <span className="truncate leading-none tracking-tight">{label}</span>
           )}
         </div>
 
-        {/* Badge (expanded only) */}
+        {/* Badge */}
         {!collapsed && badge !== undefined && (
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#0B2F25] text-emerald-300 border border-emerald-950/60">
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-900/60 leading-none">
             {badge}
           </span>
         )}
 
-        {/* Active indicator */}
-        {active && !collapsed && (
-          <div className="absolute right-2 top-3 bottom-3 w-1 bg-[#34D399] rounded-full" />
-        )}
-        {active && collapsed && (
-          <div className="absolute right-0.5 top-2 bottom-2 w-0.5 bg-[#34D399] rounded-full" />
+        {/* Active left indicator */}
+        {active && (
+          <div className="absolute left-0 top-2 bottom-2 w-0.5 bg-emerald-400 rounded-full" />
         )}
       </Link>
 
-      {/* Tooltip — only in collapsed mode */}
+      {/* Tooltip — collapsed only */}
       {collapsed && (
-        <div
-          className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-50 pointer-events-none
-                     opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-        >
-          <div className="relative bg-gray-900 text-white text-[11px] font-semibold px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl flex items-center gap-1.5">
-            {/* Arrow */}
-            <span className="absolute right-full top-1/2 -translate-y-1/2 border-[5px] border-transparent border-r-gray-900" />
+        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3.5 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+          <div className="relative bg-[#0B2A20] border border-emerald-900/60 text-emerald-100 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl flex items-center gap-1.5">
+            <span className="absolute right-full top-1/2 -translate-y-1/2 border-[5px] border-transparent border-r-[#0B2A20]" />
             {label}
             {badge !== undefined && (
               <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
@@ -145,65 +141,60 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
   }
 
   return (
-    <aside className="w-full h-full bg-[#06241C] text-emerald-100 flex flex-col shadow-xl overflow-hidden">
+    <aside className="w-full h-full bg-[#06241C] text-emerald-100 flex flex-col overflow-hidden select-none">
 
-      {/* ── Logo / collapse toggle ─────────────────────── */}
+      {/* ── Logo ──────────────────────────────────────────── */}
       <div
-        className={`h-20 shrink-0 flex items-center border-b border-emerald-950/40 transition-all duration-300 ${
-          collapsed ? 'justify-center px-3' : 'justify-between px-6'
+        className={`h-14 shrink-0 flex items-center border-b border-white/[0.06] transition-all duration-300 ${
+          collapsed ? 'justify-center px-3' : 'px-4'
         }`}
       >
         <button
           onClick={onToggleCollapse}
-          className="flex items-center gap-3 cursor-pointer select-none hover:opacity-80 active:opacity-60 transition-opacity duration-150 min-w-0"
-          title={collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+          className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity duration-150 min-w-0"
+          title={collapsed ? 'Expandir' : 'Colapsar'}
           aria-label={collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
         >
-          <div className="w-10 h-10 relative bg-white/10 rounded-xl shrink-0 overflow-hidden">
-            <Image
-              src={logo}
-              alt="Formocosta"
-              fill
-              className="object-contain rounded-lg"
-            />
+          <div className="w-8 h-8 relative bg-white/10 rounded-lg shrink-0 overflow-hidden">
+            <Image src={logo} alt="Formocosta" fill className="object-contain" />
           </div>
           {!collapsed && (
-            <span className="font-bold text-white text-lg tracking-tight truncate">
+            <span className="font-bold text-white text-[15px] tracking-tight truncate">
               Formocosta
             </span>
           )}
         </button>
       </div>
 
-      {/* ── Search bar (hidden when collapsed) ────────── */}
+      {/* ── Search ───────────────────────────────────────── */}
       <div
         className={`shrink-0 overflow-hidden transition-all duration-300 ${
-          collapsed ? 'max-h-0 opacity-0 py-0 px-4' : 'max-h-20 opacity-100 px-4 py-3'
+          collapsed ? 'max-h-0 opacity-0 py-0 px-3' : 'max-h-16 opacity-100 px-3 py-2.5'
         }`}
       >
-        <div className="flex items-center gap-2 bg-[#0B2F25] border border-emerald-950/60 rounded-xl px-3.5 py-2 w-full hover:border-emerald-800/40 transition-colors">
-          <Search size={15} className="text-emerald-500 shrink-0" />
+        <div className="flex items-center gap-2 bg-white/[0.05] border border-white/[0.06] rounded-lg px-3 py-2 hover:border-emerald-800/60 transition-colors">
+          <Search size={13} className="text-emerald-600 shrink-0" />
           <input
             type="text"
             placeholder="Pesquisar..."
             tabIndex={collapsed ? -1 : 0}
-            className="bg-transparent text-xs text-white placeholder:text-emerald-600 outline-none w-full"
+            className="bg-transparent text-xs text-emerald-100 placeholder:text-emerald-700 outline-none w-full"
           />
-          <span className="text-[10px] text-emerald-600 bg-[#06241C] px-1.5 py-0.5 rounded border border-emerald-950/60 shrink-0 font-mono">
+          <span className="text-[10px] text-emerald-700 bg-white/[0.04] px-1 py-0.5 rounded border border-white/[0.06] shrink-0 font-mono leading-none">
             ⌘F
           </span>
         </div>
       </div>
 
-      {/* ── Main navigation ───────────────────────────── */}
+      {/* ── Main nav ─────────────────────────────────────── */}
       <div
-        className={`flex-1 overflow-y-auto py-4 space-y-0.5 scrollbar-thin scrollbar-thumb-emerald-950/50 transition-all duration-300 ${
-          collapsed ? 'px-2' : 'px-4'
+        className={`flex-1 overflow-y-auto py-3 space-y-0.5 transition-all duration-300 ${
+          collapsed ? 'px-2' : 'px-3'
         }`}
       >
         {!collapsed && (
-          <p className="text-[10px] font-semibold text-emerald-500/50 uppercase tracking-widest px-3.5 mb-2 truncate">
-            Main Menu
+          <p className="text-[10px] font-semibold text-emerald-700/70 uppercase tracking-widest px-3 mb-2 truncate">
+            Menu Principal
           </p>
         )}
         {collapsed && <div className="h-1" />}
@@ -217,14 +208,14 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
         ))}
       </div>
 
-      {/* ── General navigation ────────────────────────── */}
+      {/* ── General nav ──────────────────────────────────── */}
       <div
-        className={`py-4 border-t border-emerald-950/40 space-y-0.5 transition-all duration-300 ${
-          collapsed ? 'px-2' : 'px-4'
+        className={`py-3 border-t border-white/[0.06] space-y-0.5 transition-all duration-300 ${
+          collapsed ? 'px-2' : 'px-3'
         }`}
       >
         {!collapsed && (
-          <p className="text-[10px] font-semibold text-emerald-500/50 uppercase tracking-widest px-3.5 mb-2 truncate">
+          <p className="text-[10px] font-semibold text-emerald-700/70 uppercase tracking-widest px-3 mb-2 truncate">
             Conta
           </p>
         )}
@@ -238,47 +229,47 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
         ))}
       </div>
 
-      {/* ── Profile card ──────────────────────────────── */}
+      {/* ── Profile ──────────────────────────────────────── */}
       <div
-        className={`border-t border-emerald-950/40 shrink-0 transition-all duration-300 ${
-          collapsed ? 'p-2' : 'p-4'
+        className={`border-t border-white/[0.06] shrink-0 transition-all duration-300 ${
+          collapsed ? 'p-2' : 'p-3'
         }`}
       >
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
             <div
-              className="w-8 h-8 rounded-full bg-[#34D399] flex items-center justify-center text-[#06241C] text-xs font-bold shrink-0"
+              className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0"
               title={user.name}
             >
               {initials}
             </div>
             <button
               onClick={handleLogout}
-              className="w-8 h-8 rounded-lg hover:bg-red-500/10 text-emerald-400 hover:text-red-400 flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-lg hover:bg-red-500/10 text-emerald-600 hover:text-red-400 flex items-center justify-center transition-colors cursor-pointer"
               title="Sair"
             >
-              <LogOut size={14} />
+              <LogOut size={13} />
             </button>
           </div>
         ) : (
-          <div className="bg-[#0B392E] rounded-xl p-3 flex items-center justify-between shadow-inner border border-emerald-950/60">
+          <div className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-3 flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[#34D399] flex items-center justify-center text-[#06241C] text-xs font-bold shrink-0">
+              <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                 {initials}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-white truncate leading-none">{user.name}</p>
-                <span className="text-[9px] font-semibold text-emerald-400 mt-1 block uppercase tracking-wider leading-none">
-                  {user.role === 'admin' ? 'Admin' : user.role}
+                <p className="text-[13px] font-semibold text-white truncate leading-none">{user.name}</p>
+                <span className="text-[10px] text-emerald-600 mt-1 block uppercase tracking-wider leading-none">
+                  {user.role === 'admin' ? 'Administrador' : user.role}
                 </span>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="w-7 h-7 rounded-lg hover:bg-red-500/10 text-emerald-400 hover:text-red-400 flex items-center justify-center transition-colors shrink-0 cursor-pointer"
+              className="w-7 h-7 rounded-lg hover:bg-red-500/10 text-emerald-700 hover:text-red-400 flex items-center justify-center transition-colors shrink-0 cursor-pointer"
               title="Sair"
             >
-              <LogOut size={16} />
+              <LogOut size={14} />
             </button>
           </div>
         )}
