@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Search, AlertTriangle, Inbox, RotateCw,
@@ -746,7 +747,7 @@ function SolicitacoesContent() {
 
                       {/* ID */}
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <span className="text-xs font-bold text-gray-800 font-mono">{s.id}</span>
+                        <Link href={`/solicitacoes/${s.id}`} className="text-xs font-bold text-emerald-700 hover:text-emerald-900 font-mono hover:underline underline-offset-2 transition-colors">{s.id}</Link>
                         <p className="text-[10px] text-gray-400 font-medium mt-0.5">{CATEGORIA_LABELS[s.categoria]}</p>
                       </td>
 
