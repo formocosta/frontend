@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Menu, X, ChevronRight, Star, Shield, Clock, CheckCircle,
-  ArrowRight, Users, MapPin, Facebook, Instagram, Linkedin,
+  ArrowRight, Users, MapPin, Globe, Camera, Briefcase,
   MessageCircle, Zap, TrendingUp, Award, BadgeCheck,
   Wrench, Droplets, Leaf, Hammer, Bug,
   Home as HomeIcon, CreditCard, Search, Headphones,
@@ -17,7 +17,7 @@ import {
 function Logo({ light = false }: { light?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-2.5 select-none group">
-      <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-500 transition-colors shadow-sm shadow-blue-500/30">
+      <div className="w-8 h-8 bg-[#06241C] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#0a3529] transition-colors shadow-sm shadow-green-900/30">
         <span className="text-white font-black text-[15px] tracking-tight">F</span>
       </div>
       <span className={`font-bold text-[17px] tracking-tight leading-none ${light ? 'text-white' : 'text-slate-900'}`}>
@@ -98,7 +98,7 @@ function Navbar() {
               </Link>
               <Link
                 href="/login"
-                className="text-[13px] font-bold px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-sm shadow-blue-500/25 hover:shadow-blue-400/30 hover:shadow-md active:scale-[0.97]"
+                className="text-[13px] font-bold px-5 py-2.5 bg-[#06241C] hover:bg-[#0a3529] text-white rounded-xl transition-all shadow-sm shadow-green-900/25 hover:shadow-green-900/30 hover:shadow-md active:scale-[0.97]"
               >
                 Contratar Serviço
               </Link>
@@ -145,10 +145,10 @@ function Navbar() {
           <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center py-3.5 text-[14px] font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
             Entrar
           </Link>
-          <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center py-3.5 text-[14px] font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-colors shadow-sm">
+          <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center py-3.5 text-[14px] font-bold text-white bg-[#06241C] hover:bg-[#0a3529] rounded-xl transition-colors shadow-sm">
             Contratar Serviço
           </Link>
-          <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center py-3.5 text-[14px] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
+          <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center py-3.5 text-[14px] font-bold text-[#06241C] bg-green-50 hover:bg-green-100 rounded-xl transition-colors">
             Tornar-me Prestador →
           </Link>
         </div>
@@ -166,15 +166,15 @@ function HeroSection() {
     <section
       id="inicio"
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E3358 50%, #0F172A 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #06241C 0%, #0c3d2c 50%, #06241C 100%)' }}
     >
       {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.03]"
+      <div className="absolute inset-0 opacity-[0.04]"
         style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }}
       />
       {/* Glow blobs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600/15 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-700/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-0 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -183,7 +183,7 @@ function HeroSection() {
           <div className="space-y-8">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 backdrop-blur-sm text-white/80 text-xs font-semibold px-3.5 py-1.5 rounded-full">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
               Plataforma líder em Angola
             </div>
 
@@ -191,7 +191,7 @@ function HeroSection() {
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black text-white leading-[1.08] tracking-tight">
                 Encontre profissionais{' '}
-                <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #60A5FA, #818CF8)' }}>
+                <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #4ade80, #86efac)' }}>
                   de confiança
                 </span>
                 {' '}para qualquer serviço.
@@ -205,7 +205,7 @@ function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[15px] rounded-2xl transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-400/40 hover:shadow-xl active:scale-[0.97] group"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-[15px] rounded-2xl transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/35 hover:shadow-xl active:scale-[0.97] group"
               >
                 Contratar Serviço
                 <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
@@ -221,15 +221,15 @@ function HeroSection() {
             {/* Trust indicators */}
             <div className="flex flex-wrap items-center gap-6 pt-2">
               <div className="flex items-center gap-2 text-white/50 text-sm">
-                <Shield size={15} className="text-blue-400" />
+                <Shield size={15} className="text-emerald-400" />
                 <span>Pagamentos seguros</span>
               </div>
               <div className="flex items-center gap-2 text-white/50 text-sm">
-                <BadgeCheck size={15} className="text-blue-400" />
+                <BadgeCheck size={15} className="text-emerald-400" />
                 <span>Prestadores verificados</span>
               </div>
               <div className="flex items-center gap-2 text-white/50 text-sm">
-                <Headphones size={15} className="text-blue-400" />
+                <Headphones size={15} className="text-emerald-400" />
                 <span>Suporte 24/7</span>
               </div>
             </div>
@@ -257,7 +257,7 @@ function HeroSection() {
                     <span className="text-xs text-slate-500 ml-1.5 font-medium">5.0</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">AM</div>
+                    <div className="w-6 h-6 rounded-full bg-[#06241C] flex items-center justify-center text-white text-[10px] font-bold">AM</div>
                     <span className="text-xs text-slate-500">António M.</span>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ function HeroSection() {
               <div className="bg-white rounded-2xl shadow-2xl p-5 animate-float-delayed">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3.5">Prestador disponível agora</p>
                 <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#06241C] to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
                     MR
                   </div>
                   <div className="flex-1 min-w-0">
@@ -286,15 +286,15 @@ function HeroSection() {
                   </span>
                 </div>
                 <div className="mt-3.5 grid grid-cols-2 gap-2">
-                  <button className="text-[12px] font-bold bg-blue-600 text-white py-2.5 rounded-xl cursor-default">Contratar</button>
+                  <button className="text-[12px] font-bold bg-[#06241C] text-white py-2.5 rounded-xl cursor-default">Contratar</button>
                   <button className="text-[12px] font-bold bg-slate-100 text-slate-700 py-2.5 rounded-xl cursor-default">Ver perfil</button>
                 </div>
               </div>
 
               {/* Floating stat — bottom left */}
               <div className="absolute -bottom-5 -left-8 bg-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 border border-slate-100">
-                <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
-                  <TrendingUp size={17} className="text-blue-600" />
+                <div className="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center shrink-0">
+                  <TrendingUp size={17} className="text-[#06241C]" />
                 </div>
                 <div>
                   <p className="text-sm font-black text-slate-800">+1.247</p>
@@ -332,10 +332,10 @@ function HeroSection() {
 // ─────────────────────────────────────────────────────────────
 
 const STATS = [
-  { value: '+12.000', label: 'Serviços concluídos',    icon: <CheckCircle size={20} className="text-blue-600" /> },
+  { value: '+12.000', label: 'Serviços concluídos',    icon: <CheckCircle size={20} className="text-[#06241C]" /> },
   { value: '+850',    label: 'Prestadores verificados', icon: <BadgeCheck size={20} className="text-emerald-600" /> },
   { value: '4.9 ★',  label: 'Avaliação média',         icon: <Star size={20} className="text-amber-500" /> },
-  { value: '18',      label: 'Províncias cobertas',     icon: <MapPin size={20} className="text-indigo-600" /> },
+  { value: '18',      label: 'Províncias cobertas',     icon: <MapPin size={20} className="text-teal-600" /> },
 ];
 
 function StatsBar() {
@@ -386,7 +386,7 @@ function HowItWorks() {
 
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="inline-block text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Como funciona</span>
+          <span className="inline-block text-[11px] font-bold text-[#06241C] bg-green-50 border border-green-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Como funciona</span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             Simples, rápido e seguro
           </h2>
@@ -404,7 +404,7 @@ function HowItWorks() {
                 onClick={() => setTab(t)}
                 className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all cursor-pointer capitalize ${
                   tab === t
-                    ? 'bg-slate-900 text-white shadow-sm'
+                    ? 'bg-[#06241C] text-white shadow-sm'
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -423,7 +423,7 @@ function HowItWorks() {
               )}
               <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all duration-300 shrink-0">
+                  <div className="w-14 h-14 bg-green-50 border border-green-100 rounded-2xl flex items-center justify-center text-[#06241C] group-hover:bg-[#06241C] group-hover:text-white group-hover:border-[#06241C] transition-all duration-300 shrink-0">
                     {s.icon}
                   </div>
                   <span className="text-4xl font-black text-slate-100 leading-none select-none">{s.step}</span>
@@ -444,8 +444,8 @@ function HowItWorks() {
 // ─────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { icon: <HomeIcon size={26} />, label: 'Limpeza',            count: '213 prestadores', color: 'text-emerald-600', bg: 'bg-emerald-50 group-hover:bg-emerald-600' },
-  { icon: <Droplets size={26} />, label: 'Canalização',        count: '148 prestadores', color: 'text-blue-600',    bg: 'bg-blue-50 group-hover:bg-blue-600' },
+  { icon: <HomeIcon size={26} />, label: 'Limpeza',            count: '213 prestadores', color: 'text-emerald-700', bg: 'bg-emerald-50 group-hover:bg-[#06241C]' },
+  { icon: <Droplets size={26} />, label: 'Canalização',        count: '148 prestadores', color: 'text-teal-600',    bg: 'bg-teal-50 group-hover:bg-teal-600' },
   { icon: <Zap size={26} />,      label: 'Eletricidade',       count: '187 prestadores', color: 'text-amber-500',   bg: 'bg-amber-50 group-hover:bg-amber-500' },
   { icon: <Leaf size={26} />,     label: 'Jardinagem',         count: '94 prestadores',  color: 'text-green-600',   bg: 'bg-green-50 group-hover:bg-green-600' },
   { icon: <Hammer size={26} />,   label: 'Obras',              count: '162 prestadores', color: 'text-orange-600',  bg: 'bg-orange-50 group-hover:bg-orange-600' },
@@ -458,7 +458,7 @@ function ServicesGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-block text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Serviços</span>
+          <span className="inline-block text-[11px] font-bold text-[#06241C] bg-green-50 border border-green-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Serviços</span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             O profissional certo para cada necessidade
           </h2>
@@ -472,7 +472,7 @@ function ServicesGrid() {
             <Link
               key={s.label}
               href="/login"
-              className="group relative bg-white border border-slate-200 hover:border-blue-200 rounded-3xl p-6 lg:p-8 flex flex-col items-start gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer overflow-hidden"
+              className="group relative bg-white border border-slate-200 hover:border-green-200 rounded-3xl p-6 lg:p-8 flex flex-col items-start gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer overflow-hidden"
             >
               <div className={`w-14 h-14 rounded-2xl ${s.bg} flex items-center justify-center shrink-0 transition-all duration-300`}>
                 <span className={`${s.color} group-hover:text-white transition-colors duration-300`}>
@@ -483,13 +483,13 @@ function ServicesGrid() {
                 <h3 className="text-[15px] font-bold text-slate-800 group-hover:text-slate-900">{s.label}</h3>
                 <p className="text-xs text-slate-400 mt-0.5 font-medium">{s.count}</p>
               </div>
-              <ArrowRight size={15} className="absolute bottom-6 right-6 text-slate-200 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all duration-300" />
+              <ArrowRight size={15} className="absolute bottom-6 right-6 text-slate-200 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all duration-300" />
             </Link>
           ))}
         </div>
 
         <div className="mt-10 text-center">
-          <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-500 transition-colors group">
+          <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-[#06241C] hover:text-[#0a3529] transition-colors group">
             Ver todos os serviços disponíveis
             <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -504,10 +504,10 @@ function ServicesGrid() {
 // ─────────────────────────────────────────────────────────────
 
 const WHY_US = [
-  { icon: <Shield size={24} />,    title: 'Pagamentos 100% seguros',   desc: 'O valor fica retido na plataforma e só é liberado após confirmação do serviço. Zero risco para o cliente.', color: 'text-blue-600',    bg: 'bg-blue-50' },
+  { icon: <Shield size={24} />,    title: 'Pagamentos 100% seguros',   desc: 'O valor fica retido na plataforma e só é liberado após confirmação do serviço. Zero risco para o cliente.', color: 'text-[#06241C]',    bg: 'bg-green-50' },
   { icon: <BadgeCheck size={24} />,title: 'Prestadores verificados',    desc: 'Todos os prestadores passam por um processo rigoroso de verificação de identidade, habilitações e antecedentes.', color: 'text-emerald-600', bg: 'bg-emerald-50' },
   { icon: <Clock size={24} />,     title: 'Resposta em minutos',        desc: 'Receba propostas de prestadores disponíveis em menos de 30 minutos, 7 dias por semana.', color: 'text-amber-500',   bg: 'bg-amber-50' },
-  { icon: <Headphones size={24} />,title: 'Suporte dedicado',           desc: 'Equipa de suporte disponível para resolver qualquer questão antes, durante e após o serviço.', color: 'text-indigo-600',  bg: 'bg-indigo-50' },
+  { icon: <Headphones size={24} />,title: 'Suporte dedicado',           desc: 'Equipa de suporte disponível para resolver qualquer questão antes, durante e após o serviço.', color: 'text-teal-600',  bg: 'bg-teal-50' },
 ];
 
 function WhyUs() {
@@ -518,14 +518,14 @@ function WhyUs() {
 
           {/* Left */}
           <div>
-            <span className="inline-block text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full uppercase tracking-widest mb-5">Porquê nós?</span>
+            <span className="inline-block text-[11px] font-bold text-[#06241C] bg-green-50 border border-green-100 px-3 py-1 rounded-full uppercase tracking-widest mb-5">Porquê nós?</span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-6">
               A plataforma que coloca a sua tranquilidade em primeiro lugar
             </h2>
             <p className="text-slate-500 text-base leading-relaxed mb-8">
               A Formocosta nasceu com o objetivo de profissionalizar o mercado de serviços em Angola, oferecendo uma experiência segura e transparente para clientes e prestadores.
             </p>
-            <Link href="/login" className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-2xl transition-all active:scale-[0.97] group">
+            <Link href="/login" className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#06241C] hover:bg-[#0a3529] text-white font-bold text-sm rounded-2xl transition-all active:scale-[0.97] group">
               Começar agora
               <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
@@ -567,12 +567,12 @@ function ForProviders() {
     <section
       id="prestadores"
       className="relative py-24 lg:py-32 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E3358 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #06241C 0%, #0c3d2c 100%)' }}
     >
       <div className="absolute inset-0 opacity-[0.04]"
         style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -580,10 +580,10 @@ function ForProviders() {
           {/* Left */}
           <div className="space-y-8">
             <div>
-              <span className="inline-block text-[11px] font-bold text-blue-400 bg-blue-400/10 border border-blue-400/20 px-3 py-1 rounded-full uppercase tracking-widest mb-5">Para prestadores</span>
+              <span className="inline-block text-[11px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-1 rounded-full uppercase tracking-widest mb-5">Para prestadores</span>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
                 Faça crescer o seu negócio{' '}
-                <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #60A5FA, #818CF8)' }}>
+                <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #4ade80, #86efac)' }}>
                   connosco
                 </span>
               </h2>
@@ -595,7 +595,7 @@ function ForProviders() {
             <ul className="space-y-3">
               {PROVIDER_BENEFITS.map(b => (
                 <li key={b.text} className="flex items-center gap-3 text-white/80 text-sm font-medium">
-                  <div className="w-8 h-8 bg-blue-500/20 border border-blue-500/30 rounded-lg flex items-center justify-center text-blue-400 shrink-0">
+                  <div className="w-8 h-8 bg-emerald-500/20 border border-emerald-500/30 rounded-lg flex items-center justify-center text-emerald-400 shrink-0">
                     {b.icon}
                   </div>
                   {b.text}
@@ -603,7 +603,7 @@ function ForProviders() {
               ))}
             </ul>
 
-            <Link href="/login" className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[15px] rounded-2xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.97] group">
+            <Link href="/login" className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-[15px] rounded-2xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.97] group">
               Tornar-me Prestador
               <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
@@ -621,7 +621,7 @@ function ForProviders() {
                 {[
                   { label: 'Serviços completados', value: '42', icon: <CheckCircle size={14} className="text-emerald-400" /> },
                   { label: 'Avaliação média',       value: '4.8 ★', icon: <Star size={14} className="text-amber-400" /> },
-                  { label: 'Taxa de aceitação',     value: '94%',   icon: <TrendingUp size={14} className="text-blue-400" /> },
+                  { label: 'Taxa de aceitação',     value: '94%',   icon: <TrendingUp size={14} className="text-emerald-400" /> },
                 ].map(r => (
                   <div key={r.label} className="flex items-center justify-between bg-white/5 border border-white/[0.08] rounded-xl px-4 py-3">
                     <div className="flex items-center gap-2.5">
@@ -685,7 +685,7 @@ function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-block text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Testemunhos</span>
+          <span className="inline-block text-[11px] font-bold text-[#06241C] bg-green-50 border border-green-100 px-3 py-1 rounded-full uppercase tracking-widest mb-4">Testemunhos</span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             O que dizem os nossos utilizadores
           </h2>
@@ -706,14 +706,14 @@ function Testimonials() {
               </p>
               {/* Author */}
               <div className="flex items-center gap-3 pt-2 border-t border-slate-200">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#06241C] to-emerald-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                   {t.avatar}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-slate-800 truncate">{t.name}</p>
                   <p className="text-[11px] text-slate-400 font-medium">{t.role} · {t.location}</p>
                 </div>
-                <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg shrink-0">
+                <span className="text-[10px] font-semibold text-[#06241C] bg-green-50 border border-green-100 px-2 py-0.5 rounded-lg shrink-0">
                   {t.service}
                 </span>
               </div>
@@ -735,13 +735,13 @@ function CtaBanner() {
       <div className="max-w-5xl mx-auto">
         <div
           className="relative rounded-[2rem] overflow-hidden p-12 lg:p-20 text-center space-y-8"
-          style={{ background: 'linear-gradient(135deg, #1D4ED8 0%, #4F46E5 100%)' }}
+          style={{ background: 'linear-gradient(135deg, #06241C 0%, #0f4a34 100%)' }}
         >
-          <div className="absolute inset-0 opacity-[0.07]"
+          <div className="absolute inset-0 opacity-[0.06]"
             style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '28px 28px' }}
           />
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 space-y-6">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
@@ -753,7 +753,7 @@ function CtaBanner() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-slate-50 text-blue-700 font-bold text-[15px] rounded-2xl transition-all shadow-lg active:scale-[0.97] group"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-slate-50 text-[#06241C] font-bold text-[15px] rounded-2xl transition-all shadow-lg active:scale-[0.97] group"
               >
                 Contratar Serviço
                 <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
@@ -785,7 +785,7 @@ function Footer() {
           {/* Brand col */}
           <div className="col-span-2 lg:col-span-2 space-y-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#06241C] rounded-xl flex items-center justify-center">
                 <span className="text-white font-black text-[15px]">F</span>
               </div>
               <span className="font-bold text-[17px] tracking-tight text-white">Formocosta</span>
@@ -795,16 +795,16 @@ function Footer() {
             </p>
             <div className="flex items-center gap-3">
               {[
-                { icon: <Facebook size={17} />,      href: '#', label: 'Facebook' },
-                { icon: <Linkedin size={17} />,       href: '#', label: 'LinkedIn' },
-                { icon: <Instagram size={17} />,      href: '#', label: 'Instagram' },
+                { icon: <Globe size={17} />,       href: '#', label: 'Facebook' },
+                { icon: <Briefcase size={17} />,      href: '#', label: 'LinkedIn' },
+                { icon: <Camera size={17} />,         href: '#', label: 'Instagram' },
                 { icon: <MessageCircle size={17} />,  href: '#', label: 'WhatsApp' },
               ].map(s => (
                 <a
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="w-9 h-9 bg-white/[0.08] hover:bg-blue-600 border border-white/[0.08] hover:border-blue-600 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200"
+                  className="w-9 h-9 bg-white/[0.08] hover:bg-[#06241C] border border-white/[0.08] hover:border-[#06241C] rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200"
                 >
                   {s.icon}
                 </a>
@@ -842,13 +842,13 @@ function Footer() {
             <ul className="space-y-3">
               <li>
                 <a href="tel:+244923000000" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
-                  <Wrench size={14} className="text-slate-600 group-hover:text-blue-400 transition-colors shrink-0" />
+                  <Wrench size={14} className="text-slate-600 group-hover:text-emerald-400 transition-colors shrink-0" />
                   +244 923 000 000
                 </a>
               </li>
               <li>
                 <a href="mailto:info@formocosta.ao" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
-                  <Zap size={14} className="text-slate-600 group-hover:text-blue-400 transition-colors shrink-0" />
+                  <Zap size={14} className="text-slate-600 group-hover:text-emerald-400 transition-colors shrink-0" />
                   info@formocosta.ao
                 </a>
               </li>

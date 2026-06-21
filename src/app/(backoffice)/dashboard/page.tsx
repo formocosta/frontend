@@ -279,39 +279,31 @@ const DATA_BY_PERIOD: Record<string, {
 function StatCard({ label, value, suffix, icon: Icon, description, isLoading }: StatItem & { isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-xs h-full flex flex-col justify-between animate-pulse min-h-[120px]">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm animate-pulse min-h-[120px] flex flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex flex-col gap-1 w-2/3">
-            <div className="h-3 bg-gray-100 rounded w-3/4 animate-pulse"></div>
-          </div>
-          <div className="w-9 h-9 rounded-lg bg-gray-50 flex-shrink-0"></div>
+          <div className="h-2.5 bg-slate-100 rounded w-3/4"></div>
+          <div className="w-9 h-9 rounded-lg bg-slate-100 shrink-0"></div>
         </div>
-        <div>
-          <div className="mb-2 h-7 bg-gray-100 rounded w-1/2 animate-pulse"></div>
-          <div className="h-3 bg-gray-50 rounded w-2/3 animate-pulse"></div>
-        </div>
+        <div className="h-7 bg-slate-100 rounded w-1/2 mb-1"></div>
+        <div className="h-2.5 bg-slate-50 rounded w-2/3"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-xs transition-all duration-200 hover:border-gray-300 hover:shadow-md h-full flex flex-col justify-between">
+    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between">
       <div className="flex items-start justify-between mb-3">
-        <div className="flex flex-col gap-1">
-          <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</h3>
-        </div>
-        <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0 shadow-xs">
+        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</h3>
+        <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
           <Icon size={18} className="text-emerald-600" strokeWidth={1.5} />
         </div>
       </div>
       <div>
-        <div className="mb-1">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-bold text-gray-900 tracking-tight">{value}</span>
-            {suffix && <span className="text-xs font-semibold text-gray-500">{suffix}</span>}
-          </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-2xl font-bold text-slate-900 tracking-tight">{value}</span>
+          {suffix && <span className="text-xs font-semibold text-slate-500">{suffix}</span>}
         </div>
-        <p className="text-xs text-gray-400 font-medium">{description}</p>
+        <p className="text-xs text-slate-400 font-medium mt-1">{description}</p>
       </div>
     </div>
   );
@@ -398,8 +390,8 @@ function PeriodSelector({
             onClick={() => onChange(period.id)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
               value === period.id
-                ? 'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700'
-                : 'bg-white border border-gray-300 text-gray-700 hover:border-emerald-400'
+                ? 'bg-[#06241C] text-white shadow-sm hover:bg-[#0a3529]'
+                : 'bg-white border border-slate-200 text-slate-600 hover:border-green-300 hover:text-[#06241C]'
             }`}
           >
             {period.label}
@@ -564,7 +556,7 @@ export default function DashboardPage() {
     <div className="space-y-6 max-w-[1400px] mx-auto pb-8 px-4">
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {currentStats.map((stat) => (
           <div key={stat.label}>
             <StatCard {...stat} isLoading={isLoading} />
@@ -576,13 +568,13 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
         {/* Histórico Geral */}
-        <div className="xl:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-xs flex flex-col">
+        <div className="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">Análise Histórica de Candidaturas</h2>
-              <p className="text-xs text-gray-500 mt-0.5">Visão macro por meses</p>
+              <h2 className="text-[15px] font-bold text-slate-900">Análise Histórica de Candidaturas</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Visão macro por meses</p>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
               <TrendingUp size={18} className="text-emerald-600" strokeWidth={1.5} />
             </div>
           </div>
@@ -600,7 +592,7 @@ export default function DashboardPage() {
           </div>
 
           {isLoading ? (
-            <div className="h-[240px] w-full flex items-center justify-center bg-gray-50/50 rounded-xl border border-dashed border-gray-200 animate-pulse">
+            <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
               <div className="flex flex-col items-center gap-2">
                 <Loader className="animate-spin text-emerald-600" size={24} />
                 <span className="text-xs text-gray-500 font-medium">A carregar análise...</span>
@@ -633,14 +625,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Tasks Checklist */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-sm font-semibold text-gray-900">Tarefas Internas</h2>
-                <p className="text-xs text-gray-500 mt-0.5">{TASKS.length} acções necessárias</p>
+                <h2 className="text-[15px] font-bold text-slate-900">Tarefas Internas</h2>
+                <p className="text-xs text-slate-400 mt-0.5">{TASKS.length} acções necessárias</p>
               </div>
-              <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
                 <BarChart3 size={18} className="text-emerald-600" strokeWidth={1.5} />
               </div>
             </div>
@@ -652,7 +644,7 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          <button className="mt-6 w-full text-xs font-medium text-emerald-600 hover:text-emerald-700 border border-emerald-200 hover:border-emerald-300 py-2 rounded-lg transition-colors">
+          <button className="mt-6 w-full text-xs font-semibold text-[#06241C] hover:text-emerald-700 border border-emerald-200 hover:border-emerald-300 hover:bg-green-50 py-2.5 rounded-xl transition-all">
             Ver todas as tarefas
           </button>
         </div>
@@ -662,13 +654,18 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         
         {/* Requisito 1: Gráfico de Barras - Solicitações por Estado */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs">
-          <div className="mb-4">
-            <h2 className="text-sm font-semibold text-gray-900">Solicitações por Estado</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Volume total nos últimos 30 dias</p>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-[15px] font-bold text-slate-900">Solicitações por Estado</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Volume total no período</p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <BarChart3 size={18} className="text-emerald-600" strokeWidth={1.5} />
+            </div>
           </div>
           {isLoading ? (
-            <div className="h-[240px] w-full flex items-center justify-center bg-gray-50/50 rounded-xl border border-dashed border-gray-200 animate-pulse">
+            <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
               <div className="flex flex-col items-center gap-2">
                 <Loader className="animate-spin text-emerald-600" size={24} />
                 <span className="text-xs text-gray-500 font-medium">A carregar solicitações...</span>
@@ -690,13 +687,18 @@ export default function DashboardPage() {
         </div>
 
         {/* Requisito 2: Gráfico de Linha - Receita Diária */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs">
-          <div className="mb-4">
-            <h2 className="text-sm font-semibold text-gray-900">Evolução da Receita Diária</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Faturamento em Kz nos últimos 30 dias</p>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-[15px] font-bold text-slate-900">Evolução da Receita Diária</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Faturamento em Kz no período</p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <TrendingUp size={18} className="text-emerald-600" strokeWidth={1.5} />
+            </div>
           </div>
           {isLoading ? (
-            <div className="h-[240px] w-full flex items-center justify-center bg-gray-50/50 rounded-xl border border-dashed border-gray-200 animate-pulse">
+            <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
               <div className="flex flex-col items-center gap-2">
                 <Loader className="animate-spin text-emerald-600" size={24} />
                 <span className="text-xs text-gray-500 font-medium">A carregar receita...</span>
@@ -728,14 +730,16 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
         {/* Requisito 3: Fila / Lista KYC Recentes */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden flex flex-col justify-between">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between">
           <div>
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-semibold text-gray-900">Candidaturas KYC Recentes</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Últimos registos submetidos na plataforma</p>
+                <h2 className="text-[15px] font-bold text-slate-900">Candidaturas KYC Recentes</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Últimos registos submetidos</p>
               </div>
-              <Clock size={16} className="text-gray-400" />
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <Clock size={16} className="text-emerald-600" strokeWidth={1.5} />
+              </div>
             </div>
             
             {isLoading ? (
@@ -748,25 +752,29 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-slate-50">
                 {currentKyc.map((kyc) => (
-                  <div key={kyc.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-semibold text-gray-800">{kyc.name}</span>
+                  <div key={kyc.id} className="px-6 py-3.5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#06241C] to-emerald-700 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                        {kyc.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-semibold text-slate-800 block truncate">{kyc.name}</span>
+                        <span className="text-[10px] text-slate-400">{kyc.date}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <StatusBadge status={kyc.status as 'aprovado' | 'pendente' | 'rejeitado'} />
-                    </div>
+                    <StatusBadge status={kyc.status as 'aprovado' | 'pendente' | 'rejeitado'} />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="p-4 bg-gray-50 border-t border-gray-100">
-            <a 
-              href="/kyc" 
-              className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+          <div className="p-4 border-t border-slate-100">
+            <a
+              href="/kyc"
+              className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-semibold text-[#06241C] hover:text-emerald-700 hover:bg-green-50 py-2 rounded-xl transition-all"
             >
               Ir para a fila de validação completa
               <ArrowRight size={14} />

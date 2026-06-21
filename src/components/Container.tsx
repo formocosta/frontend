@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-const SIDEBAR_DEFAULT = 210;
-const SIDEBAR_ICONS   = 64;
+const SIDEBAR_DEFAULT = 250;
+const SIDEBAR_ICONS   = 90;
 
 export default function Container({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

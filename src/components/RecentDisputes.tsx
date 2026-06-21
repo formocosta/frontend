@@ -105,88 +105,83 @@ export default function RecentDisputes() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden flex flex-col justify-between w-full transition-all duration-200">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between w-full transition-all duration-200">
       <div>
         {/* Header Block */}
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">Disputas Recentes</h2>
-            <p className="text-xs text-gray-500 mt-0.5">As 5 disputas abertas mais recentes no sistema administrativo</p>
+            <h2 className="text-[15px] font-bold text-slate-900">Disputas Recentes</h2>
+            <p className="text-xs text-slate-400 mt-0.5">As 5 disputas abertas mais recentes</p>
           </div>
-          <Scale size={16} className="text-gray-400" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <Scale size={16} className="text-emerald-600" strokeWidth={1.5} />
+          </div>
         </div>
 
         {/* Content States Rendering */}
         <div className="w-full">
           {isLoading ? (
-            /* Skeleton Loading State */
-            <div className="divide-y divide-gray-100 animate-pulse">
-              <div className="p-4 grid grid-cols-4 gap-4 bg-gray-50/20">
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div className="divide-y divide-slate-50 animate-pulse">
+              <div className="p-4 grid grid-cols-4 gap-4 bg-slate-50/30">
+                {[1,2,3,4].map(i => <div key={i} className="h-3 bg-slate-100 rounded w-1/2"></div>)}
               </div>
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="p-4 grid grid-cols-4 gap-4 items-center">
-                  <div className="h-4 bg-gray-100 rounded w-2/3"></div>
-                  <div className="h-4 bg-gray-100 rounded w-2/3"></div>
-                  <div className="h-4 bg-gray-100 rounded w-3/4"></div>
-                  <div className="w-16 h-5 bg-gray-100 rounded-full"></div>
+                  <div className="h-3 bg-slate-100 rounded w-2/3"></div>
+                  <div className="h-3 bg-slate-100 rounded w-2/3"></div>
+                  <div className="h-3 bg-slate-100 rounded w-3/4"></div>
+                  <div className="w-16 h-5 bg-slate-100 rounded-full"></div>
                 </div>
               ))}
             </div>
           ) : errorMsg ? (
-            /* Error State card */
-            <div className="p-8 flex flex-col items-center justify-center text-center gap-3 animate-in fade-in duration-350">
-              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500">
+            <div className="p-8 flex flex-col items-center justify-center text-center gap-3">
+              <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-500">
                 <AlertTriangle size={24} />
               </div>
               <div className="max-w-md">
-                <h3 className="text-sm font-semibold text-gray-950">Erro ao carregar dados</h3>
-                <p className="text-xs text-gray-500 mt-1">{errorMsg}</p>
+                <h3 className="text-sm font-bold text-slate-900">Erro ao carregar dados</h3>
+                <p className="text-xs text-slate-500 mt-1">{errorMsg}</p>
               </div>
               <button
                 onClick={loadData}
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:border-gray-400 transition-colors shadow-2xs cursor-pointer"
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:border-slate-300 transition-colors cursor-pointer"
               >
-                <RotateCw size={12} className="animate-hover-spin" />
+                <RotateCw size={12} />
                 Tentar Novamente
               </button>
             </div>
           ) : disputes.length === 0 ? (
-            /* Empty State card */
-            <div className="p-8 flex flex-col items-center justify-center text-center gap-3 animate-in fade-in duration-350">
-              <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 border border-gray-100">
+            <div className="p-8 flex flex-col items-center justify-center text-center gap-3">
+              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-100">
                 <Inbox size={22} />
               </div>
               <div className="max-w-md">
-                <h3 className="text-sm font-semibold text-gray-950">Nenhuma disputa aberta</h3>
-                <p className="text-xs text-gray-500 mt-1">De momento, não existem disputas pendentes de resolução no sistema.</p>
+                <h3 className="text-sm font-bold text-slate-900">Nenhuma disputa aberta</h3>
+                <p className="text-xs text-slate-500 mt-1">De momento, não existem disputas pendentes de resolução.</p>
               </div>
             </div>
           ) : (
-            /* Success State - Responsive Table */
-            <div className="overflow-x-auto animate-in fade-in duration-350">
+            <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/30">
-                    <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Cliente</th>
-                    <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Prestador</th>
-                    <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Data de abertura</th>
-                    <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Estado</th>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</th>
+                    <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Prestador</th>
+                    <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:table-cell">Data</th>
+                    <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-50">
                   {disputes.map((dispute) => (
-                    <tr key={dispute.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="p-4 text-xs font-semibold text-gray-800">{dispute.cliente}</td>
-                      <td className="p-4 text-xs font-medium text-gray-700">{dispute.prestador}</td>
-                      <td className="p-4 text-xs text-gray-500 font-medium">
+                    <tr key={dispute.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-6 py-3.5 text-xs font-semibold text-slate-800">{dispute.cliente}</td>
+                      <td className="px-6 py-3.5 text-xs text-slate-600">{dispute.prestador}</td>
+                      <td className="px-6 py-3.5 text-xs text-slate-400 hidden md:table-cell">
                         {formatDate(dispute.dataAbertura)}
                       </td>
-                      <td className="p-4 text-xs">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${badgeColors[dispute.estado]}`}>
+                      <td className="px-6 py-3.5 text-xs">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors ${badgeColors[dispute.estado]}`}>
                           {dispute.estado}
                         </span>
                       </td>
@@ -199,11 +194,11 @@ export default function RecentDisputes() {
         </div>
       </div>
 
-      {/* Footer / Fila completa */}
-      <div className="p-4 bg-gray-50 border-t border-gray-100">
+      {/* Footer */}
+      <div className="p-4 border-t border-slate-100">
         <a
           href="/dashboard/disputas"
-          className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+          className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-semibold text-[#06241C] hover:text-emerald-700 hover:bg-green-50 py-2 rounded-xl transition-all"
         >
           Ir para a moderação de disputas completa
           <ArrowRight size={14} />
