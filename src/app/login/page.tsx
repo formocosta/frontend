@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import icon from '@/assets/images/icon2.png';
+import loginIllustration from '@/assets/images/login_illustration.png';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function LoginPage() {
 
   return (
     <main className="h-screen w-screen bg-[#f0f2f1] flex items-center justify-center p-3 md:p-6 font-sans overflow-hidden">
-      <div className="w-full max-w-4xl bg-white rounded-sm p-2 grid md:grid-cols-2 shadow-2xl border border-gray-100 h-full max-h-[500px] md:max-h-[560px] transition-all duration-300">
+      <div className="w-full max-w-4xl bg-white rounded-3xl p-3 grid md:grid-cols-2 shadow-2xl border border-gray-100/50 h-full max-h-[500px] md:max-h-[580px] transition-all duration-300">
 
         {/* ── LEFT COLUMN (Login Form) ──────────────────────── */}
         <div className="flex flex-col justify-between p-6 md:p-8 h-full overflow-y-auto">
@@ -68,18 +69,9 @@ export default function LoginPage() {
 
               {/* Password Input */}
               <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <label htmlFor="password" className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Palavra-passe
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => router.push('/forgot-password')}
-                    className="text-xs text-[#06241C] font-semibold hover:underline"
-                  >
-                    Esqueceu?
-                  </button>
-                </div>
+                <label htmlFor="password" className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+                  Palavra-passe
+                </label>
                 <div className="relative">
                   <input
                     id="password"
@@ -101,11 +93,29 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              {/* Remember me & Forgot account */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 text-[#2d7a55] focus:ring-[#2d7a55]/20 focus:ring-offset-0 focus:ring-2 w-4 h-4 accent-[#2d7a55]"
+                  />
+                  <span className="text-xs text-gray-500 font-medium">Lembrar-me</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => router.push('/forgot-password')}
+                  className="text-xs text-[#2d7a55] hover:text-[#236143] font-semibold hover:underline transition-colors"
+                >
+                  Esqueci minha conta
+                </button>
+              </div>
+
               {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-3/4 mx-auto py-3 bg-[#06241C] hover:bg-[#0a3529] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-[#06241C]/20 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-2"
+                className="w-full py-3 bg-[#2d7a55] hover:bg-[#236143] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-[#2d7a55]/20 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-2"
               >
                 {loading ? (
                   <>
@@ -113,10 +123,7 @@ export default function LoginPage() {
                     A entrar…
                   </>
                 ) : (
-                  <>
-                    Entrar no Painel
-                    <ArrowRight size={16} />
-                  </>
+                  'Entrar'
                 )}
               </button>
             </form>
@@ -134,62 +141,15 @@ export default function LoginPage() {
         </div>
 
         {/* ── RIGHT COLUMN ────────────────────────────────────── */}
-        <div className="p-2 hidden md:flex h-full">
-          <div className="w-full h-full rounded-sm bg-[#2d7a55] relative overflow-hidden flex flex-col items-center justify-center select-none">
-
-            {/* Decorative dots */}
-            <div className="absolute top-6 right-8 w-2 h-2 rounded-full bg-[#06241C]/20" />
-            <div className="absolute top-14 right-16 w-1.5 h-1.5 rounded-full bg-[#06241C]/15" />
-            <div className="absolute bottom-10 left-8 w-2 h-2 rounded-full bg-[#06241C]/20" />
-
-            {/* Title */}
-            <div className="absolute top-8 left-8 z-10 space-y-1 select-none">
-              <div className="font-serif italic text-[#06241C]/80 text-3xl lg:text-[2.2rem] font-medium leading-none">Gerencie</div>
-              <div className="font-serif italic text-[#06241C]/80 text-3xl lg:text-[2.2rem] font-medium leading-none">o Futuro</div>
-              <div className="font-sans font-light text-[#06241C] text-3xl lg:text-[2.2rem] leading-none pt-1 tracking-tight">dos Serviços,</div>
-              <div className="font-sans font-normal text-[#2d6a4f] text-3xl lg:text-[2.2rem] leading-none tracking-tight">hoje</div>
-            </div>
-
-            {/* Cards centrados */}
-            <div className="relative flex flex-col items-center justify-center gap-3 w-full px-8 mt-auto mb-8">
-
-              {/* Card — bar chart */}
-              <div className="bg-white rounded-2xl shadow-lg p-3 w-52">
-                <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Candidaturas</p>
-                <div className="flex items-end gap-1 h-10">
-                  {[40,65,45,80,55,90,70].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, backgroundColor: i === 5 ? '#06241C' : '#a7d4bb' }} />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-3 w-52">
-                {/* Card — donut */}
-                <div className="bg-white rounded-2xl shadow-lg p-3 flex-1 ">
-                  <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider mb-1">Serviços</p>
-                  <div className="flex items-center justify-center">
-                    <svg viewBox="0 0 40 40" className="w-10 h-10">
-                      <circle cx="20" cy="20" r="15" fill="none" stroke="#e8f5ee" strokeWidth="8"/>
-                      <circle cx="20" cy="20" r="15" fill="none" stroke="#06241C" strokeWidth="8" strokeDasharray="56 38" strokeLinecap="round"/>
-                      <circle cx="20" cy="20" r="15" fill="none" stroke="#4a9e7c" strokeWidth="8" strokeDasharray="22 72" strokeDashoffset="-56" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                  <p className="text-center text-[10px] font-bold text-[#06241C] mt-1">342</p>
-                </div>
-
-                {/* Card — line chart */}
-                <div className="bg-white rounded-2xl shadow-lg p-3 flex-1 ">
-                  <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider mb-1">Receita</p>
-                  <p className="text-xs font-bold text-[#06241C] mb-1">245K Kz</p>
-                  <svg viewBox="0 0 100 30" className="w-full h-6">
-                    <polyline points="0,28 20,20 40,24 60,12 80,8 100,10" fill="none" stroke="#4a9e7c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <polyline points="0,28 20,20 40,24 60,12 80,8 100,10 100,30 0,30" fill="#4a9e7c" opacity="0.12"/>
-                  </svg>
-                </div>
-              </div>
-
-            </div>
-
+        <div className="p-1 hidden md:flex h-full">
+          <div className="w-full h-full rounded-2xl bg-[#2d7a55] relative overflow-hidden flex items-center justify-center select-none">
+            <Image
+              src={loginIllustration}
+              alt="Formocosta Serviços"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
 
