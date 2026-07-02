@@ -6,11 +6,12 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  Loader2,
   ShieldCheck,
 } from 'lucide-react';
 import Image from 'next/image';
 import icon from '@/assets/images/icon2.png';
+import { Input } from '@/components/common/form/Input';
+import { Button } from '@/components/common/form/Button';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,22 +60,15 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5 mt-8">
             {/* Email Input */}
-            <div className="space-y-1.5">
-              <label htmlFor="email" className="text-sm font-semibold text-slate-700">
-                Email
-              </label>
-              <div className="relative">
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="exemplo@formocosta.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-sm border border-slate-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 outline-none text-sm text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50 focus:bg-white"
-                  required
-                />
-              </div>
-            </div>
+            <Input
+              id="email"
+              type="email"
+              label="Email"
+              placeholder="exemplo@formocosta.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
             {/* Password Input */}
             <div className="space-y-1.5">
@@ -85,50 +79,43 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => router.push('/forgot-password')}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                  className="text-sm text-primary-600 hover:text-primary-700 font-semibold transition-colors outline-none focus:underline"
                 >
                   Esqueceu?
                 </button>
               </div>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-sm border border-slate-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 outline-none text-sm text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50 focus:bg-white pr-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                  aria-label={showPassword ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center outline-none focus:text-primary-500"
+                    aria-label={showPassword ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                }
+              />
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 bg-primary-700 hover:bg-primary-800 text-white text-sm font-semibold rounded-sm transition-all duration-300 shadow-lg shadow-primary-700/30 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-6"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  A entrar…
-                </>
-              ) : (
-                <>
-                  Entrar no Painel
-                  <ArrowRight size={18} />
-                </>
-              )}
-            </button>
+            <div className="pt-2">
+              <Button
+                type="submit"
+                isLoading={loading}
+                className="w-full shadow-lg shadow-primary-700/30 active:scale-[0.98]"
+                rightIcon={<ArrowRight size={18} />}
+                size="lg"
+              >
+                {loading ? 'A entrar…' : 'Entrar no Painel'}
+              </Button>
+            </div>
           </form>
         </div>
 
@@ -137,7 +124,7 @@ export default function LoginPage() {
           <span className="text-xs text-slate-500 flex items-center gap-1.5">
             <ShieldCheck size={14} className="text-primary-600" />
             Área restrita e segura. Precisa de ajuda?{' '}
-            <button type="button" className="text-primary-700 font-semibold hover:underline">
+            <button type="button" className="text-primary-700 font-semibold hover:underline outline-none">
               Contactar Suporte
             </button>
           </span>
