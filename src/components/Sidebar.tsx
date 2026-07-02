@@ -3,7 +3,6 @@ import Image from 'next/image';
 import icon from '@/assets/images/icon2.png';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
 import {
   LayoutDashboard,
   FileCheck,
@@ -63,12 +62,8 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ onToggleSidebar }: SidebarProps) {
-  const { user } = useAuth();
   const pathname = usePathname();
 
-  if (!user) return null;
-
-  const visibleMain = MAIN_NAV.filter(item => item.allowedRoles.includes(user.role));
 
   return (
     <aside className="w-[260px] shrink-0 h-screen bg-white border-r border-gray-100 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.01)]">
@@ -91,13 +86,7 @@ export default function Sidebar({ onToggleSidebar }: SidebarProps) {
       {/* Main nav */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5 scrollbar-thin scrollbar-thumb-gray-100 hover:scrollbar-thumb-gray-200">
         <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-3 mb-3">Menu Principal</p>
-        {visibleMain.map(item => (
-          <NavItem
-            key={item.href}
-            {...item}
-            active={pathname === item.href || pathname.startsWith(item.href + '/')}
-          />
-        ))}
+
       </div>
 
     </aside>
