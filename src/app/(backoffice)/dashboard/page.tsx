@@ -8,6 +8,7 @@ import {
   FileText, CheckCircle, Clock, XCircle, ArrowUpRight, ArrowDownRight,
   TrendingUp, ArrowRight, Check, BarChart3, Search,
 } from 'lucide-react';
+import PageHeader from '@/components/PageHeader';
 
 // ── Mock data ──────────────────────────────────────────────
 
@@ -53,18 +54,18 @@ const CHART_DATA = [
 ];
 
 const ACTIVITIES = [
-  { id: 'KYC-001', name: 'Maria Fernanda Silva',  status: 'aprovado',  date: '01 Jun 2026' },
-  { id: 'KYC-002', name: 'João Paulo Mendes',     status: 'pendente',  date: '01 Jun 2026' },
-  { id: 'KYC-003', name: 'Ana Cristina Faria',    status: 'rejeitado', date: '31 Mai 2026' },
-  { id: 'KYC-004', name: 'Carlos Alberto Neto',   status: 'aprovado',  date: '31 Mai 2026' },
-  { id: 'KYC-005', name: 'Beatriz Lopes Costa',   status: 'pendente',  date: '30 Mai 2026' },
-  { id: 'KYC-006', name: 'Rui Manuel Oliveira',   status: 'aprovado',  date: '30 Mai 2026' },
+  { id: 'KYC-001', name: 'Maria Fernanda Silva', status: 'aprovado', date: '01 Jun 2026' },
+  { id: 'KYC-002', name: 'João Paulo Mendes', status: 'pendente', date: '01 Jun 2026' },
+  { id: 'KYC-003', name: 'Ana Cristina Faria', status: 'rejeitado', date: '31 Mai 2026' },
+  { id: 'KYC-004', name: 'Carlos Alberto Neto', status: 'aprovado', date: '31 Mai 2026' },
+  { id: 'KYC-005', name: 'Beatriz Lopes Costa', status: 'pendente', date: '30 Mai 2026' },
+  { id: 'KYC-006', name: 'Rui Manuel Oliveira', status: 'aprovado', date: '30 Mai 2026' },
 ];
 
 const TASKS = [
-  { id: 1, label: 'Revisar documentos KYC',  progress: 65 },
-  { id: 2, label: 'Aprovar utilizadores',     progress: 40 },
-  { id: 3, label: 'Validar parceiros',        progress: 80 },
+  { id: 1, label: 'Revisar documentos KYC', progress: 65 },
+  { id: 2, label: 'Aprovar utilizadores', progress: 40 },
+  { id: 3, label: 'Validar parceiros', progress: 80 },
   { id: 4, label: 'Resolver tickets abertos', progress: 20 },
 ];
 
@@ -86,9 +87,8 @@ function StatCard({ label, value, change, icon: Icon, description }: typeof STAT
         {/* Middle Row: Value and Change Badge */}
         <div className="flex items-baseline gap-2 mt-3">
           <span className="text-2xl font-bold text-gray-900 tracking-tight">{value}</span>
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-            positive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
-          }`}>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${positive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
+            }`}>
             {positive ? '+' : ''}{change}%
           </span>
         </div>
@@ -106,8 +106,8 @@ function StatCard({ label, value, change, icon: Icon, description }: typeof STAT
 }
 
 const STATUS_CONFIG = {
-  aprovado:  { label: 'Aprovado',  classes: 'bg-emerald-50 text-emerald-700 border border-emerald-100' },
-  pendente:  { label: 'Pendente',  classes: 'bg-amber-50 text-amber-700 border border-amber-100' },
+  aprovado: { label: 'Aprovado', classes: 'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+  pendente: { label: 'Pendente', classes: 'bg-amber-50 text-amber-700 border border-amber-100' },
   rejeitado: { label: 'Rejeitado', classes: 'bg-red-50 text-red-600 border border-red-100' },
 } as const;
 
@@ -127,9 +127,8 @@ function TaskItem({ label, progress }: { label: string; progress: number }) {
       <div className="flex items-center gap-3">
         <button
           onClick={() => setDone(v => !v)}
-          className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
-            done ? 'bg-[#42b883] border-[#42b883]' : 'border-gray-200 hover:border-[#42b883]'
-          }`}
+          className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${done ? 'bg-[#42b883] border-[#42b883]' : 'border-gray-200 hover:border-[#42b883]'
+            }`}
         >
           {done && <Check size={11} className="text-white" strokeWidth={3} />}
         </button>
@@ -153,6 +152,10 @@ function TaskItem({ label, progress }: { label: string; progress: number }) {
 export default function DashboardPage() {
   return (
     <div className="space-y-6 max-w-[1400px] mx-auto pb-8">
+      <PageHeader
+        title="Dashboard"
+        description="Visão geral e estatísticas de candidaturas KYC."
+      />
 
       {/* Stats Cards Row */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-5">
@@ -166,7 +169,7 @@ export default function DashboardPage() {
 
         {/* Line/Area Chart Card */}
         <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between">
-          
+
           {/* Chart Header */}
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -178,7 +181,7 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
-            
+
             <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm">
               <TrendingUp size={15} />
             </div>
@@ -218,12 +221,12 @@ export default function DashboardPage() {
               <AreaChart data={CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCandidaturas" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorAprovacoes" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#064e3b" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#064e3b" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#064e3b" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#064e3b" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F9FBFB" />
@@ -242,7 +245,7 @@ export default function DashboardPage() {
 
         {/* Right side: Conversion Rate & Tasks Card */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between min-h-[350px]">
-          
+
           {/* Taxa de aprovação header */}
           <div className="border-b border-gray-50 pb-4 mb-4">
             <div className="flex items-center justify-between">
@@ -276,7 +279,7 @@ export default function DashboardPage() {
                 ))}
               </div>
             </div>
-            
+
             <button className="flex items-center gap-2 mt-6 text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer select-none">
               <span>Gerir todas tarefas</span>
               <ArrowRight size={13} />
@@ -302,7 +305,7 @@ export default function DashboardPage() {
                 Upgrade
               </button>
             </div>
-            
+
             <p className="text-xs text-gray-400 mt-4 leading-relaxed font-medium">
               Melhore a gestão de candidaturas KYC e aceda a ferramentas avançadas de análise de risco e relatórios automáticos.
             </p>
@@ -323,14 +326,14 @@ export default function DashboardPage() {
         {/* Recent Activities Table Card */}
         <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between">
           <div>
-            
+
             {/* Table Header with Search and Refresh */}
             <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between flex-wrap gap-3">
               <div>
                 <h3 className="text-sm font-bold text-gray-900">Atividades Recentes</h3>
                 <p className="text-xs text-gray-400 mt-0.5">Candidaturas KYC submetidas recentemente</p>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 {/* Inline Search */}
                 <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-1.5 w-44 hover:bg-gray-100/50 transition-colors">
@@ -341,7 +344,7 @@ export default function DashboardPage() {
                     className="bg-transparent text-xs text-gray-700 outline-none w-full placeholder:text-gray-400 font-medium"
                   />
                 </div>
-                
+
                 {/* Refresh Action */}
                 <button className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 border border-gray-200 bg-white px-3 py-1.5 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer select-none">
                   <ArrowRight size={13} className="rotate-180 text-gray-400" />
