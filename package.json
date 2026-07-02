@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.18.1",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "otplib": "^13.4.0",
@@ -18,7 +19,8 @@
     "react-dom": "19.2.4",
     "recharts": "^3.8.1",
     "ui-ux-pro-max-cli": "^2.10.0",
-    "uipro-cli": "^2.2.3"
+    "uipro-cli": "^2.2.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
