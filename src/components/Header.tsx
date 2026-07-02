@@ -92,12 +92,12 @@ export default function Header() {
   const { title, subtitle } = getHeaderInfo();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shrink-0 select-none">
+    <header className="h-[72px] bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 select-none">
       
       {/* Title & Subtitle */}
       <div className="flex flex-col">
         <h1 className="text-xl font-extrabold text-gray-900 leading-tight tracking-tight">{title}</h1>
-        <p className="text-xs text-gray-400 font-medium mt-0.5">{subtitle}</p>
+        <p className="text-[13px] text-gray-500 font-medium mt-0.5">{subtitle}</p>
       </div>
 
       {/* Right side utilities */}
@@ -135,9 +135,9 @@ export default function Header() {
         </button>
 
         {/* Export Button */}
-        <button className="flex items-center gap-2 bg-[#06241C] hover:bg-[#0B392E] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm active:scale-[0.98] cursor-pointer">
+        <button className="flex items-center gap-2 bg-[#42b883] hover:bg-[#3aa374] text-white text-[13px] font-bold px-4 py-2 rounded-md transition-all duration-150 shadow-sm active:scale-[0.98] cursor-pointer">
           <span>Exportar</span>
-          <Download size={14} />
+          <Download size={15} />
         </button>
 
       </div>

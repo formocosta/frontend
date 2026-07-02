@@ -73,7 +73,7 @@ const TASKS = [
 function StatCard({ label, value, change, icon: Icon, description }: typeof STATS[0]) {
   const positive = change >= 0;
   return (
-    <div className="bg-white rounded-2xl p-5 flex flex-col justify-between min-h-[145px] shadow-sm border border-gray-100/80 transition-all hover:shadow-md">
+    <div className="bg-white rounded-xl p-5 flex flex-col justify-between min-h-[145px] shadow-sm border border-gray-200 transition-all hover:shadow-md">
       <div>
         {/* Top Row: Label and Icon */}
         <div className="flex items-center justify-between">
@@ -128,7 +128,7 @@ function TaskItem({ label, progress }: { label: string; progress: number }) {
         <button
           onClick={() => setDone(v => !v)}
           className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
-            done ? 'bg-[#06241C] border-[#06241C]' : 'border-gray-200 hover:border-[#06241C]'
+            done ? 'bg-[#42b883] border-[#42b883]' : 'border-gray-200 hover:border-[#42b883]'
           }`}
         >
           {done && <Check size={11} className="text-white" strokeWidth={3} />}
@@ -141,7 +141,7 @@ function TaskItem({ label, progress }: { label: string; progress: number }) {
       <div className="ml-8 h-1.5 bg-gray-50 rounded-full overflow-hidden border border-gray-100">
         <div
           className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${done ? 100 : progress}%`, backgroundColor: done ? '#06241C' : '#10B981' }}
+          style={{ width: `${done ? 100 : progress}%`, backgroundColor: done ? '#42b883' : '#42b883' }}
         />
       </div>
     </div>
@@ -165,7 +165,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         {/* Line/Area Chart Card */}
-        <div className="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80 flex flex-col justify-between">
+        <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between">
           
           {/* Chart Header */}
           <div className="flex items-center justify-between mb-4">
@@ -241,7 +241,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Right side: Conversion Rate & Tasks Card */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80 flex flex-col justify-between min-h-[350px]">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between min-h-[350px]">
           
           {/* Taxa de aprovação header */}
           <div className="border-b border-gray-50 pb-4 mb-4">
@@ -291,14 +291,14 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         {/* Upgrade Card / Premium Promo */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80 flex flex-col justify-between min-h-[300px]">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between min-h-[300px]">
           <div>
             <div className="flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">UPGRADE</span>
                 <h3 className="text-base font-bold text-gray-900 mt-0.5">Plano Premium</h3>
               </div>
-              <button className="bg-[#06241C] hover:bg-[#0B392E] text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all cursor-pointer shadow-sm">
+              <button className="bg-[#42b883] hover:bg-[#3aa374] text-white text-xs font-bold px-3 py-1.5 rounded-md transition-all cursor-pointer shadow-sm">
                 Upgrade
               </button>
             </div>
@@ -321,7 +321,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Activities Table Card */}
-        <div className="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden flex flex-col justify-between">
+        <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between">
           <div>
             
             {/* Table Header with Search and Refresh */}
