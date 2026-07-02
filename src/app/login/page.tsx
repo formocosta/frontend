@@ -7,7 +7,7 @@ import {
   EyeOff,
 } from 'lucide-react';
 import Image from 'next/image';
-import icon from '@/assets/images/icon2.png';
+import icon from '@/assets/images/icon3.png';
 import profissionalImage from '@/assets/images/proficional.png';
 import { Input } from '@/components/common/form/Input';
 import { Button } from '@/components/common/form/Button';
@@ -37,20 +37,33 @@ export default function LoginPage() {
 
   return (
     <main className="h-screen w-full flex items-center justify-center font-sans bg-[#f3f4f6] p-4 sm:p-8 selection:bg-primary-200 selection:text-primary-900">
-      <div className="bg-white rounded-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[1000px] flex flex-col lg:flex-row overflow-hidden min-h-[650px] relative h-full max-h-[800px]">
+      <div className="bg-white rounded-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[1000px] flex flex-col lg:flex-row overflow-hidden min-h-[650px] relative h-full max-h-[800px] p-4">
         
-        <section className="relative hidden lg:flex lg:w-[45%] flex-col pt-12 px-12 pb-0 overflow-hidden bg-[#fafafa]">
+        <section className="relative rounded-md hidden lg:flex lg:w-[45%] flex-col pt-12 px-12 pb-0 overflow-hidden bg-primary-700">
           
+          {/* Decorative SVGs for the background */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 text-primary-600/30">
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="12" />
+            </svg>
+          </div>
+
           {/* Top Content */}
           <div className="relative z-10">
-            <Image src={icon} alt="Logo" className="w-40 h-24 object-contain object-left mb-6" />
-            <p className="text-[14px] text-gray-600 font-medium leading-[1.6] max-w-[90%]"> 
-              Conecte clientes a profissionais qualificados, faça o acompanhamento e simplifique as operações do seu negócio com total controlo.
-            </p>
+            <Image src={icon} alt="Logo" className="w-40 h-24 object-contain object-left mb-8 drop-shadow-md brightness-0 invert" />
+            
+            <div className="relative">
+              <svg className="absolute -top-4 -left-4 w-10 h-10 text-primary-500/40" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+              <p className="relative z-10 text-[15px] text-white/95 font-medium leading-[1.7] max-w-[90%] tracking-wide"> 
+                Conecte clientes a profissionais qualificados, faça o acompanhamento e simplifique as operações do seu negócio com total controlo.
+              </p>
+            </div>
           </div>
 
           {/* Bottom Content / Image */}
-          <div className="relative z-10 flex-1 flex items-end justify-center mt-12 w-full h-full bg-primary">
+          <div className="relative z-10 flex-1 flex items-end justify-center mt-12 w-full h-full bg-primary-800/30 rounded-t-[32px] overflow-hidden backdrop-blur-sm border border-primary-600/30 border-b-0">
             <Image 
               src={profissionalImage} 
               alt="Profissional" 
@@ -65,11 +78,18 @@ export default function LoginPage() {
           <div className="w-full max-w-[340px] mx-auto">
             
             <div className="mb-8">
-              <h1 className="text-[22px] font-bold text-gray-900 tracking-tight mb-2">
-                Registrar ou entrar
-              </h1>
-              <p className="text-[13px] text-gray-500 leading-relaxed">
-                Para facilitar, basta fazer login com o seu e-mail de trabalho ou clicar no botão para continuar!
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-[#42b883]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                </div>
+                <h1 className="text-[22px] font-bold text-gray-900 tracking-tight">
+                  Acesso à Conta
+                </h1>
+              </div>
+              <p className="text-[13px] text-gray-500 leading-relaxed ml-[52px]">
+                Faça login com o seu e-mail de trabalho ou clique numa das opções abaixo.
               </p>
             </div>
 
@@ -159,8 +179,6 @@ export default function LoginPage() {
                 </a>
               </span>
             </div>
-            
-         
             
           </div>
         </section>
