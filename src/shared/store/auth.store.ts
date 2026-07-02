@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '../shared/types/auth.types';
+import { User } from '../types/auth.types';
 
 interface AuthState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
-  
+
   setAuth: (user: User, accessToken: string, refreshToken: string) => void;
   setUser: (user: User) => void;
   logout: () => void;
@@ -42,9 +42,9 @@ export const useAuthStore = create<AuthState>()(
 
       refreshAuth: async () => {
         try {
-          const { AuthService } = await import('../service/auth.service');
+          const { AuthService } = await import('../../service/auth.service');
           const response = await AuthService.refresh();
-          
+
           if (response && response.data && response.data.access_token && response.data.refresh_token) {
             set((state) => ({
               ...state,

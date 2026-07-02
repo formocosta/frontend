@@ -1,6 +1,6 @@
 import axios from 'axios'
 import ENV from "./env.utils"
-import { useAuthStore } from '../../store/auth.store'
+import { useAuthStore } from '../store/auth.store'
 
 const apiClient = axios.create({
     baseURL: ENV.BASE_URL_API,
@@ -35,7 +35,7 @@ apiClient.interceptors.response.use(
             try {
                 const authStore = useAuthStore.getState();
                 await authStore.refreshAuth();
-                
+
                 const newToken = useAuthStore.getState().accessToken;
                 if (newToken && originalRequest.headers) {
                     originalRequest.headers.Authorization = `Bearer ${newToken}`;
