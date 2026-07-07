@@ -77,7 +77,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
         <Header
           onOpenMobileMenu={() => setMobileOpen(true)}
         />
-        <main className="flex-1 overflow-hidden p-4 md:p-6">
+        <main className="flex-1 overflow-hidden p-4">
           {/* key=pathname triggers CSS entrance animation on route change */}
           <div key={pathname} className="animate-page-enter h-full overflow-y-auto">
             {children}

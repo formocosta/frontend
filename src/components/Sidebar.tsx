@@ -136,12 +136,12 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
   }
 
   return (
-    <aside className="w-full h-full bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden select-none m-3" style={{ height: 'calc(100% - 24px)', width: 'calc(100% - 24px)' }}>
+    <aside className="w-full h-full bg-white border-r border-slate-200 flex flex-col overflow-hidden select-none">
 
       {/* ── Logo ──────────────────────────────────────────── */}
       <div
         className={`h-20 shrink-0 flex items-center border-b border-slate-100 transition-all duration-300 ${
-          collapsed ? 'justify-center px-3' : 'px-4'
+          collapsed ? 'justify-center px-3' : 'px-5'
         }`}
       >
         <button
@@ -164,11 +164,11 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
       {/* ── Main nav ─────────────────────────────────────── */}
       <div
         className={`flex-1 overflow-y-auto overflow-x-hidden py-3 space-y-0.5 transition-all duration-300 sidebar-scroll ${
-          collapsed ? 'px-2' : 'px-3'
+          collapsed ? 'px-2' : 'px-4'
         }`}
       >
         {!collapsed && (
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 truncate">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-3 truncate">
             Menu Principal
           </p>
         )}
@@ -186,11 +186,11 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
       {/* ── General nav ──────────────────────────────────── */}
       <div
         className={`py-3 border-t border-slate-100 space-y-0.5 transition-all duration-300 ${
-          collapsed ? 'px-2' : 'px-3'
+          collapsed ? 'px-2' : 'px-4'
         }`}
       >
         {!collapsed && (
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 truncate">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-3 truncate">
             Conta
           </p>
         )}
@@ -207,7 +207,7 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
       {/* ── Profile ──────────────────────────────────────── */}
       <div
         className={`border-t border-slate-100 shrink-0 transition-all duration-300 ${
-          collapsed ? 'p-2' : 'p-3'
+          collapsed ? 'p-2' : 'p-4'
         }`}
       >
         {collapsed ? (
@@ -227,7 +227,7 @@ export default function Sidebar({ collapsed = false, onToggleCollapse }: Sidebar
             </button>
           </div>
         ) : (
-          <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-between">
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-[#06241C] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                 {initials}
