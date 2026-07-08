@@ -520,6 +520,11 @@ function SolicitacoesContent() {
   const urlPage      = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
 
   const [searchInput, setSearchInput] = useState(urlSearch);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftStatus, setDraftStatus] = useState(urlStatus);
+  const [draftCategoria, setDraftCategoria] = useState(urlCategoria);
+  const [draftProvincia, setDraftProvincia] = useState(urlProvincia);
+  const [draftData, setDraftData] = useState(urlData);
   const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -555,6 +560,10 @@ function SolicitacoesContent() {
   }, [loadData]);
 
   useEffect(() => { setSearchInput(urlSearch); }, [urlSearch]);
+  useEffect(() => { setDraftStatus(urlStatus); }, [urlStatus]);
+  useEffect(() => { setDraftCategoria(urlCategoria); }, [urlCategoria]);
+  useEffect(() => { setDraftProvincia(urlProvincia); }, [urlProvincia]);
+  useEffect(() => { setDraftData(urlData); }, [urlData]);
 
   const updateUrl = useCallback(
     (updates: Record<string, string | null>) => {
@@ -578,7 +587,23 @@ function SolicitacoesContent() {
   };
 
   const clearFilters = () => {
+    setDraftStatus('');
+    setDraftCategoria('');
+    setDraftProvincia('');
+    setDraftData('');
     updateUrl({ status: null, categoria: null, provincia: null, data: null, page: '1' });
+    setFiltersOpen(false);
+  };
+
+  const applyFilters = () => {
+    updateUrl({
+      status: draftStatus || null,
+      categoria: draftCategoria || null,
+      provincia: draftProvincia || null,
+      data: draftData || null,
+      page: '1',
+    });
+    setFiltersOpen(false);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -624,7 +649,7 @@ function SolicitacoesContent() {
   const pageStart   = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginated   = filtered.slice(pageStart, pageStart + ITEMS_PER_PAGE);
   const hasFilters  = !!urlSearch || !!urlStatus || !!urlCategoria || !!urlProvincia || !!urlData;
-  const hasSelectFilters = !!urlStatus || !!urlCategoria || !!urlProvincia || !!urlData;
+  const activeFilterCount = [urlStatus, urlCategoria, urlProvincia, urlData].filter(Boolean).length;
 
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
     .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
@@ -649,9 +674,8 @@ function SolicitacoesContent() {
 
       {/* Filters */}
       <div className="shrink-0 bg-white rounded-2xl border border-gray-200 shadow-xs p-5">
-        <div className="flex flex-col gap-3">
-          {/* Search */}
-          <div className="relative">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+          <div className="relative flex-1 min-w-0">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -661,42 +685,89 @@ function SolicitacoesContent() {
               className="w-full pl-9 pr-4 py-2 text-xs text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-all duration-200 placeholder:text-gray-400"
             />
           </div>
-          {/* Select filters */}
-          <div className="flex flex-wrap gap-3">
-            <FilterSelect
-              value={urlStatus}
-              onChange={v => updateUrl({ status: v || null, page: '1' })}
-              options={STATUS_OPTIONS as Array<{ value: string; label: string }>}
-              className="flex-1 min-w-[160px]"
-            />
-            <FilterSelect
-              value={urlCategoria}
-              onChange={v => updateUrl({ categoria: v || null, page: '1' })}
-              options={CATEGORIA_OPTIONS as Array<{ value: string; label: string }>}
-              className="flex-1 min-w-[160px]"
-            />
-            <FilterSelect
-              value={urlProvincia}
-              onChange={v => updateUrl({ provincia: v || null, page: '1' })}
-              options={PROVINCIA_OPTIONS as Array<{ value: string; label: string }>}
-              className="flex-1 min-w-[160px]"
-            />
-            <div className="flex-1 min-w-[160px]">
-              <input
-                type="date"
-                value={urlData}
-                onChange={e => updateUrl({ data: e.target.value || null, page: '1' })}
-                className="w-full px-3 py-2 text-xs text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-all [color-scheme:light]"
-              />
-            </div>
-            {hasSelectFilters && (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-500 hover:text-gray-800 border border-gray-200 hover:border-gray-400 rounded-xl transition-colors cursor-pointer whitespace-nowrap"
-              >
-                <X size={11} />
-                Limpar
-              </button>
+
+          <div className="relative shrink-0 lg:w-auto">
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(v => !v)}
+              className={`inline-flex items-center justify-between gap-2 px-4 py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer whitespace-nowrap ${
+                filtersOpen || activeFilterCount > 0
+                  ? 'border-emerald-300 bg-emerald-50 text-[#06241C]'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <span>Filtros</span>
+              <span className="inline-flex items-center gap-1">
+                {activeFilterCount > 0 && (
+                  <span className="min-w-5 h-5 px-1 inline-flex items-center justify-center rounded-full bg-[#06241C] text-white text-[10px] font-bold">
+                    {activeFilterCount}
+                  </span>
+                )}
+                <ChevronDown size={12} className={`transition-transform ${filtersOpen ? 'rotate-180' : ''}`} />
+              </span>
+            </button>
+
+            {filtersOpen && (
+              <div className="absolute right-0 top-full mt-2 z-20 w-[min(92vw,28rem)] rounded-2xl border border-gray-200 bg-white shadow-xl p-4">
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
+                    <p className="text-xs text-gray-500">Organiza a lista sem ocupar espaço na vista principal.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Estado</label>
+                      <FilterSelect
+                        value={draftStatus}
+                        onChange={v => setDraftStatus(v as StatusSolicitacao | '')}
+                        options={STATUS_OPTIONS as Array<{ value: string; label: string }>}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Categoria</label>
+                      <FilterSelect
+                        value={draftCategoria}
+                        onChange={v => setDraftCategoria(v as Categoria | '')}
+                        options={CATEGORIA_OPTIONS as Array<{ value: string; label: string }>}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Província</label>
+                      <FilterSelect
+                        value={draftProvincia}
+                        onChange={v => setDraftProvincia(v as Provincia | '')}
+                        options={PROVINCIA_OPTIONS as Array<{ value: string; label: string }>}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Data</label>
+                      <input
+                        type="date"
+                        value={draftData}
+                        onChange={e => setDraftData(e.target.value)}
+                        className="w-full px-3 py-2 text-xs text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-all [color-scheme:light]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    <button
+                      onClick={clearFilters}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 hover:text-gray-900 transition-colors cursor-pointer"
+                    >
+                      <X size={11} />
+                      Limpar
+                    </button>
+                    <button
+                      onClick={applyFilters}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#06241C] rounded-xl hover:bg-[#0B392E] transition-colors cursor-pointer"
+                    >
+                      Aplicar
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>

@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   Users, AlertCircle, Loader, CheckCircle2, DollarSign, TrendingDown, Send,
-  TrendingUp, BarChart3, Calendar, Check, ArrowRight, Clock
+  TrendingUp, BarChart3, Calendar, Check, ArrowRight, Clock, ChevronDown
 } from 'lucide-react';
 import RecentDisputes from '@/components/RecentDisputes';
 // ── Types ──────────────────────────────────────────────────
@@ -352,6 +352,8 @@ function TaskItem({ label, progress }: { label: string; progress: number }) {
   );
 }
 
+const PRIMARY_STATS_COUNT = 4;
+
 type PeriodType = 'today' | '7days' | '30days' | '90days' | 'custom';
 
 interface PeriodSelectorProps {
@@ -373,61 +375,58 @@ function PeriodSelector({
   onEndDateChange = () => {},
   dateError = '',
 }: PeriodSelectorProps) {
-  const periods = [
-    { id: 'today' as const, label: 'Hoje' },
-    { id: '7days' as const, label: '7 dias' },
-    { id: '30days' as const, label: '30 dias' },
-    { id: '90days' as const, label: '90 dias' },
-    { id: 'custom' as const, label: 'Personalizado' },
-  ];
-
   return (
-    <div className="space-y-4 w-full">
-      <div className="flex flex-wrap items-center gap-2">
-        {periods.map(period => (
-          <button
-            key={period.id}
-            onClick={() => onChange(period.id)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-              value === period.id
-                ? 'bg-[#06241C] text-white shadow-sm hover:bg-[#0a3529]'
-                : 'bg-white border border-slate-200 text-slate-600 hover:border-green-300 hover:text-[#06241C]'
-            }`}
+    <div className="space-y-3 w-full">
+      <div>
+        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Período</label>
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <Calendar size={14} />
+          </div>
+          <select
+            value={value}
+            onChange={(e) => onChange(e.target.value as PeriodType)}
+            className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-9 py-2.5 text-xs font-semibold text-slate-700 outline-none transition-all hover:border-slate-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 [color-scheme:light]"
           >
-            {period.label}
-          </button>
-        ))}
+            <option value="today">Hoje</option>
+            <option value="7days">Últimos 7 dias</option>
+            <option value="30days">Últimos 30 dias</option>
+            <option value="90days">Últimos 90 dias</option>
+            <option value="custom">Intervalo personalizado</option>
+          </select>
+          <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        </div>
       </div>
 
       {value === 'custom' && (
-        <div className="flex flex-col gap-3 border-t border-gray-200 pt-3 animate-in fade-in duration-200">
-          <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 animate-in fade-in duration-200 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Início</label>
-              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-1.5">
-                <Calendar size={14} className="text-gray-400" />
+              <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Início</label>
+              <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+                <Calendar size={14} className="text-slate-400" />
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => onStartDateChange(e.target.value)}
-                  className="bg-transparent text-xs text-gray-800 outline-none w-full [color-scheme:light]"
+                  className="bg-transparent text-xs text-slate-800 outline-none w-full [color-scheme:light]"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Fim</label>
-              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-1.5">
-                <Calendar size={14} className="text-gray-400" />
+              <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Fim</label>
+              <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+                <Calendar size={14} className="text-slate-400" />
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => onEndDateChange(e.target.value)}
-                  className="bg-transparent text-xs text-gray-800 outline-none w-full [color-scheme:light]"
+                  className="bg-transparent text-xs text-slate-800 outline-none w-full [color-scheme:light]"
                 />
               </div>
             </div>
           </div>
-          {dateError && <p className="text-[11px] text-red-600 font-medium">⚠ {dateError}</p>}
+          {dateError && <p className="text-[11px] text-red-600 font-medium">{dateError}</p>}
         </div>
       )}
     </div>
@@ -459,6 +458,7 @@ export default function DashboardPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [dateError, setDateError] = useState('');
+  const [activeInsightTab, setActiveInsightTab] = useState<'requests' | 'revenue'>('requests');
 
   // Period datasets states
   const [currentStats, setCurrentStats] = useState<StatItem[]>(DATA_BY_PERIOD['30days'].stats);
@@ -467,6 +467,9 @@ export default function DashboardPage() {
   const [currentRevenueData, setCurrentRevenueData] = useState<DailyRevenueItem[]>(DATA_BY_PERIOD['30days'].dailyRevenue);
   const [currentKyc, setCurrentKyc] = useState<RecentKycItem[]>(DATA_BY_PERIOD['30days'].recentKyc);
   const [isLoading, setIsLoading] = useState(false);
+
+  const visibleStats = currentStats.slice(0, PRIMARY_STATS_COUNT);
+  const secondaryStats = currentStats.slice(PRIMARY_STATS_COUNT);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -553,33 +556,66 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-[1400px] mx-auto pb-8 px-4">
+    <div className="space-y-8 max-w-[1400px] mx-auto pb-10 px-4">
 
-      {/* Stats Cards Row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-        {currentStats.map((stat) => (
-          <div key={stat.label}>
-            <StatCard {...stat} isLoading={isLoading} />
+      <section className="space-y-4">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-600">Visão geral</p>
+            <h1 className="text-2xl md:text-[28px] font-semibold tracking-tight text-slate-900">Dashboard</h1>
+            <p className="text-sm text-slate-500 max-w-2xl">
+              Métricas essenciais em primeiro plano e detalhes operacionais recolhidos para reduzir distrações.
+            </p>
           </div>
-        ))}
-      </div>
+          <div className="text-[11px] font-medium text-slate-400 md:text-right">
+            Actualizado automaticamente a cada 5 minutos
+          </div>
+        </div>
 
-      {/* Main Analysis Section (Original Area Chart & Tasks) */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
-        {/* Histórico Geral */}
-        <div className="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-[15px] font-bold text-slate-900">Análise Histórica de Candidaturas</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Visão macro por meses</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          {visibleStats.map((stat) => (
+            <div key={stat.label}>
+              <StatCard {...stat} isLoading={isLoading} />
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+          ))}
+        </div>
+
+        {secondaryStats.length > 0 && (
+          <details className="group rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-slate-900">Mais indicadores</p>
+                <p className="text-xs text-slate-500 mt-0.5">{secondaryStats.length} métricas secundárias recolhidas por defeito</p>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 group-open:text-slate-900">
+                Ver detalhes
+                <ChevronDown size={14} className="transition-transform group-open:rotate-180" />
+              </div>
+            </summary>
+            <div className="px-5 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {secondaryStats.map((stat) => (
+                  <StatCard key={stat.label} {...stat} isLoading={isLoading} />
+                ))}
+              </div>
+            </div>
+          </details>
+        )}
+      </section>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-6">
+            <div className="space-y-1">
+              <h2 className="text-[15px] font-bold text-slate-900">Análise Histórica de Candidaturas</h2>
+              <p className="text-xs text-slate-400">Visão macro por meses, com apenas um filtro exposto de cada vez.</p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
               <TrendingUp size={18} className="text-emerald-600" strokeWidth={1.5} />
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+          <div className="mb-4 pb-4 border-b border-slate-100">
             <PeriodSelector
               value={period}
               onChange={handlePeriodChange}
@@ -595,7 +631,7 @@ export default function DashboardPage() {
             <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
               <div className="flex flex-col items-center gap-2">
                 <Loader className="animate-spin text-emerald-600" size={24} />
-                <span className="text-xs text-gray-500 font-medium">A carregar análise...</span>
+                <span className="text-xs text-slate-500 font-medium">A carregar análise...</span>
               </div>
             </div>
           ) : (
@@ -624,7 +660,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Tasks Checklist */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -650,81 +685,109 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── NOVOS GRÁFICOS (Últimos 30 dias) ─────────────────── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        
-        {/* Requisito 1: Gráfico de Barras - Solicitações por Estado */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-[15px] font-bold text-slate-900">Solicitações por Estado</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Volume total no período</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <BarChart3 size={18} className="text-emerald-600" strokeWidth={1.5} />
-            </div>
+      <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-5">
+          <div className="space-y-1">
+            <h2 className="text-[15px] font-bold text-slate-900">Análises Secundárias</h2>
+            <p className="text-xs text-slate-400">Seleciona o foco que queres ver sem abrir mais blocos na página.</p>
           </div>
-          {isLoading ? (
-            <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
-              <div className="flex flex-col items-center gap-2">
-                <Loader className="animate-spin text-emerald-600" size={24} />
-                <span className="text-xs text-gray-500 font-medium">A carregar solicitações...</span>
-              </div>
-            </div>
-          ) : (
-            <div className="h-[240px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={currentRequestsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                  <XAxis dataKey="estado" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
-                  <Tooltip cursor={{ fill: '#F9FAFB' }} contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }} />
-                  <Bar dataKey="quantidade" fill="#10B981" radius={[4, 4, 0, 0]} barSize={40} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 self-start">
+            <button
+              onClick={() => setActiveInsightTab('requests')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                activeInsightTab === 'requests'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              Solicitações
+            </button>
+            <button
+              onClick={() => setActiveInsightTab('revenue')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                activeInsightTab === 'revenue'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              Receita
+            </button>
+          </div>
         </div>
 
-        {/* Requisito 2: Gráfico de Linha - Receita Diária */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-[15px] font-bold text-slate-900">Evolução da Receita Diária</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Faturamento em Kz no período</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <TrendingUp size={18} className="text-emerald-600" strokeWidth={1.5} />
-            </div>
-          </div>
-          {isLoading ? (
-            <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
-              <div className="flex flex-col items-center gap-2">
-                <Loader className="animate-spin text-emerald-600" size={24} />
-                <span className="text-xs text-gray-500 font-medium">A carregar receita...</span>
+        {activeInsightTab === 'requests' ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">Solicitações por Estado</p>
+                <p className="text-xs text-slate-400 mt-0.5">Volume total no período</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <BarChart3 size={18} className="text-emerald-600" strokeWidth={1.5} />
               </div>
             </div>
-          ) : (
-            <div className="h-[240px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={currentRevenueData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                  <XAxis dataKey="dia" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
-                  <YAxis 
-                    tick={{ fontSize: 11, fill: '#6B7280' }} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tickFormatter={(val) => `${(val / 1000).toLocaleString('pt-PT')}k`}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line type="monotone" dataKey="receita" name="Receita (Kz)" stroke="#064e3b" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </div>
 
-      </div>
+            {isLoading ? (
+              <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader className="animate-spin text-emerald-600" size={24} />
+                  <span className="text-xs text-slate-500 font-medium">A carregar solicitações...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="h-[240px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={currentRequestsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                    <XAxis dataKey="estado" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
+                    <Tooltip cursor={{ fill: '#F9FAFB' }} contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }} />
+                    <Bar dataKey="quantidade" fill="#10B981" radius={[4, 4, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">Evolução da Receita Diária</p>
+                <p className="text-xs text-slate-400 mt-0.5">Faturamento em Kz no período</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <TrendingUp size={18} className="text-emerald-600" strokeWidth={1.5} />
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="h-[240px] w-full flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 animate-pulse">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader className="animate-spin text-emerald-600" size={24} />
+                  <span className="text-xs text-slate-500 font-medium">A carregar receita...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="h-[240px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={currentRevenueData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                    <XAxis dataKey="dia" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#6B7280' }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tickFormatter={(val) => `${(val / 1000).toLocaleString('pt-PT')}k`}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Line type="monotone" dataKey="receita" name="Receita (Kz)" stroke="#064e3b" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
       {/* ── NOVAS LISTAS (Tabelas de Operações) ─────────────── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

@@ -443,6 +443,11 @@ function PagamentosContent() {
   const [success,     setSuccess]     = useState<string | null>(null);
   const [modalConfirm, setModalConfirm] = useState<Pagamento | null>(null);
   const [modalComprov, setModalComprov] = useState<Pagamento | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftStatus, setDraftStatus] = useState(urlStatus);
+  const [draftMetodo, setDraftMetodo] = useState(urlMetodo);
+  const [draftDataIni, setDraftDataIni] = useState(urlDataIni);
+  const [draftDataFim, setDraftDataFim] = useState(urlDataFim);
 
   const loadRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
   const successRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -488,6 +493,33 @@ function PagamentosContent() {
     searchInput.current = v;
     if (searchRef.current) clearTimeout(searchRef.current);
     searchRef.current = setTimeout(() => pushUrl({ q: v }), 300);
+  };
+
+  const openFilters = () => {
+    setDraftStatus(urlStatus);
+    setDraftMetodo(urlMetodo);
+    setDraftDataIni(urlDataIni);
+    setDraftDataFim(urlDataFim);
+    setFiltersOpen(v => !v);
+  };
+
+  const applyFilters = () => {
+    pushUrl({
+      status: draftStatus,
+      metodo: draftMetodo,
+      dataIni: draftDataIni,
+      dataFim: draftDataFim,
+    });
+    setFiltersOpen(false);
+  };
+
+  const clearFilters = () => {
+    setDraftStatus('');
+    setDraftMetodo('');
+    setDraftDataIni('');
+    setDraftDataFim('');
+    router.push(urlSearch ? `?q=${encodeURIComponent(urlSearch)}` : '?');
+    setFiltersOpen(false);
   };
 
   // ── Confirm payment ───────────────────────────────────────
@@ -590,74 +622,110 @@ function PagamentosContent() {
         </div>
 
         {/* Filters */}
-        <div className="shrink-0 bg-white rounded-2xl border border-gray-200 shadow-xs p-4">
-          <div className="flex flex-wrap gap-3 items-center">
-            {/* Search */}
-            <div className="relative flex-1 min-w-[180px]">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              <input
-                type="text"
-                defaultValue={urlSearch}
-                onChange={e => handleSearch(e.target.value)}
-                placeholder="ID, cliente, referência..."
-                className="w-full pl-8 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors placeholder:text-gray-400"
-              />
-              {urlSearch && (
-                <button onClick={() => pushUrl({ q: '' })} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
-                  <X size={11} />
+          <div className="shrink-0 bg-white rounded-2xl border border-gray-200 shadow-xs p-4">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-3">
+              <div className="relative flex-1 min-w-[180px]">
+                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <input
+                  type="text"
+                  defaultValue={urlSearch}
+                  onChange={e => handleSearch(e.target.value)}
+                  placeholder="ID, cliente, referência..."
+                  className="w-full pl-8 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors placeholder:text-gray-400"
+                />
+                {urlSearch && (
+                  <button onClick={() => pushUrl({ q: '' })} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
+                    <X size={11} />
+                  </button>
+                )}
+              </div>
+
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={openFilters}
+                  className={`inline-flex items-center justify-between gap-2 px-4 py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer whitespace-nowrap ${
+                    filtersOpen || hasFilters
+                      ? 'border-emerald-300 bg-emerald-50 text-[#06241C]'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <span>Filtros</span>
+                  <ChevronDown size={12} className={`transition-transform ${filtersOpen ? 'rotate-180' : ''}`} />
                 </button>
-              )}
+
+                {filtersOpen && (
+                  <div className="absolute right-0 top-full mt-2 z-20 w-[min(92vw,32rem)] rounded-2xl border border-gray-200 bg-white shadow-xl p-4">
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
+                        <p className="text-xs text-gray-500">Mostra apenas o que precisas e mantém a tabela limpa.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                          <Select
+                            value={draftStatus}
+                            onChange={setDraftStatus}
+                            options={STATUS_OPTIONS}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Método</label>
+                          <Select
+                            value={draftMetodo}
+                            onChange={setDraftMetodo}
+                            options={METODO_OPTIONS}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Data inicial</label>
+                          <div className="relative">
+                            <Calendar size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            <input
+                              type="date"
+                              value={draftDataIni}
+                              onChange={e => setDraftDataIni(e.target.value)}
+                              className="w-full pl-8 pr-3 py-2 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light]"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Data final</label>
+                          <div className="relative">
+                            <Calendar size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            <input
+                              type="date"
+                              value={draftDataFim}
+                              onChange={e => setDraftDataFim(e.target.value)}
+                              className="w-full pl-8 pr-3 py-2 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2 pt-1">
+                        <button
+                          onClick={clearFilters}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 hover:text-gray-900 transition-colors cursor-pointer"
+                        >
+                          <X size={11} />
+                          Limpar
+                        </button>
+                        <button
+                          onClick={applyFilters}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#06241C] rounded-xl hover:bg-[#0B392E] transition-colors cursor-pointer"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-
-            {/* Status */}
-            <Select
-              value={urlStatus}
-              onChange={v => pushUrl({ status: v })}
-              options={STATUS_OPTIONS}
-              className="w-44"
-            />
-
-            {/* Método */}
-            <Select
-              value={urlMetodo}
-              onChange={v => pushUrl({ metodo: v })}
-              options={METODO_OPTIONS}
-              className="w-44"
-            />
-
-            {/* Data inicial */}
-            <div className="relative">
-              <Calendar size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              <input
-                type="date"
-                value={urlDataIni}
-                onChange={e => pushUrl({ dataIni: e.target.value })}
-                className="pl-8 pr-3 py-2 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light]"
-              />
-            </div>
-
-            {/* Data final */}
-            <div className="relative">
-              <Calendar size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              <input
-                type="date"
-                value={urlDataFim}
-                onChange={e => pushUrl({ dataFim: e.target.value })}
-                className="pl-8 pr-3 py-2 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light]"
-              />
-            </div>
-
-            {/* Clear */}
-            {hasFilters && (
-              <button
-                onClick={() => router.push('?')}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
-              >
-                <X size={11} /> Limpar
-              </button>
-            )}
           </div>
-        </div>
 
         {/* Table card */}
         <div className="flex-1 min-h-0 bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden flex flex-col">
@@ -671,21 +739,8 @@ function PagamentosContent() {
                 {hasFilters && ' (filtrado)'}
               </p>
             </div>
-            <div className="flex items-center gap-2 flex-wrap justify-end">
-              {(['pendente', 'processando', 'confirmado', 'falhado'] as StatusPagamento[]).map(s => {
-                const count = pagamentos.filter(p => p.status === s).length;
-                const cfg   = STATUS_CFG[s];
-                return (
-                  <button
-                    key={s}
-                    onClick={() => pushUrl({ status: urlStatus === s ? '' : s })}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${urlStatus === s ? cfg.classes + ' ring-2 ring-offset-1 ring-gray-300' : cfg.classes}`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                    {cfg.label} ({count})
-                  </button>
-                );
-              })}
+            <div className="hidden md:flex items-center gap-2 text-[10px] text-gray-400 font-medium">
+              {hasFilters ? 'Filtros activos' : 'Pesquisa sempre visível; filtros avançados recolhidos'}
             </div>
           </div>
 

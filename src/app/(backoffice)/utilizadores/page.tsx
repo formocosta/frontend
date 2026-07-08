@@ -692,6 +692,9 @@ function UtilizadoresContent() {
   const [search, setSearch]   = useState('');
   const [filterPapel, setFilterPapel]   = useState<Papel | ''>('');
   const [filterStatus, setFilterStatus] = useState<StatusUser | ''>('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftPapel, setDraftPapel] = useState<Papel | ''>('');
+  const [draftStatus, setDraftStatus] = useState<StatusUser | ''>('');
   const [modal, setModal]   = useState<ModalState | null>(null);
   const [toast, setToast]   = useState<{ msg: string; variant: 'ok' | 'warn'; key: number } | null>(null);
   const [menuState, setMenuState] = useState<{ id: string; x: number; y: number } | null>(null);
@@ -716,6 +719,13 @@ function UtilizadoresContent() {
     window.addEventListener('click', close, { once: true });
     return () => window.removeEventListener('click', close);
   }, [menuState]);
+
+  useEffect(() => {
+    if (!filtersOpen) {
+      setDraftPapel(filterPapel);
+      setDraftStatus(filterStatus);
+    }
+  }, [filterPapel, filterStatus, filtersOpen]);
 
   // ── Access control ─────────────────────────────────────────
   if (!authUser || authUser.role !== 'admin') {
@@ -786,8 +796,22 @@ function UtilizadoresContent() {
 
   const menuUser = menuState ? users.find(u => u.id === menuState.id) ?? null : null;
   const hasFilters = !!(search || filterPapel || filterStatus);
+  const activeFilterCount = [filterPapel, filterStatus].filter(Boolean).length;
 
-  const clearFilters = () => { setSearch(''); setFilterPapel(''); setFilterStatus(''); };
+  const clearFilters = () => {
+    setSearch('');
+    setFilterPapel('');
+    setFilterStatus('');
+    setDraftPapel('');
+    setDraftStatus('');
+    setFiltersOpen(false);
+  };
+
+  const applyFilters = () => {
+    setFilterPapel(draftPapel);
+    setFilterStatus(draftStatus);
+    setFiltersOpen(false);
+  };
 
   // ── Render ─────────────────────────────────────────────────
   return (
@@ -846,66 +870,123 @@ function UtilizadoresContent() {
       </div>
 
       {/* Filters + New button */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-4 flex flex-col gap-3">
+        <div className="flex flex-col lg:flex-row lg:items-start gap-3">
+          <div className="relative flex-1 w-full min-w-0">
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Pesquisar por nome ou email..."
+              className="w-full pl-8 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors placeholder:text-gray-400"
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
+                <X size={11} />
+              </button>
+            )}
+          </div>
 
-        {/* Search */}
-        <div className="relative flex-1 w-full sm:w-auto min-w-0">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Pesquisar por nome ou email..."
-            className="w-full pl-8 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-emerald-400 focus:bg-white transition-colors placeholder:text-gray-400"
-          />
-          {search && (
-            <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
-              <X size={11} />
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(v => !v)}
+                className={`inline-flex items-center justify-between gap-2 px-4 py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer whitespace-nowrap ${
+                  filtersOpen || activeFilterCount > 0
+                    ? 'border-emerald-300 bg-emerald-50 text-[#06241C]'
+                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <span>Filtros</span>
+                <span className="inline-flex items-center gap-1">
+                  {activeFilterCount > 0 && (
+                    <span className="min-w-5 h-5 px-1 inline-flex items-center justify-center rounded-full bg-[#06241C] text-white text-[10px] font-bold">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                  <ChevronDown size={11} className={`transition-transform ${filtersOpen ? 'rotate-180' : ''}`} />
+                </span>
+              </button>
+
+              {filtersOpen && (
+                <div className="absolute right-0 top-full mt-2 z-20 w-[min(92vw,24rem)] rounded-2xl border border-gray-200 bg-white shadow-xl p-4">
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
+                      <p className="text-xs text-gray-500">Mantém a vista limpa e abre opções secundárias só quando necessário.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Papel</label>
+                        <div className="relative">
+                          <select
+                            value={draftPapel}
+                            onChange={e => setDraftPapel(e.target.value as Papel | '')}
+                            className="w-full appearance-none text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 pr-7 outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light] text-gray-700"
+                          >
+                            <option value="">Todos os papéis</option>
+                            <option value="admin">Admin</option>
+                            <option value="operador">Operador</option>
+                            <option value="operador_financeiro">Op. Financeiro</option>
+                            <option value="suporte">Suporte</option>
+                          </select>
+                          <ChevronDown size={11} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                        <div className="relative">
+                          <select
+                            value={draftStatus}
+                            onChange={e => setDraftStatus(e.target.value as StatusUser | '')}
+                            className="w-full appearance-none text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 pr-7 outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light] text-gray-700"
+                          >
+                            <option value="">Todos os status</option>
+                            <option value="ativo">Activo</option>
+                            <option value="suspenso">Suspenso</option>
+                            <option value="encerrado">Encerrado</option>
+                          </select>
+                          <ChevronDown size={11} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-1">
+                      <button
+                        onClick={clearFilters}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 hover:text-gray-900 transition-colors cursor-pointer"
+                      >
+                        <X size={11} />
+                        Limpar
+                      </button>
+                      <button
+                        onClick={applyFilters}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#06241C] rounded-xl hover:bg-[#0B392E] transition-colors cursor-pointer"
+                      >
+                        Aplicar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => setModal({ type: 'novo' })}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#06241C] hover:bg-[#0B392E] rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer whitespace-nowrap shrink-0"
+            >
+              <Plus size={13} /> Novo Utilizador
             </button>
-          )}
-        </div>
-
-        {/* Role filter */}
-        <div className="relative shrink-0">
-          <select
-            value={filterPapel}
-            onChange={e => setFilterPapel(e.target.value as Papel | '')}
-            className="appearance-none text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 pr-7 outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light] text-gray-700"
-          >
-            <option value="">Todos os papéis</option>
-            <option value="admin">Admin</option>
-            <option value="operador">Operador</option>
-            <option value="operador_financeiro">Op. Financeiro</option>
-            <option value="suporte">Suporte</option>
-          </select>
-          <ChevronDown size={11} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-        </div>
-
-        {/* Status filter */}
-        <div className="relative shrink-0">
-          <select
-            value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value as StatusUser | '')}
-            className="appearance-none text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 pr-7 outline-none focus:border-emerald-400 focus:bg-white transition-colors cursor-pointer [color-scheme:light] text-gray-700"
-          >
-            <option value="">Todos os status</option>
-            <option value="ativo">Activo</option>
-            <option value="suspenso">Suspenso</option>
-            <option value="encerrado">Encerrado</option>
-          </select>
-          <ChevronDown size={11} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
         <span className="text-[10px] text-gray-400 font-medium hidden lg:block whitespace-nowrap shrink-0">
           {filtered.length} de {totalUsers}
         </span>
-
-        <button
-          onClick={() => setModal({ type: 'novo' })}
-          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#06241C] hover:bg-[#0B392E] rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer whitespace-nowrap shrink-0"
-        >
-          <Plus size={13} /> Novo Utilizador
-        </button>
       </div>
 
       {/* Table / Cards */}
