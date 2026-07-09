@@ -68,6 +68,6 @@ export interface ConfirmarPagamentoRequest {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  links?: any;
-  meta?: any;
+  links?: Record<string, unknown> | null;
+  meta?: Record<string, unknown> | null;
 }

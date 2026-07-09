@@ -5,6 +5,7 @@ import { ClipboardList, Search } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { SolicitacaoCard } from '@/components/solicitacoes/SolicitacaoCard';
 import { useSolicitacoes } from '@/hooks/solicitacoes/solicitacoes.hooks';
+import { ListSolicitacoesParams } from '@/shared/types/backoffice/requests.types';
 import { Input } from '@/components/common/form/Input';
 import { Select, SelectOption } from '@/components/common/form/Select';
 import { Button } from '@/components/common/form/Button';
@@ -30,7 +31,7 @@ export default function SolicitacoesPage() {
   const limit = 10;
 
   const loadData = useCallback(() => {
-    const params: Record<string, any> = { page: currentPage, limit };
+    const params: ListSolicitacoesParams = { page: currentPage, limit };
     if (statusFilter) params.status = statusFilter;
     fetchSolicitacoes(params);
   }, [statusFilter, currentPage, fetchSolicitacoes]);
@@ -39,9 +40,7 @@ export default function SolicitacoesPage() {
     loadData();
   }, [loadData]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [statusFilter]);
+
 
   const filteredSolicitacoes = solicitacoes.filter((s) => {
     if (!search) return true;
@@ -71,7 +70,10 @@ export default function SolicitacoesPage() {
             <Select
               options={statusOptions}
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
         </div>

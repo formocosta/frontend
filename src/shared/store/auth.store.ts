@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../types/auth.types';
+import { AxiosError } from 'axios';
 
 const ALLOWED_ROLES = ['admin', 'operador'] as const;
 
@@ -38,7 +39,13 @@ export const useAuthStore = create<AuthState>()(
             return { success: false, error: 'Resposta inválida do servidor' };
           }
 
-          const data = response.data as any;
+          const data = response.data as {
+            two_factor_pending?: boolean;
+            temp_token?: string;
+            user?: User;
+            access_token: string;
+            refresh_token: string;
+          };
 
           // 2FA pending response
           if (data.two_factor_pending) {
@@ -56,7 +63,7 @@ export const useAuthStore = create<AuthState>()(
           }
 
           // Validate role - only admin and operator allowed
-          if (!ALLOWED_ROLES.includes(user.role)) {
+          if (!user.role || !(ALLOWED_ROLES as readonly string[]).includes(user.role)) {
             return {
               success: false,
               error: 'Acesso negado. Apenas administradores e operadores podem aceder ao backoffice.',
@@ -65,8 +72,9 @@ export const useAuthStore = create<AuthState>()(
 
           get().setAuth(user, data.access_token, data.refresh_token);
           return { success: true };
-        } catch (error: any) {
-          const message = error?.response?.data?.message || 'Erro ao efetuar login';
+        } catch (error) {
+          const axiosError = error as AxiosError<{ message?: string }>;
+          const message = axiosError?.response?.data?.message || 'Erro ao efetuar login';
           return { success: false, error: message };
         }
       },
@@ -110,7 +118,7 @@ export const useAuthStore = create<AuthState>()(
         if (!accessToken) return;
 
         try {
-          const decoded: any = jwtDecode(accessToken);
+          const decoded = jwtDecode<{ exp?: number }>(accessToken);
           if (!decoded.exp) return;
 
           // Calcula tempo restante em milisegundos

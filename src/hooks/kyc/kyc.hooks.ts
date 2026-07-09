@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { AxiosError } from 'axios';
 import { KycBackofficeService } from '@/service/backoffice/kyc.service';
 import {
   Candidatura,
@@ -31,7 +32,8 @@ export function useCandidaturas(): UseCandidaturasReturn {
       const response = await KycBackofficeService.getCandidaturas(params);
       setCandidaturas(response.data || []);
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao carregar candidaturas');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar candidaturas');
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       const response = await KycBackofficeService.getCandidaturaById(id);
       setCandidatura(response.data);
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao carregar candidatura');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar candidatura');
     } finally {
       setLoading(false);
     }
@@ -81,7 +84,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao aprovar candidatura');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao aprovar candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -92,7 +96,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao rejeitar candidatura');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao rejeitar candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -103,7 +108,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao ressubmeter candidatura');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao ressubmeter candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -114,7 +120,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao actualizar notas');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao actualizar notas');
       return false;
     }
   }, [fetchCandidatura]);
@@ -127,7 +134,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       }
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao aprovar documento');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao aprovar documento');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
@@ -140,7 +148,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       }
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao rejeitar documento');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao rejeitar documento');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
@@ -151,7 +160,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao agendar entrevista');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao agendar entrevista');
       return false;
     }
   }, [fetchCandidatura]);
@@ -161,7 +171,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       const response = await KycBackofficeService.listarEntrevistas(id);
       return response.data || [];
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao listar entrevistas');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao listar entrevistas');
       return [];
     }
   }, []);
@@ -174,7 +185,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       }
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao actualizar entrevista');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao actualizar entrevista');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
@@ -202,7 +214,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       window.URL.revokeObjectURL(url);
       return true;
     } catch (err) {
-      setError((err as any)?.response?.data?.message || 'Erro ao descarregar documento');
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao descarregar documento');
       return false;
     }
   }, []);

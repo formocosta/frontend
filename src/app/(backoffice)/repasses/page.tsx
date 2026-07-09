@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeftRight, Search, RefreshCw, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { ArrowLeftRight, RefreshCw, CheckCircle, Clock, DollarSign } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/common/form/Button';
 import { Input } from '@/components/common/form/Input';
@@ -40,7 +40,7 @@ export default function RepassesPage() {
   });
 
   const loadData = useCallback(() => {
-    const params: Record<string, any> = { page: currentPage };
+    const params: { page: number; status?: string } = { page: currentPage };
     if (statusFilter) params.status = statusFilter;
     fetchRepasses(params);
     fetchResumo();
@@ -50,9 +50,7 @@ export default function RepassesPage() {
     loadData();
   }, [loadData]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [statusFilter]);
+
 
   async function handleProcessar(data: ProcessarRepasseFormData) {
     if (!selectedRepasse) return;
@@ -140,7 +138,10 @@ export default function RepassesPage() {
           <Select
             options={statusOptions}
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
       </div>

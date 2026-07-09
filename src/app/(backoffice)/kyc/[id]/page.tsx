@@ -17,7 +17,6 @@ import {
   Phone,
   MapPin,
   Building,
-  User,
 } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/common/form/Button';

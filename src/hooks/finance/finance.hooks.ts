@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { AxiosError } from 'axios';
 import { FinanceBackofficeService, CatalogoBackofficeService, PagamentosBackofficeService } from '@/service/backoffice/finance.service';
 import { FinancialSummary, Categoria, Repasse } from '@/shared/types/backoffice/finance.types';
 
@@ -16,8 +17,9 @@ export function useFinanceiro() {
     try {
       const response = await FinanceBackofficeService.getResumoFinanceiro();
       setResumo(response.data);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar resumo financeiro');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar resumo financeiro');
     } finally {
       setLoading(false);
     }
@@ -38,8 +40,9 @@ export function useCatalogo() {
     try {
       const response = await CatalogoBackofficeService.getCategorias();
       setCategorias(response.data || []);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar categorias');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar categorias');
     } finally {
       setLoading(false);
     }
@@ -50,8 +53,9 @@ export function useCatalogo() {
       await CatalogoBackofficeService.criarCategoria(data);
       await fetchCategorias();
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao criar categoria');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao criar categoria');
       return false;
     }
   }, [fetchCategorias]);
@@ -61,8 +65,9 @@ export function useCatalogo() {
       await CatalogoBackofficeService.actualizarCategoria(id, data);
       await fetchCategorias();
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao actualizar categoria');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao actualizar categoria');
       return false;
     }
   }, [fetchCategorias]);
@@ -72,8 +77,9 @@ export function useCatalogo() {
       await CatalogoBackofficeService.eliminarCategoria(id);
       await fetchCategorias();
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao eliminar categoria');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao eliminar categoria');
       return false;
     }
   }, [fetchCategorias]);
@@ -83,8 +89,9 @@ export function useCatalogo() {
       await CatalogoBackofficeService.criarSubcategoria(categoriaId, data);
       await fetchCategorias();
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao criar subcategoria');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao criar subcategoria');
       return false;
     }
   }, [fetchCategorias]);
@@ -94,8 +101,9 @@ export function useCatalogo() {
       await CatalogoBackofficeService.actualizarSubcategoria(id, data);
       await fetchCategorias();
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao actualizar subcategoria');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao actualizar subcategoria');
       return false;
     }
   }, [fetchCategorias]);
@@ -110,7 +118,7 @@ export function useCatalogo() {
 // Repasses hooks
 export function useRepasses() {
   const [repasses, setRepasses] = useState<Repasse[]>([]);
-  const [meta, setMeta] = useState<any>(null);
+  const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,8 +129,9 @@ export function useRepasses() {
       const response = await FinanceBackofficeService.getRepasses(params);
       setRepasses(response.data || []);
       setMeta(response.meta || null);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar repasses');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar repasses');
     } finally {
       setLoading(false);
     }
@@ -132,8 +141,9 @@ export function useRepasses() {
     try {
       await FinanceBackofficeService.processarRepasse(id, data);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao processar repasse');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao processar repasse');
       return false;
     }
   }, []);
@@ -152,8 +162,9 @@ export function usePagamentos() {
     try {
       await PagamentosBackofficeService.confirmarPagamento(solicitacaoId, referencia ? { referencia_externa: referencia } : undefined);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao confirmar pagamento');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao confirmar pagamento');
       return false;
     } finally {
       setLoading(false);
@@ -172,8 +183,9 @@ export function usePagamentos() {
       link.remove();
       window.URL.revokeObjectURL(url);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao descarregar comprovativo');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao descarregar comprovativo');
       return false;
     }
   }, []);

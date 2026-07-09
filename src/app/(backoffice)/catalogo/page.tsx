@@ -71,7 +71,7 @@ export default function CatalogoPage() {
     });
   }
 
-  async function handleCriar(data: any) {
+  async function handleCriar(data: CriarCategoriaFormData) {
     setActionLoading(true);
     const formData = new FormData();
     formData.append('nome', data.nome);
@@ -90,7 +90,7 @@ export default function CatalogoPage() {
     setActionLoading(false);
   }
 
-  async function handleEditar(data: any) {
+  async function handleEditar(data: CriarCategoriaFormData) {
     if (!selectedCategoria) return;
     setActionLoading(true);
     const formData = new FormData();
@@ -122,7 +122,7 @@ export default function CatalogoPage() {
     setActionLoading(false);
   }
 
-  async function handleSubcategoria(data: any) {
+  async function handleSubcategoria(data: CriarSubcategoriaFormData) {
     if (!selectedCategoria) return;
     setActionLoading(true);
     const success = await criarSubcategoria(selectedCategoria.id, data);

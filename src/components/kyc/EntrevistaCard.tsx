@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Video, MapPin, Phone, Calendar, Clock, Edit } from 'lucide-react';
+import { Video, MapPin, Calendar, Clock, Edit } from 'lucide-react';
 import { Entrevista } from '@/shared/types/backoffice/kyc.types';
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/form/Button';

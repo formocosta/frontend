@@ -58,7 +58,6 @@ export default function SolicitacaoDetailPage() {
   if (!solicitacao) return null;
 
   const localizacao = [solicitacao.provincia, solicitacao.municipio].filter(Boolean).join(', ');
-  const endereco = [solicitacao.morada_execucao, solicitacao.municipio, solicitacao.provincia].filter(Boolean).join(', ');
   const dataFormatada = solicitacao.data_pretendida
     ? new Date(solicitacao.data_pretendida).toLocaleDateString('pt-AO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
     : null;

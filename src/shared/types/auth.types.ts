@@ -8,8 +8,7 @@ export interface User {
   email_verified_at?: string | null;
   telefone_verificado_at?: string | null;
   created_at?: string;
-  updated_at?: string;
-  prestador?: any; // Replace with Prestador type if available
+  prestador?: unknown; // Replace with Prestador type if available
 }
 
 export interface LoginRequest {

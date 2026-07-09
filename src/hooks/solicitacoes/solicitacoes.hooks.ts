@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { AxiosError } from 'axios';
 import { RequestsBackofficeService } from '@/service/backoffice/requests.service';
 import {
   Solicitacao,
   ListSolicitacoesParams,
-  PaginatedResponse,
 } from '@/shared/types/backoffice/requests.types';
 
 export interface UseSolicitacoesReturn {
@@ -29,8 +29,9 @@ export function useSolicitacoes(): UseSolicitacoesReturn {
       const response = await RequestsBackofficeService.getSolicitacoes(params);
       setSolicitacoes(response.data || []);
       setMeta(response.meta || null);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar solicitações');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar solicitações');
     } finally {
       setLoading(false);
     }
@@ -59,8 +60,9 @@ export function useSolicitacaoDetail(): UseSolicitacaoDetailReturn {
     try {
       const response = await RequestsBackofficeService.getSolicitacaoById(id);
       setSolicitacao(response.data);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar solicitação');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar solicitação');
     } finally {
       setLoading(false);
     }
@@ -73,8 +75,9 @@ export function useSolicitacaoDetail(): UseSolicitacaoDetailReturn {
       });
       await fetchSolicitacao(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao encaminhar solicitação');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao encaminhar solicitação');
       return false;
     }
   }, [fetchSolicitacao]);
@@ -83,8 +86,9 @@ export function useSolicitacaoDetail(): UseSolicitacaoDetailReturn {
     try {
       const response = await RequestsBackofficeService.getMensagens(id);
       setSolicitacao((prev) => prev ? { ...prev, mensagens: response.data || [] } : null);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar mensagens');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar mensagens');
     }
   }, []);
 
