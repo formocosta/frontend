@@ -28,16 +28,25 @@ function NavItem({ href, icon: Icon, label, active }: { href: string; icon: Reac
   return (
     <Link
       href={href}
-      className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 group ${active
-        ? 'bg-[#42b883]/10 text-[#42b883] font-bold'
-        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-semibold'
-        }`}
+      className={`relative flex items-center gap-3 px-4 py-3 rounded-sm text-[13px] transition-all duration-300 group overflow-hidden ${
+        active
+          ? 'bg-gradient-to-r from-[#42b883]/10 to-transparent text-[#42b883] font-black'
+          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-bold'
+      }`}
     >
       {active && (
-        <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#42b883] rounded-r-full" />
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#42b883] rounded-r-sm shadow-[0_0_8px_rgba(66,184,131,0.5)]" />
       )}
-      <Icon size={18} strokeWidth={active ? 2.5 : 2} className={`shrink-0 transition-colors ${active ? 'text-[#42b883]' : 'text-gray-400 group-hover:text-gray-600'}`} />
-      <span className="truncate">{label}</span>
+      <Icon 
+        size={18} 
+        strokeWidth={active ? 2.5 : 2} 
+        className={`shrink-0 transition-transform duration-300 ${
+          active 
+            ? 'text-[#42b883]' 
+            : 'text-gray-400 group-hover:text-gray-600 group-hover:scale-110 group-hover:-rotate-3'
+        }`} 
+      />
+      <span className="truncate tracking-tight">{label}</span>
     </Link>
   );
 }
@@ -58,17 +67,17 @@ export default function Sidebar({ onToggleSidebar }: SidebarProps) {
   );
 
   return (
-    <aside className="w-[260px] shrink-0 h-screen bg-white border-r border-gray-100 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.01)]">
+    <aside className="w-[260px] shrink-0 h-screen bg-white border-r border-gray-100 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
 
       {/* Logo */}
-      <div className="px-6 h-[72px] flex items-center justify-between shrink-0 border-b border-gray-50">
+      <div className="px-6 h-[72px] flex items-center justify-between shrink-0 border-b border-gray-100 bg-white">
         <div className="flex items-center gap-2.5">
-          <Image src={icon} alt="Formocosta Logo" className="w-42 h-32 object-contain" />
+          <Image src={icon} alt="Formocosta Logo" className="w-40 h-auto object-contain" />
         </div>
         {onToggleSidebar && (
           <button
             onClick={onToggleSidebar}
-            className="w-7 h-7 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            className="w-7 h-7 rounded-sm bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-[#42b883] hover:border-[#42b883]/30 transition-all shadow-sm"
           >
             <ChevronLeft size={16} />
           </button>
@@ -76,8 +85,8 @@ export default function Sidebar({ onToggleSidebar }: SidebarProps) {
       </div>
 
       {/* Main nav */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-thumb-gray-100 hover:scrollbar-thumb-gray-200">
-        <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-3 mb-3">Menu Principal</p>
+      <div className="flex-1 overflow-y-auto px-3 py-6 space-y-1.5 scrollbar-thin scrollbar-thumb-gray-100 hover:scrollbar-thumb-gray-200">
+        <p className="text-[10px] font-black text-gray-400/80 uppercase tracking-[0.2em] px-4 mb-4">Menu Principal</p>
 
         {filteredNav.map((item) => (
           <NavItem
@@ -91,26 +100,26 @@ export default function Sidebar({ onToggleSidebar }: SidebarProps) {
       </div>
 
       {/* User info & logout */}
-      <div className="shrink-0 border-t border-gray-50 p-4">
-        <div className="flex items-center gap-3 mb-3 px-2">
-          <div className="w-9 h-9 rounded-full bg-[#42b883]/10 flex items-center justify-center text-[#42b883] text-sm font-bold">
+      <div className="shrink-0 p-4 border-t border-gray-100 bg-gray-50/30">
+        <div className="bg-white border border-gray-100 rounded-sm p-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)] mb-3 flex items-center gap-3 transition-colors hover:border-gray-200">
+          <div className="w-9 h-9 rounded-sm bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white text-sm font-black shadow-inner shrink-0">
             {user?.nome_completo?.charAt(0) || 'A'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-bold text-gray-900 truncate">
+            <p className="text-[13px] font-black text-gray-900 truncate tracking-tight">
               {user?.nome_completo || 'Admin'}
             </p>
-            <p className="text-[11px] text-gray-500 font-medium truncate">
-              {user?.email || 'admin@formocosta.com'}
+            <p className="text-[11px] text-gray-500 font-semibold truncate">
+              {user?.role === 'admin' ? 'Administrador' : 'Operador'}
             </p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-sm text-[13px] font-bold text-gray-500 bg-white border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all group shadow-sm"
         >
-          <LogOut size={18} />
-          <span>Sair da conta</span>
+          <LogOut size={16} className="transition-transform group-hover:-translate-x-1" />
+          <span>Encerrar Sessão</span>
         </button>
       </div>
     </aside>
