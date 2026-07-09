@@ -1,6 +1,15 @@
 export type DocumentStatus = 'pendente' | 'aprovado' | 'rejeitado';
-export type InterviewStatus = 'agendada' | 'realizada' | 'cancelada';
+export type InterviewStatus = 'agendada' | 'realizada' | 'cancelada' | 'nao_compareceu' | 'faltou';
 export type InterviewType = 'presencial' | 'video' | 'telefone';
+export type StatusVerificacao = 'pendente' | 'em_analise' | 'aprovado' | 'rejeitado';
+export type TipoPrestador = 'singular' | 'coletivo';
+
+export interface CandidaturaUser {
+  id: string;
+  nome_completo: string;
+  email: string;
+  telefone: string;
+}
 
 export interface Documento {
   id: string;
@@ -17,7 +26,7 @@ export interface Entrevista {
   prestador_id: string;
   operador_id?: string;
   tipo: InterviewType;
-  agendada_para: string; // date string
+  agendada_para: string;
   realizada_em?: string;
   link_video?: string;
   status: InterviewStatus;
@@ -28,14 +37,22 @@ export interface Entrevista {
 }
 
 export interface Candidatura {
-  id: string; // prestador_id
-  nome_completo: string;
-  status: string;
+  id: string;
+  tipo_prestador: TipoPrestador;
+  nome_comercial: string | null;
+  nif: string | null;
+  iban: string | null;
+  provincia: string | null;
+  municipio: string | null;
+  bairro: string | null;
+  morada_detalhe: string | null;
+  status_verificacao: StatusVerificacao;
   nota_operador?: string;
   documentos?: Documento[];
   entrevistas?: Entrevista[];
-  created_at?: string;
-  updated_at?: string;
+  user: CandidaturaUser;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ListCandidaturasRequest {
