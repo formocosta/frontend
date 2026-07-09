@@ -21,13 +21,14 @@ const sizes = {
 
 export function Badge({ children, variant = 'default', size = 'sm' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center font-bold rounded-md border ${variants[variant]} ${sizes[size]}`}>
+    <span className={`inline-flex items-center font-bold rounded-sm border ${variants[variant]} ${sizes[size]}`}>
       {children}
     </span>
   );
 }
 
 const statusMap: Record<string, { label: string; variant: BadgeProps['variant'] }> = {
+  // KYC / General
   pendente: { label: 'Pendente', variant: 'warning' },
   em_analise: { label: 'Em Análise', variant: 'info' },
   entrevista_agendada: { label: 'Entrevista Agendada', variant: 'info' },
@@ -35,6 +36,15 @@ const statusMap: Record<string, { label: string; variant: BadgeProps['variant'] 
   rejeitado: { label: 'Rejeitado', variant: 'danger' },
   activo: { label: 'Activo', variant: 'success' },
   suspenso: { label: 'Suspenso', variant: 'danger' },
+  // Solicitações
+  submetida: { label: 'Submetida', variant: 'default' },
+  encaminhada: { label: 'Encaminhada', variant: 'info' },
+  aceite: { label: 'Aceite', variant: 'info' },
+  em_execucao: { label: 'Em Execução', variant: 'warning' },
+  concluida: { label: 'Concluída', variant: 'success' },
+  cancelada: { label: 'Cancelada', variant: 'danger' },
+  rejeitada: { label: 'Rejeitada', variant: 'danger' },
+  em_disputa: { label: 'Em Disputa', variant: 'danger' },
 };
 
 export function StatusBadge({ status }: { status: string }) {
