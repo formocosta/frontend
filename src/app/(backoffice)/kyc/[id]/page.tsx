@@ -174,23 +174,19 @@ export default function KycDetailPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <PageHeader
+        title="Dossiê de Verificação KYC"
+        description={`Submetido em ${new Date(candidatura.created_at).toLocaleDateString('pt-AO')}`}
+        backButton={
           <button 
             onClick={() => router.back()} 
             className="w-9 h-9 flex items-center justify-center rounded-sm bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
           >
             <ArrowLeft size={16} />
           </button>
-          <PageHeader
-            title="Dossiê de Verificação KYC"
-            description={`Submetido em ${new Date(candidatura.created_at).toLocaleDateString('pt-AO')}`}
-          />
-        </div>
-        <div className="shrink-0">
-          <StatusBadge status={candidatura.status_verificacao} />
-        </div>
-      </div>
+        }
+        action={<StatusBadge status={candidatura.status_verificacao} />}
+      />
 
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-medium shadow-sm">
