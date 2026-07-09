@@ -61,12 +61,13 @@ export default function Header() {
   );
 
   return (
-    <header className="h-[72px] bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 select-none shadow-[0_2px_10px_rgba(0,0,0,0.01)] relative z-10">
+    <header className="h-[72px] bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 select-none shadow-[0_2px_10px_rgba(0,0,0,0.01)] relative z-10 gap-4">
 
       {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-[13px] font-bold text-gray-400 w-1/4">
-        <Link href="/dashboard" className="text-gray-400 hover:text-[#42b883] hover:bg-[#42b883]/10 transition-all flex items-center justify-center w-7 h-7 rounded-sm">
+      <div className="flex items-center gap-2 text-[13px] font-bold text-gray-400 flex-1 min-w-0 overflow-hidden">
+        <Link href="/dashboard" className="text-gray-400 hover:text-[#42b883] transition-colors flex items-center gap-1.5 rounded-sm shrink-0">
           <Home size={14} />
+          <span className="hidden sm:inline">Dashboard</span>
         </Link>
 
         {pathSegments.map((segment, index) => {
@@ -76,9 +77,9 @@ export default function Header() {
           const isLast = index === pathSegments.length - 1;
 
           return (
-            <div key={segment} className="flex items-center gap-2">
+            <div key={segment} className="flex items-center gap-2 shrink-0">
               <ChevronRight size={14} className="text-gray-300" />
-              <span className={`tracking-tight ${isLast ? 'text-gray-900 font-black' : 'hover:text-gray-600 transition-colors cursor-pointer'}`}>
+              <span className={`tracking-tight ${isLast ? 'text-gray-900 font-black truncate max-w-[120px] md:max-w-[200px]' : 'hover:text-gray-600 transition-colors cursor-pointer truncate max-w-[100px]'}`}>
                 {formatted}
               </span>
             </div>
@@ -87,7 +88,7 @@ export default function Header() {
       </div>
 
       {/* Search Bar Center */}
-      <div className="flex-1 max-w-lg mx-4 relative" ref={searchRef}>
+      <div className="w-[300px] lg:w-[400px] xl:w-[500px] relative shrink-0" ref={searchRef}>
         <div className={`relative flex items-center transition-all duration-300 rounded-sm border ${isSearchFocused ? 'bg-white border-[#42b883] shadow-[0_0_0_3px_rgba(66,184,131,0.1)]' : 'bg-gray-50 border-gray-100 hover:border-gray-200 hover:bg-gray-50/80'}`}>
           <Search size={15} className={`absolute left-3 transition-colors ${isSearchFocused ? 'text-[#42b883]' : 'text-gray-400'}`} />
           <input 
@@ -156,10 +157,10 @@ export default function Header() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4 w-1/4 justify-end">
+      <div className="flex items-center gap-4 flex-1 justify-end min-w-0">
 
         {/* Utility buttons */}
-        <div className="flex items-center gap-1.5 border-r border-gray-100 pr-4 hidden lg:flex">
+        <div className="flex items-center gap-1.5 border-r border-gray-100 pr-4 hidden lg:flex shrink-0">
           <Link
             href="/backoffice/suporte"
             className="w-8 h-8 flex items-center justify-center rounded-sm text-gray-400 hover:bg-[#42b883]/10 hover:text-[#42b883] transition-colors"
@@ -183,20 +184,20 @@ export default function Header() {
         </div>
 
         {/* User Profile */}
-        <div className="relative" ref={menuRef}>
+        <div className="relative shrink-0" ref={menuRef}>
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            className={`flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-sm transition-all border ${showUserMenu ? 'bg-gray-50 border-gray-200' : 'bg-transparent border-transparent hover:bg-gray-50 hover:border-gray-100'}`}
+            className={`flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-sm transition-all border max-w-full ${showUserMenu ? 'bg-gray-50 border-gray-200' : 'bg-transparent border-transparent hover:bg-gray-50 hover:border-gray-100'}`}
           >
-            <div className="text-right hidden sm:block">
-              <p className="text-[13px] font-black text-gray-900 leading-tight tracking-tight">
+            <div className="text-right hidden md:block min-w-0">
+              <p className="text-[13px] font-black text-gray-900 leading-tight tracking-tight truncate max-w-[120px] lg:max-w-[150px]">
                 {user?.nome_completo || 'Admin'}
               </p>
-              <p className="text-[11px] text-gray-500 font-semibold">
+              <p className="text-[11px] text-gray-500 font-semibold truncate">
                 {user?.role === 'admin' ? 'Administrador' : 'Operador'}
               </p>
             </div>
-            <div className="w-9 h-9 rounded-sm bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white text-sm font-black shadow-inner">
+            <div className="w-9 h-9 shrink-0 rounded-sm bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white text-sm font-black shadow-inner">
               {user?.nome_completo?.charAt(0) || 'A'}
             </div>
           </button>
