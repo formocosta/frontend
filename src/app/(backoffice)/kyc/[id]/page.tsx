@@ -39,9 +39,8 @@ import {
 } from '@/shared/schemas/kyc.schema';
 
 const entrevistaTipoOptions: SelectOption[] = [
-  { value: 'video', label: 'Videchamada' },
+  { value: 'video_chamada', label: 'Videochamada' },
   { value: 'presencial', label: 'Presencial' },
-  { value: 'telefone', label: 'Telefone' },
 ];
 
 const tipoLabels: Record<string, string> = {
@@ -67,6 +66,7 @@ export default function KycDetailPage() {
     rejeitarDocumento,
     agendarEntrevista,
     atualizarEntrevista,
+    downloadDocumento,
   } = useCandidaturaDetail();
 
   const [showRejeitarModal, setShowRejeitarModal] = useState(false);
@@ -314,6 +314,7 @@ export default function KycDetailPage() {
                 documento={doc}
                 onAprovar={aprovarDocumento}
                 onRejeitar={rejeitarDocumento}
+                onDownload={downloadDocumento}
               />
             ))}
           </div>

@@ -65,4 +65,11 @@ export const KycBackofficeService = {
     const response = await apiClient.patch<{ data: Entrevista }>(`/v1/backoffice/kyc/entrevistas/${entrevistaId}`, data);
     return response.data;
   },
+
+  downloadDocumento: async (documentoId: string) => {
+    const response = await apiClient.get(`/v1/prestador/kyc/documentos/${documentoId}`, {
+      responseType: 'blob',
+    });
+    return response;
+  },
 };

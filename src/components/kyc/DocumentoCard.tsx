@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, CheckCircle, XCircle, Eye } from 'lucide-react';
+import { FileText, CheckCircle, XCircle, Download } from 'lucide-react';
 import { Documento } from '@/shared/types/backoffice/kyc.types';
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/form/Button';
@@ -11,6 +11,7 @@ interface DocumentoCardProps {
   documento: Documento;
   onAprovar: (id: string) => Promise<boolean>;
   onRejeitar: (id: string, motivo: string) => Promise<boolean>;
+  onDownload: (id: string) => Promise<boolean>;
 }
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' }> = {
@@ -19,10 +20,10 @@ const statusConfig: Record<string, { label: string; variant: 'success' | 'danger
   rejeitado: { label: 'Rejeitado', variant: 'danger' },
 };
 
-export function DocumentoCard({ documento, onAprovar, onRejeitar }: DocumentoCardProps) {
+export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectMotivo, setRejectMotivo] = useState('');
-  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | null>(null);
+  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | 'download' | null>(null);
 
   const status = statusConfig[documento.status] || statusConfig.pendente;
 
@@ -40,6 +41,12 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar }: DocumentoCar
       setShowRejectModal(false);
       setRejectMotivo('');
     }
+    setLoading(null);
+  }
+
+  async function handleDownload() {
+    setLoading('download');
+    await onDownload(documento.id);
     setLoading(null);
   }
 
@@ -72,27 +79,39 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar }: DocumentoCar
           </div>
         )}
 
-        {documento.status === 'pendente' && (
-          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleAprovar}
-              isLoading={loading === 'aprovar'}
-              leftIcon={<CheckCircle size={14} />}
-            >
-              Aprovar
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setShowRejectModal(true)}
-              leftIcon={<XCircle size={14} />}
-            >
-              Rejeitar
-            </Button>
-          </div>
-        )}
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownload}
+            isLoading={loading === 'download'}
+            leftIcon={<Download size={14} />}
+          >
+            Visualizar / Baixar
+          </Button>
+
+          {documento.status === 'pendente' && (
+            <>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleAprovar}
+                isLoading={loading === 'aprovar'}
+                leftIcon={<CheckCircle size={14} />}
+              >
+                Aprovar
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setShowRejectModal(true)}
+                leftIcon={<XCircle size={14} />}
+              >
+                Rejeitar
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <Modal

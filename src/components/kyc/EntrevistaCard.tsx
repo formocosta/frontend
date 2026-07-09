@@ -18,9 +18,8 @@ interface EntrevistaCardProps {
 }
 
 const tipoConfig: Record<string, { label: string; icon: React.ElementType }> = {
-  video: { label: 'Videchamada', icon: Video },
+  video_chamada: { label: 'Videchamada', icon: Video },
   presencial: { label: 'Presencial', icon: MapPin },
-  telefone: { label: 'Telefone', icon: Phone },
 };
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' | 'info' }> = {
@@ -117,9 +116,9 @@ export function EntrevistaCard({ entrevista, onAtualizar }: EntrevistaCardProps)
           </p>
         )}
 
-        {entrevista.link_video && (
+        {entrevista.link_videochamada && (
           <a
-            href={entrevista.link_video}
+            href={entrevista.link_videochamada}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"

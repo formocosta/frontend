@@ -19,7 +19,7 @@ export const notasCandidaturaSchema = z.object({
 export type NotasCandidaturaFormData = z.infer<typeof notasCandidaturaSchema>;
 
 export const agendarEntrevistaSchema = z.object({
-  tipo: z.enum(["video", "presencial", "telefone"], {
+  tipo: z.enum(["video_chamada", "presencial"], {
     message: "Selecione o tipo de entrevista",
   }),
   agendada_para: z

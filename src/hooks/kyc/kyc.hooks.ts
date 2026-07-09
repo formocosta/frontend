@@ -30,8 +30,8 @@ export function useCandidaturas(): UseCandidaturasReturn {
     try {
       const response = await KycBackofficeService.getCandidaturas(params);
       setCandidaturas(response.data || []);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar candidaturas');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao carregar candidaturas');
     } finally {
       setLoading(false);
     }
@@ -54,6 +54,7 @@ export interface UseCandidaturaDetailReturn {
   agendarEntrevista: (id: string, data: AgendarEntrevistaRequest) => Promise<boolean>;
   listarEntrevistas: (id: string) => Promise<Entrevista[]>;
   atualizarEntrevista: (entrevistaId: string, data: AtualizarEntrevistaRequest) => Promise<boolean>;
+  downloadDocumento: (documentoId: string) => Promise<boolean>;
 }
 
 export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
@@ -67,8 +68,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
     try {
       const response = await KycBackofficeService.getCandidaturaById(id);
       setCandidatura(response.data);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao carregar candidatura');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao carregar candidatura');
     } finally {
       setLoading(false);
     }
@@ -79,8 +80,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await KycBackofficeService.aprovarCandidatura(id);
       await fetchCandidatura(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao aprovar candidatura');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao aprovar candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -90,8 +91,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await KycBackofficeService.rejeitarCandidatura(id, data);
       await fetchCandidatura(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao rejeitar candidatura');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao rejeitar candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -101,8 +102,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await KycBackofficeService.resubmeterCandidatura(id);
       await fetchCandidatura(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao ressubmeter candidatura');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao ressubmeter candidatura');
       return false;
     }
   }, [fetchCandidatura]);
@@ -112,8 +113,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await KycBackofficeService.atualizarNotas(id, data);
       await fetchCandidatura(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao actualizar notas');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao actualizar notas');
       return false;
     }
   }, [fetchCandidatura]);
@@ -125,8 +126,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
         await fetchCandidatura(candidatura.id);
       }
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao aprovar documento');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao aprovar documento');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
@@ -138,8 +139,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
         await fetchCandidatura(candidatura.id);
       }
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao rejeitar documento');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao rejeitar documento');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
@@ -149,8 +150,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await KycBackofficeService.agendarEntrevista(id, data);
       await fetchCandidatura(id);
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao agendar entrevista');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao agendar entrevista');
       return false;
     }
   }, [fetchCandidatura]);
@@ -159,8 +160,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
     try {
       const response = await KycBackofficeService.listarEntrevistas(id);
       return response.data || [];
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao listar entrevistas');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao listar entrevistas');
       return [];
     }
   }, []);
@@ -172,11 +173,39 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
         await fetchCandidatura(candidatura.id);
       }
       return true;
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Erro ao actualizar entrevista');
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao actualizar entrevista');
       return false;
     }
   }, [candidatura, fetchCandidatura]);
+
+  const downloadDocumento = useCallback(async (documentoId: string): Promise<boolean> => {
+    try {
+      const response = await KycBackofficeService.downloadDocumento(documentoId);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `documento_${documentoId}`;
+      if (contentDisposition) {
+        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+        if (matches && matches[1]) {
+          filename = matches[1];
+        }
+      }
+
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      return true;
+    } catch (err) {
+      setError((err as any)?.response?.data?.message || 'Erro ao descarregar documento');
+      return false;
+    }
+  }, []);
 
   return {
     candidatura,
@@ -192,5 +221,6 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
     agendarEntrevista,
     listarEntrevistas,
     atualizarEntrevista,
+    downloadDocumento,
   };
 }

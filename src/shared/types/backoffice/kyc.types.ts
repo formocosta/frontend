@@ -1,6 +1,6 @@
 export type DocumentStatus = 'pendente' | 'aprovado' | 'rejeitado';
 export type InterviewStatus = 'agendada' | 'realizada' | 'cancelada' | 'nao_compareceu' | 'faltou';
-export type InterviewType = 'presencial' | 'video' | 'telefone';
+export type InterviewType = 'presencial' | 'video_chamada';
 export type StatusVerificacao = 'pendente' | 'em_analise' | 'aprovado' | 'rejeitado';
 export type TipoPrestador = 'singular' | 'coletivo';
 
@@ -29,6 +29,7 @@ export interface Entrevista {
   agendada_para: string;
   realizada_em?: string;
   link_video?: string;
+  link_videochamada?: string;
   status: InterviewStatus;
   resultado?: 'aprovado' | 'reprovado' | 'inconclusivo';
   notas?: string;
