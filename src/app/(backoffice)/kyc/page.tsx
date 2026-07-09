@@ -7,7 +7,6 @@ import { CandidaturaCard } from '@/components/kyc/CandidaturaCard';
 import { useCandidaturas } from '@/hooks/kyc/kyc.hooks';
 import { Input } from '@/components/common/form/Input';
 import { Select, SelectOption } from '@/components/common/form/Select';
-import { Candidatura } from '@/shared/types/backoffice/kyc.types';
 
 const statusOptions: SelectOption[] = [
   { value: '', label: 'Todos os status' },
@@ -17,12 +16,6 @@ const statusOptions: SelectOption[] = [
   { value: 'rejeitado', label: 'Rejeitado' },
 ];
 
-const statusCountMap: Record<string, number> = {
-  pendente: 0,
-  em_analise: 0,
-  aprovado: 0,
-  rejeitado: 0,
-};
 
 export default function KycPage() {
   const { candidaturas, loading, error, fetchCandidaturas } = useCandidaturas();
