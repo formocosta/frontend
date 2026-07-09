@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { FileCheck, Search, ChevronRight, Mail, Phone, MapPin, Building, User } from 'lucide-react';
+import { FileCheck, Search, Filter, ChevronRight, Mail, Phone, MapPin, Building, User } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { useCandidaturas } from '@/hooks/kyc/kyc.hooks';
 import { Input } from '@/components/common/form/Input';
@@ -85,9 +85,13 @@ export default function KycPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-56">
+      <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="hidden sm:flex items-center gap-2 text-gray-500 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+            <Filter size={16} />
+            <span className="text-[13px] font-semibold">Filtros</span>
+          </div>
+          <div className="w-full sm:w-56">
             <Select
               options={statusOptions}
               value={statusFilter}
@@ -95,12 +99,12 @@ export default function KycPage() {
             />
           </div>
         </div>
-        <div className="w-full sm:w-80">
+        <div className="w-full sm:w-[350px]">
           <Input
             placeholder="Pesquisar por nome, email, telefone ou NIF..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            leftIcon={<Search size={15} />}
+            leftIcon={<Search size={16} className="text-gray-400" />}
             className="text-[13px]"
           />
         </div>
