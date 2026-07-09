@@ -29,8 +29,8 @@ function NavItem({ href, icon: Icon, label, active }: { href: string; icon: Reac
     <Link
       href={href}
       className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 group ${active
-          ? 'bg-[#42b883]/10 text-[#42b883] font-bold'
-          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-semibold'
+        ? 'bg-[#42b883]/10 text-[#42b883] font-bold'
+        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-semibold'
         }`}
     >
       {active && (
