@@ -2,30 +2,35 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Eye,
-  EyeOff,
-} from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import icon from '@/assets/images/icon3.png';
 import profissionalImage from '@/assets/images/proficional.png';
 import { Input } from '@/components/common/form/Input';
 import { Button } from '@/components/common/form/Button';
+import { signinSchema, SigninFormData } from '@/shared/schemas/auth.schema';
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [receiveUpdates, setReceiveUpdates] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SigninFormData>({
+    resolver: zodResolver(signinSchema),
+  });
+
+  async function onSubmit(data: SigninFormData) {
     setLoading(true);
 
     try {
+      // TODO: Integrar com AuthService.login(data)
       await new Promise((r) => setTimeout(r, 800));
       router.push('/dashboard');
     } catch {
@@ -93,7 +98,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-[18px]">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-[18px]">
 
               {/* Social Login Buttons */}
               <div className="space-y-3 mb-6">
@@ -125,9 +130,8 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="exemplo@gmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  error={errors.email?.message}
+                  {...register('email')}
                   className="bg-white border-gray-200 shadow-[0_1px_2px_rgb(0,0,0,0.02)] text-[13px] py-2 focus:border-[#42b883] focus:ring-1 focus:ring-[#42b883] transition-all rounded-lg w-full"
                 />
               </div>
@@ -139,9 +143,8 @@ export default function LoginPage() {
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
+                    error={errors.password?.message}
+                    {...register('password')}
                     className="bg-white border-gray-200 shadow-[0_1px_2px_rgb(0,0,0,0.02)] text-[13px] py-2 focus:border-[#42b883] focus:ring-1 focus:ring-[#42b883] transition-all rounded-lg pr-10 w-full"
                   />
                   <button
