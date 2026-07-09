@@ -3,12 +3,15 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../types/auth.types';
 
+const ALLOWED_ROLES = ['admin', 'operador'] as const;
+
 interface AuthState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
 
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; twoFactorPending?: boolean; tempToken?: string }>;
   setAuth: (user: User, accessToken: string, refreshToken: string) => void;
   setUser: (user: User) => void;
   logout: () => void;
@@ -25,6 +28,48 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
+
+      login: async (email, password) => {
+        try {
+          const { AuthService } = await import('../../service/auth.service');
+          const response = await AuthService.login({ email, password });
+
+          if (!response || !response.data) {
+            return { success: false, error: 'Resposta inválida do servidor' };
+          }
+
+          const data = response.data as any;
+
+          // 2FA pending response
+          if (data.two_factor_pending) {
+            return {
+              success: true,
+              twoFactorPending: true,
+              tempToken: data.temp_token,
+            };
+          }
+
+          // Normal login response
+          const user = data.user;
+          if (!user) {
+            return { success: false, error: 'Dados do utilizador não encontrados' };
+          }
+
+          // Validate role - only admin and operator allowed
+          if (!ALLOWED_ROLES.includes(user.role)) {
+            return {
+              success: false,
+              error: 'Acesso negado. Apenas administradores e operadores podem aceder ao backoffice.',
+            };
+          }
+
+          get().setAuth(user, data.access_token, data.refresh_token);
+          return { success: true };
+        } catch (error: any) {
+          const message = error?.response?.data?.message || 'Erro ao efetuar login';
+          return { success: false, error: message };
+        }
+      },
 
       setAuth: (user, accessToken, refreshToken) => {
         set({ user, accessToken, refreshToken, isAuthenticated: true });

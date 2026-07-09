@@ -4,19 +4,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import icon from '@/assets/images/icon3.png';
 import profissionalImage from '@/assets/images/proficional.png';
 import { Input } from '@/components/common/form/Input';
 import { Button } from '@/components/common/form/Button';
 import { signinSchema, SigninFormData } from '@/shared/schemas/auth.schema';
+import { useAuthStore } from '@/shared/store/auth.store';
 
 export default function LoginPage() {
   const router = useRouter();
+  const login = useAuthStore((state) => state.login);
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -28,16 +31,22 @@ export default function LoginPage() {
 
   async function onSubmit(data: SigninFormData) {
     setLoading(true);
+    setServerError(null);
 
-    try {
-      // TODO: Integrar com AuthService.login(data)
-      await new Promise((r) => setTimeout(r, 800));
-      router.push('/dashboard');
-    } catch {
-      router.push('/dashboard');
-    } finally {
-      setLoading(false);
+    const result = await login(data.email, data.password);
+
+    if (result.success) {
+      if (result.twoFactorPending) {
+        // TODO: Redirect to 2FA verification page
+        router.push('/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } else {
+      setServerError(result.error || 'Erro ao efetuar login');
     }
+
+    setLoading(false);
   }
 
   return (
@@ -99,6 +108,13 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-[18px]">
+
+              {serverError && (
+                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-[12px] font-medium">
+                  <AlertCircle size={14} className="shrink-0" />
+                  <span>{serverError}</span>
+                </div>
+              )}
 
               {/* Social Login Buttons */}
               <div className="space-y-3 mb-6">
