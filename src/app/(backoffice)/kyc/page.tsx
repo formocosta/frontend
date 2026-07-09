@@ -64,30 +64,39 @@ export default function KycPage() {
       {/* Stats cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Pendentes', value: statusCounts['pendente'] || 0, color: 'amber', filter: 'pendente' },
-          { label: 'Em Análise', value: statusCounts['em_analise'] || 0, color: 'blue', filter: 'em_analise' },
-          { label: 'Aprovados', value: statusCounts['aprovado'] || 0, color: 'emerald', filter: 'aprovado' },
-          { label: 'Rejeitados', value: statusCounts['rejeitado'] || 0, color: 'red', filter: 'rejeitado' },
+          { label: 'Pendentes', value: statusCounts['pendente'] || 0, textColor: 'text-amber-600', bgColor: 'bg-amber-50', filter: 'pendente' },
+          { label: 'Em Análise', value: statusCounts['em_analise'] || 0, textColor: 'text-blue-600', bgColor: 'bg-blue-50', filter: 'em_analise' },
+          { label: 'Aprovados', value: statusCounts['aprovado'] || 0, textColor: 'text-emerald-600', bgColor: 'bg-emerald-50', filter: 'aprovado' },
+          { label: 'Rejeitados', value: statusCounts['rejeitado'] || 0, textColor: 'text-red-600', bgColor: 'bg-red-50', filter: 'rejeitado' },
         ].map((stat) => (
           <button
             key={stat.filter}
             onClick={() => setStatusFilter(statusFilter === stat.filter ? '' : stat.filter)}
-            className={`bg-white rounded-xl border p-4 text-left transition-all duration-200 ${
+            className={`relative bg-white rounded-sm border p-4 text-left transition-all duration-300 flex flex-col justify-between min-h-[90px] overflow-hidden group ${
               statusFilter === stat.filter
-                ? 'border-[#42b883] shadow-md shadow-[#42b883]/10'
-                : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
+                ? 'border-[#42b883] shadow-md ring-1 ring-[#42b883]'
+                : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
             }`}
           >
-            <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wide">{stat.label}</p>
-            <p className={`text-2xl font-extrabold mt-1 text-${stat.color}-600`}>{stat.value}</p>
+            {/* Detalhe de fundo */}
+            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-sm opacity-50 transition-transform duration-300 group-hover:scale-125 ${stat.bgColor}`} />
+            
+            <p className="text-[11px] text-gray-500 font-bold uppercase tracking-wider relative z-10">{stat.label}</p>
+            <div className="flex items-baseline gap-2 relative z-10 mt-1">
+               <p className={`text-3xl font-black tracking-tight ${stat.textColor}`}>{stat.value}</p>
+            </div>
+            
+            {statusFilter === stat.filter && (
+               <div className="absolute left-0 bottom-0 w-full h-1 bg-[#42b883]" />
+            )}
           </button>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+      <div className="bg-white p-4 rounded-sm border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="hidden sm:flex items-center gap-2 text-gray-500 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+          <div className="hidden sm:flex items-center gap-2 text-gray-500 bg-gray-50 px-3 py-2 rounded-sm border border-gray-100">
             <Filter size={16} />
             <span className="text-[13px] font-semibold">Filtros</span>
           </div>
@@ -112,23 +121,23 @@ export default function KycPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 font-medium">
+        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-medium">
           {error}
         </div>
       )}
 
       {/* Loading */}
       {loading && candidaturas.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center">
-          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-full animate-spin" />
+        <div className="bg-white rounded-sm p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
           <p className="text-sm text-gray-500 mt-4 font-medium">A carregar candidaturas...</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && candidaturas.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 mb-4">
+        <div className="bg-white rounded-sm p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 mb-4">
             <FileCheck size={28} />
           </div>
           <h3 className="text-base font-bold text-gray-900">Sem candidaturas</h3>
@@ -142,7 +151,7 @@ export default function KycPage() {
 
       {/* Table Content */}
       {!loading && candidaturas.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-gray-100 rounded-sm shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -165,14 +174,14 @@ export default function KycPage() {
                     <tr key={candidatura.id} className="hover:bg-gray-50/50 transition-colors group">
                       <td className="px-5 py-4 align-top">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
+                          <div className="w-10 h-10 rounded-sm bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
                             {candidatura.user.nome_completo.charAt(0)}
                           </div>
                           <div>
                             <p className="text-[13px] font-bold text-gray-900 group-hover:text-[#42b883] transition-colors">
                               {candidatura.user.nome_completo}
                             </p>
-                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 mt-0.5 bg-gray-100/80 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 mt-0.5 bg-gray-100/80 px-2 py-0.5 rounded-sm">
                               <User size={10} />
                               {tipoLabels[candidatura.tipo_prestador] || candidatura.tipo_prestador}
                             </span>
@@ -220,7 +229,7 @@ export default function KycPage() {
                       <td className="px-5 py-4 align-top text-right">
                         <Link
                           href={`/kyc/${candidatura.id}`}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
                           title="Ver Detalhes"
                         >
                           <ChevronRight size={16} />
