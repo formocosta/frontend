@@ -1,21 +1,22 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeftRight, RefreshCw, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { ArrowLeftRight, RefreshCw, CheckCircle, Clock, DollarSign, Wallet } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/common/form/Button';
 import { Input } from '@/components/common/form/Input';
-import { Select, SelectOption } from '@/components/common/form/Select';
+import { SelectOption } from '@/components/common/form/Select';
 import { Badge } from '@/components/common/ui/Badge';
 import { Modal } from '@/components/common/ui/Modal';
+import { FilterBar } from '@/components/common/FilterBar';
 import { useRepasses, useFinanceiro } from '@/hooks/finance/finance.hooks';
 import { Repasse } from '@/shared/types/backoffice/finance.types';
 import { processarRepasseSchema, ProcessarRepasseFormData } from '@/shared/schemas/finance.schema';
 
 const statusOptions: SelectOption[] = [
-  { value: '', label: 'Todos os status' },
+  { value: '', label: 'Todos os Status' },
   { value: 'pendente', label: 'Pendente' },
   { value: 'pago', label: 'Pago' },
   { value: 'falhado', label: 'Falhado' },
@@ -29,6 +30,7 @@ export default function RepassesPage() {
   const { repasses, meta, loading, error, fetchRepasses, processarRepasse } = useRepasses();
   const { resumo, fetchResumo } = useFinanceiro();
   const [statusFilter, setStatusFilter] = useState('');
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showProcessarModal, setShowProcessarModal] = useState(false);
   const [selectedRepasse, setSelectedRepasse] = useState<Repasse | null>(null);
@@ -60,8 +62,8 @@ export default function RepassesPage() {
       setShowProcessarModal(false);
       setSelectedRepasse(null);
       processarForm.reset();
-      setSuccess('Repasse processado com sucesso!');
-      setTimeout(() => setSuccess(null), 3000);
+      setSuccess('Repasse processado e transferido com sucesso!');
+      setTimeout(() => setSuccess(null), 4000);
       loadData();
     }
     setActionLoading(false);
@@ -69,169 +71,192 @@ export default function RepassesPage() {
 
   const totalPages = meta ? Math.ceil(meta.total / 15) : 1;
 
+  // Filtro Local baseado na Pesquisa (IBAN, Referência ou ID)
+  const filteredRepasses = useMemo(() => {
+    if (!search.trim()) return repasses;
+    const lowerSearch = search.toLowerCase();
+    return repasses.filter((rep) => 
+      rep.id.toLowerCase().includes(lowerSearch) ||
+      (rep.referencia_repasse && rep.referencia_repasse.toLowerCase().includes(lowerSearch)) ||
+      (rep.iban_destino && rep.iban_destino.toLowerCase().includes(lowerSearch))
+    );
+  }, [repasses, search]);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <PageHeader
-        title="Repasses"
-        description="Gestão de repasses aos prestadores"
+        title="Gestão de Repasses"
+        description="Monitorize e processe os pagamentos devidos aos prestadores de serviços."
         action={
-          <Button variant="outline" size="sm" onClick={loadData} leftIcon={<RefreshCw size={14} />}>
-            Actualizar
+          <Button 
+            variant="outline" 
+            className="rounded-sm font-bold shadow-sm bg-white hover:bg-gray-50 border-gray-200" 
+            onClick={loadData} 
+            leftIcon={<RefreshCw size={14} strokeWidth={2.5} />}
+          >
+            Actualizar Dados
           </Button>
         }
       />
 
+      {/* Alertas */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 font-medium">
+        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-[13px] text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-700 font-medium">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-sm p-4 text-[13px] text-emerald-700 font-bold shadow-sm">
           {success}
         </div>
       )}
 
-      {/* Stats */}
+      {/* Estatísticas Financeiras Premium */}
       {resumo && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl border border-amber-100 p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-                <Clock size={18} />
+          <div className="bg-white rounded-sm border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-sm bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+                <Clock size={20} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 font-semibold uppercase">Pendentes</p>
-                <p className="text-lg font-extrabold text-amber-600">{resumo.quantidade_repasses_pendentes}</p>
+                <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest">Repasses Pendentes</p>
+                <p className="text-2xl font-black text-amber-600 tracking-tight">{resumo.quantidade_repasses_pendentes}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-amber-100 p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-                <DollarSign size={18} />
+          
+          <div className="bg-white rounded-sm border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-sm bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+                <DollarSign size={20} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 font-semibold uppercase">Valor Pendente</p>
-                <p className="text-lg font-extrabold text-amber-600">{formatCurrency(resumo.valor_repasses_pendentes)}</p>
+                <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest">Valor Pendente</p>
+                <p className="text-2xl font-black text-amber-600 tracking-tight">{formatCurrency(resumo.valor_repasses_pendentes)}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-emerald-100 p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <DollarSign size={18} />
+          
+          <div className="bg-white rounded-sm border border-emerald-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-emerald-200 group">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-sm bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                <Wallet size={20} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 font-semibold uppercase">Comissões Totais</p>
-                <p className="text-lg font-extrabold text-emerald-600">{formatCurrency(resumo.comissoes_totais)}</p>
+                <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest">Comissões Globais</p>
+                <p className="text-2xl font-black text-emerald-600 tracking-tight">{formatCurrency(resumo.comissoes_totais)}</p>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex items-center gap-3">
-        <div className="w-56">
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-      </div>
+      {/* Componente Genérico de Filtro */}
+      <FilterBar
+        searchPlaceholder="Pesquisar por IBAN, Ref, ou ID..."
+        searchValue={search}
+        onSearchChange={setSearch}
+        selectOptions={statusOptions}
+        selectValue={statusFilter}
+        onSelectChange={setStatusFilter}
+      />
 
-      {/* Loading */}
+      {/* Carregamento */}
       {loading && repasses.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center">
-          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-500 mt-4 font-medium">A carregar repasses...</p>
+        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
+          <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar registos de repasses...</p>
         </div>
       )}
 
-      {/* Empty */}
+      {/* Estado Vazio (Sem Dados) */}
       {!loading && repasses.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 mb-4">
+        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-sm bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
             <ArrowLeftRight size={28} />
           </div>
-          <h3 className="text-base font-bold text-gray-900">Sem repasses</h3>
-          <p className="text-xs text-gray-500 mt-1.5 max-w-sm font-medium">
+          <h3 className="text-[15px] font-black text-gray-900 tracking-tight">Zero Repasses</h3>
+          <p className="text-[12px] text-gray-500 mt-1.5 max-w-sm font-semibold">
             {statusFilter
-              ? 'Nenhum repasse encontrado com o filtro seleccionado.'
-              : 'Ainda não existem repasses registados no sistema.'}
+              ? 'Não existem repasses com o status seleccionado.'
+              : 'O sistema ainda não possui repasses registados.'}
           </p>
         </div>
       )}
+      
+      {/* Estado Vazio (Sem Resultados de Pesquisa) */}
+      {!loading && repasses.length > 0 && filteredRepasses.length === 0 && (
+         <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+          <p className="text-[12px] text-gray-500 font-bold">Nenhum repasse encontrado para a pesquisa "{search}".</p>
+        </div>
+      )}
 
-      {/* List */}
-      {!loading && repasses.length > 0 && (
-        <>
-          <p className="text-[11px] text-gray-500 font-semibold">
-            {meta?.total || repasses.length} repasse{meta?.total !== 1 && repasses.length !== 1 ? 's' : ''}
+      {/* Tabela de Resultados */}
+      {!loading && filteredRepasses.length > 0 && (
+        <div className="space-y-4">
+          <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest bg-gray-50 inline-block px-2.5 py-1 rounded-sm border border-gray-100">
+            {meta?.total || filteredRepasses.length} repasse{(meta?.total !== 1 && filteredRepasses.length !== 1) ? 's' : ''} {search && '(Filtrados)'}
           </p>
 
-          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-sm border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">ID</th>
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Valor</th>
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Status</th>
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Referência</th>
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">IBAN</th>
-                    <th className="text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Data</th>
-                    <th className="text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Acção</th>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <th className="text-left text-[11px] font-black text-gray-600 uppercase tracking-widest px-5 py-4">Status & Valor</th>
+                    <th className="text-left text-[11px] font-black text-gray-600 uppercase tracking-widest px-5 py-4">ID Transação</th>
+                    <th className="text-left text-[11px] font-black text-gray-600 uppercase tracking-widest px-5 py-4">Destino (IBAN & Ref)</th>
+                    <th className="text-left text-[11px] font-black text-gray-600 uppercase tracking-widest px-5 py-4">Data</th>
+                    <th className="text-right text-[11px] font-black text-gray-600 uppercase tracking-widest px-5 py-4">Acções</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {repasses.map((rep) => (
-                    <tr key={rep.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-gray-500 font-mono">{rep.id.slice(0, 8)}...</span>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredRepasses.map((rep) => (
+                    <tr key={rep.id} className="hover:bg-[#42b883]/5 transition-colors group">
+                      <td className="px-5 py-4">
+                        <div className="flex flex-col gap-1.5 items-start">
+                          <span className="text-[14px] text-gray-900 font-black tracking-tight">
+                            {formatCurrency(Number(rep.valor_repasse))}
+                          </span>
+                          <Badge
+                            variant={rep.status === 'pago' ? 'success' : rep.status === 'pendente' ? 'warning' : 'danger'}
+                            size="sm"
+                          >
+                            {rep.status === 'pago' ? 'Pago' : rep.status === 'pendente' ? 'Pendente' : 'Falhado'}
+                          </Badge>
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[12px] text-gray-900 font-bold">
-                          {formatCurrency(Number(rep.valor_repasse))}
-                        </span>
+                      <td className="px-5 py-4">
+                        <span className="text-[12px] text-gray-600 font-mono font-bold bg-gray-50 px-2 py-1 rounded-sm border border-gray-100">{rep.id.slice(0, 13)}...</span>
                       </td>
-                      <td className="px-4 py-3">
-                        <Badge
-                          variant={rep.status === 'pago' ? 'success' : rep.status === 'pendente' ? 'warning' : 'danger'}
-                        >
-                          {rep.status === 'pago' ? 'Pago' : rep.status === 'pendente' ? 'Pendente' : 'Falhado'}
-                        </Badge>
+                      <td className="px-5 py-4">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[12px] text-gray-900 font-black tracking-tight">{rep.iban_destino || 'Sem IBAN'}</span>
+                          <span className="text-[11px] text-gray-500 font-semibold">{rep.referencia_repasse || 'Sem Referência'}</span>
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-gray-600 font-medium">{rep.referencia_repasse || '—'}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-gray-600 font-medium">{rep.iban_destino || '—'}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-gray-500 font-medium">
+                      <td className="px-5 py-4">
+                        <span className="text-[12px] text-gray-600 font-bold">
                           {new Date(rep.criado_em).toLocaleDateString('pt-AO')}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right">
-                        {rep.status === 'pendente' && (
+                      <td className="px-5 py-4 text-right">
+                        {rep.status === 'pendente' ? (
                           <Button
                             variant="primary"
-                            size="sm"
+                            className="rounded-sm font-bold shadow-sm h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={() => {
                               setSelectedRepasse(rep);
                               setShowProcessarModal(true);
                             }}
-                            leftIcon={<CheckCircle size={14} />}
+                            leftIcon={<CheckCircle size={14} strokeWidth={2.5} />}
                           >
-                            Processar
+                            Pagar Agora
                           </Button>
+                        ) : (
+                          <span className="text-[11px] text-gray-400 font-bold">Processado</span>
                         )}
                       </td>
                     </tr>
@@ -241,23 +266,23 @@ export default function RepassesPage() {
             </div>
           </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4">
-              <p className="text-[11px] text-gray-500 font-medium">
+          {/* Paginação */}
+          {totalPages > 1 && !search && (
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <p className="text-[12px] text-gray-500 font-bold">
                 Página {currentPage} de {totalPages}
               </p>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
+                <Button variant="outline" className="rounded-sm font-bold h-8" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
                   Anterior
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
+                <Button variant="outline" className="rounded-sm font-bold h-8" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
                   Próxima
                 </Button>
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
 
       {/* Modal: Processar Repasse */}
@@ -268,12 +293,13 @@ export default function RepassesPage() {
           setSelectedRepasse(null);
           processarForm.reset();
         }}
-        title="Processar Repasse"
+        title="Liquidar Repasse ao Prestador"
         size="sm"
         footer={
           <>
             <Button
               variant="outline"
+              className="rounded-sm font-bold"
               onClick={() => {
                 setShowProcessarModal(false);
                 setSelectedRepasse(null);
@@ -285,34 +311,40 @@ export default function RepassesPage() {
             </Button>
             <Button
               variant="primary"
+              className="rounded-sm font-bold bg-[#42b883] hover:bg-[#3aa374]"
               onClick={processarForm.handleSubmit(handleProcessar)}
               isLoading={actionLoading}
-              leftIcon={<CheckCircle size={14} />}
+              leftIcon={<CheckCircle size={14} strokeWidth={2.5} />}
             >
-              Processar
+              Liquidar Transferência
             </Button>
           </>
         }
       >
-        <div className="space-y-4">
-          <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-[10px] text-gray-500 font-semibold uppercase mb-1">Valor do Repasse</p>
-            <p className="text-lg font-extrabold text-[#42b883]">
+        <div className="space-y-5">
+          <div className="bg-[#42b883]/5 rounded-sm p-4 border border-[#42b883]/20 flex flex-col items-center justify-center">
+            <p className="text-[11px] text-[#42b883] font-black uppercase tracking-widest mb-1">Montante a Liquidar</p>
+            <p className="text-3xl font-black text-gray-900 tracking-tight">
               {selectedRepasse ? formatCurrency(Number(selectedRepasse.valor_repasse)) : '—'}
             </p>
           </div>
-          <Input
-            label="Referência do Repasse"
-            placeholder="Ex: REP-2026-001"
-            error={processarForm.formState.errors.referencia_repasse?.message}
-            {...processarForm.register('referencia_repasse')}
-          />
-          <Input
-            label="IBAN Destino (opcional)"
-            placeholder="AO06 0040 0000 ..."
-            error={processarForm.formState.errors.iban_destino?.message}
-            {...processarForm.register('iban_destino')}
-          />
+          
+          <div className="space-y-4 pt-2">
+            <Input
+              label="Referência da Transferência (Obrigatória)"
+              placeholder="Ex: TPA-2026-X1Y2"
+              error={processarForm.formState.errors.referencia_repasse?.message}
+              {...processarForm.register('referencia_repasse')}
+              className="rounded-sm"
+            />
+            <Input
+              label="IBAN de Destino (Opcional)"
+              placeholder="AO06 0040 0000 ..."
+              error={processarForm.formState.errors.iban_destino?.message}
+              {...processarForm.register('iban_destino')}
+              className="rounded-sm font-mono text-[13px]"
+            />
+          </div>
         </div>
       </Modal>
     </div>
