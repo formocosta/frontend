@@ -9,7 +9,7 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, description, action, backButton }: PageHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-gray-100">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 mb-6 bg-white border border-gray-100 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
       <div className="flex items-center gap-4">
         {backButton && (
           <div className="shrink-0">
