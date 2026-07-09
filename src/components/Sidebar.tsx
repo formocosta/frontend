@@ -8,30 +8,20 @@ import {
   LayoutDashboard,
   FileCheck,
   ClipboardList,
-  MessageSquare,
   CreditCard,
   ArrowLeftRight,
-  Star,
-  Scale,
   BookOpen,
-  Users,
-  BarChart3,
   ChevronLeft,
   LogOut,
 } from 'lucide-react';
 
 const MAIN_NAV = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, allowedRoles: ['admin', 'operador', 'operador_financeiro', 'suporte'] },
+  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, allowedRoles: ['admin', 'operador'] },
   { label: 'Candidaturas KYC', href: '/kyc', icon: FileCheck, allowedRoles: ['admin', 'operador'] },
   { label: 'Solicitações', href: '/solicitacoes', icon: ClipboardList, allowedRoles: ['admin', 'operador'] },
-  { label: 'Mensagens', href: '/mensagens', icon: MessageSquare, allowedRoles: ['admin', 'operador'] },
-  { label: 'Pagamentos', href: '/pagamentos', icon: CreditCard, allowedRoles: ['admin', 'operador_financeiro'] },
-  { label: 'Repasses', href: '/repasses', icon: ArrowLeftRight, allowedRoles: ['admin', 'operador_financeiro'] },
-  { label: 'Avaliações', href: '/avaliacoes', icon: Star, allowedRoles: ['admin', 'operador'] },
-  { label: 'Disputas', href: '/disputas', icon: Scale, allowedRoles: ['admin', 'suporte'] },
   { label: 'Catálogo', href: '/catalogo', icon: BookOpen, allowedRoles: ['admin'] },
-  { label: 'Utilizadores internos', href: '/utilizadores', icon: Users, allowedRoles: ['admin'] },
-  { label: 'Relatórios', href: '/backoffice/relatorios', icon: BarChart3, allowedRoles: ['admin', 'operador_financeiro'] },
+  { label: 'Pagamentos', href: '/pagamentos', icon: CreditCard, allowedRoles: ['admin'] },
+  { label: 'Repasses', href: '/repasses', icon: ArrowLeftRight, allowedRoles: ['admin'] },
 ];
 
 function NavItem({ href, icon: Icon, label, active }: { href: string; icon: React.ElementType; label: string; active: boolean }) {

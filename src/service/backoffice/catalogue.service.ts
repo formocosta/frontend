@@ -9,6 +9,11 @@ import {
 } from '../../shared/types/backoffice/catalogue.types';
 
 export const CatalogueBackofficeService = {
+  getCategorias: async () => {
+    const response = await apiClient.get<{ data: Categoria[] }>('/v1/backoffice/categorias');
+    return response.data;
+  },
+
   createCategoria: async (data: StoreCategoriaRequest) => {
     // We use FormData if there is a file (icone)
     const formData = new FormData();

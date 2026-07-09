@@ -1,19 +1,28 @@
-export type SolicitacaoStatus = 'pendente' | 'em_andamento' | 'concluida' | 'cancelada' | 'rejeitada';
+export type SolicitacaoStatus =
+  | 'submetida'
+  | 'em_analise'
+  | 'encaminhada'
+  | 'aceite'
+  | 'rejeitada'
+  | 'em_execucao'
+  | 'concluida'
+  | 'cancelada'
+  | 'em_disputa';
 
-export interface Solicitacao {
+export interface SolicitacaoServico {
   id: string;
-  cliente_id: string;
-  prestador_servico_id?: string | null;
-  categoria_id?: string;
-  subcategoria_id?: string;
-  titulo?: string;
-  descricao?: string;
-  status: SolicitacaoStatus;
-  preco_estimado?: number;
-  data_agendada?: string;
-  created_at?: string;
-  updated_at?: string;
-  [key: string]: any;
+  titulo_servico: string;
+  descricao_detalhada: string;
+  preco_base: number;
+  preco_cliente: number;
+  modalidade_preco: string;
+}
+
+export interface SolicitacaoPrestador {
+  id: string;
+  nome: string | null;
+  foto_perfil_url: string | null;
+  avaliacao_media: number | null;
 }
 
 export interface Mensagem {
@@ -25,6 +34,30 @@ export interface Mensagem {
   lida?: boolean;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface Solicitacao {
+  id: string;
+  cliente_id: string;
+  prestador_servico_id: string | null;
+  operador_id: string | null;
+  status_id: SolicitacaoStatus;
+  data_pretendida: string | null;
+  hora_pretendida: string | null;
+  descricao_cliente: string | null;
+  provincia: string | null;
+  municipio: string | null;
+  morada_execucao: string | null;
+  preco_acordado: number | null;
+  motivo_rejeicao: string | null;
+  aceite_em: string | null;
+  iniciado_em: string | null;
+  concluido_em: string | null;
+  created_at: string;
+  updated_at: string;
+  servico: SolicitacaoServico | null;
+  prestador: SolicitacaoPrestador | null;
+  mensagens?: Mensagem[];
 }
 
 export interface ListSolicitacoesParams {
@@ -43,5 +76,5 @@ export interface PaginatedResponse<T> {
 }
 
 export interface EncaminharSolicitacaoRequest {
-  prestador_servico_id?: string | null;
+  prestador_servico_id: string;
 }

@@ -10,7 +10,11 @@ import {
 export const RequestsBackofficeService = {
   getSolicitacoes: async (params?: ListSolicitacoesParams) => {
     const response = await apiClient.get<PaginatedResponse<Solicitacao>>('/v1/backoffice/solicitacoes', { params });
-    // The endpoint returns { data: [...], meta: {...} } so we don't return response.data.data
+    return response.data;
+  },
+
+  getSolicitacaoById: async (id: string) => {
+    const response = await apiClient.get<{ data: Solicitacao }>(`/v1/solicitacoes/${id}`);
     return response.data;
   },
 
