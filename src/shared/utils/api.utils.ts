@@ -11,7 +11,10 @@ const apiClient = axios.create({
 
 // Inject token into requests
 apiClient.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().accessToken;
+    const authStore = useAuthStore.getState();
+    const isRefreshEndpoint = config.url?.includes('/v1/auth/refresh');
+    const token = isRefreshEndpoint ? authStore.refreshToken : authStore.accessToken;
+    
     if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
     }
