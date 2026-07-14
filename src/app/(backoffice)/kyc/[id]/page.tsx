@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -172,6 +172,32 @@ export default function KycDetailPage() {
     .filter(Boolean)
     .join(', ');
 
+  const validacaoAprovacao = useMemo(() => {
+    const docs = candidatura.documentos || [];
+    const entrevistas = candidatura.entrevistas || [];
+
+    const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
+    const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
+
+    const hasBi = docs.some(d => d.tipo_documento_id === 'bi' && d.status === 'aprovado');
+    const hasNif = docs.some(d => d.tipo_documento_id === 'nif' && d.status === 'aprovado');
+    const hasIban = docs.some(d => d.tipo_documento_id === 'comprovativo_iban' && d.status === 'aprovado');
+    const hasCertificado = candidatura.tipo_prestador === 'coletivo' 
+      ? docs.some(d => d.tipo_documento_id === 'certificado_registo' && d.status === 'aprovado')
+      : true;
+
+    const allDocsApproved = hasBi && hasNif && hasIban && hasCertificado;
+    const allInterviewsApproved = hasVideoApproved && hasPresencialApproved;
+
+    return {
+      isAprovavel: allDocsApproved && allInterviewsApproved,
+      reasons: [
+        !allInterviewsApproved ? 'Ambas as entrevistas (vídeo e presencial) devem estar aprovadas.' : null,
+        !allDocsApproved ? 'Todos os documentos obrigatórios devem estar submetidos e aprovados.' : null
+      ].filter(Boolean) as string[]
+    };
+  }, [candidatura]);
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
@@ -288,13 +314,30 @@ export default function KycDetailPage() {
                 </h3>
               </div>
               <div className="p-5 flex flex-col gap-3">
-                <button
-                  onClick={() => setShowConfirmAprovar(true)}
-                  className="w-full flex items-center justify-center gap-2 bg-[#42b883] hover:bg-[#3aa374] text-white py-3 rounded-sm font-bold text-[13px] transition-colors shadow-sm"
-                >
-                  <CheckCircle size={16} />
-                  Aprovar Candidatura
-                </button>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => setShowConfirmAprovar(true)}
+                    disabled={!validacaoAprovacao.isAprovavel}
+                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-sm font-bold text-[13px] transition-colors shadow-sm ${
+                      validacaoAprovacao.isAprovavel
+                        ? 'bg-[#42b883] hover:bg-[#3aa374] text-white'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    <CheckCircle size={16} />
+                    Aprovar Candidatura
+                  </button>
+                  {!validacaoAprovacao.isAprovavel && (
+                    <div className="text-[11px] text-amber-700 bg-amber-50 p-2.5 rounded-sm border border-amber-200 flex flex-col gap-1">
+                      <span className="font-bold flex items-center gap-1.5"><AlertTriangle size={13}/> Requisitos Pendentes:</span>
+                      <ul className="list-disc pl-5 space-y-1 mt-1 font-medium">
+                        {validacaoAprovacao.reasons.map((reason, i) => (
+                          <li key={i}>{reason}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setShowRejeitarModal(true)}
