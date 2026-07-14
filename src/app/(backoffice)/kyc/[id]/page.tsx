@@ -102,6 +102,32 @@ export default function KycDetailPage() {
     }
   }, [candidatura, notasForm]);
 
+  const validacaoAprovacao = useMemo(() => {
+    const docs = candidatura?.documentos || [];
+    const entrevistas = candidatura?.entrevistas || [];
+
+    const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
+    const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
+
+    const hasBi = docs.some(d => d.tipo_documento_id === 'bi' && d.status === 'aprovado');
+    const hasNif = docs.some(d => d.tipo_documento_id === 'nif' && d.status === 'aprovado');
+    const hasIban = docs.some(d => d.tipo_documento_id === 'comprovativo_iban' && d.status === 'aprovado');
+    const hasCertificado = candidatura?.tipo_prestador === 'coletivo'
+      ? docs.some(d => d.tipo_documento_id === 'certificado_registo' && d.status === 'aprovado')
+      : true;
+
+    const allDocsApproved = hasBi && hasNif && hasIban && hasCertificado;
+    const allInterviewsApproved = hasVideoApproved && hasPresencialApproved;
+
+    return {
+      isAprovavel: allDocsApproved && allInterviewsApproved,
+      reasons: [
+        !allInterviewsApproved ? 'Ambas as entrevistas (vídeo e presencial) devem estar aprovadas.' : null,
+        !allDocsApproved ? 'Todos os documentos obrigatórios devem estar submetidos e aprovados.' : null
+      ].filter(Boolean) as string[]
+    };
+  }, [candidatura]);
+
   async function handleAprovar() {
     setActionLoading(true);
     const success = await aprovar(id);
@@ -171,32 +197,6 @@ export default function KycDetailPage() {
   const localizacao = [candidatura.provincia, candidatura.municipio, candidatura.bairro]
     .filter(Boolean)
     .join(', ');
-
-  const validacaoAprovacao = useMemo(() => {
-    const docs = candidatura.documentos || [];
-    const entrevistas = candidatura.entrevistas || [];
-
-    const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
-    const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
-
-    const hasBi = docs.some(d => d.tipo_documento_id === 'bi' && d.status === 'aprovado');
-    const hasNif = docs.some(d => d.tipo_documento_id === 'nif' && d.status === 'aprovado');
-    const hasIban = docs.some(d => d.tipo_documento_id === 'comprovativo_iban' && d.status === 'aprovado');
-    const hasCertificado = candidatura.tipo_prestador === 'coletivo' 
-      ? docs.some(d => d.tipo_documento_id === 'certificado_registo' && d.status === 'aprovado')
-      : true;
-
-    const allDocsApproved = hasBi && hasNif && hasIban && hasCertificado;
-    const allInterviewsApproved = hasVideoApproved && hasPresencialApproved;
-
-    return {
-      isAprovavel: allDocsApproved && allInterviewsApproved,
-      reasons: [
-        !allInterviewsApproved ? 'Ambas as entrevistas (vídeo e presencial) devem estar aprovadas.' : null,
-        !allDocsApproved ? 'Todos os documentos obrigatórios devem estar submetidos e aprovados.' : null
-      ].filter(Boolean) as string[]
-    };
-  }, [candidatura]);
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
