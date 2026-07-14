@@ -85,8 +85,17 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao aprovar candidatura');
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      let errorMessage = axiosError.response?.data?.message || 'Erro ao aprovar candidatura';
+      
+      if (axiosError.response?.data?.errors) {
+        const firstError = Object.values(axiosError.response.data.errors)[0]?.[0];
+        if (firstError) {
+          errorMessage = firstError;
+        }
+      }
+      
+      setError(errorMessage);
       return false;
     }
   }, [fetchCandidatura]);
@@ -97,8 +106,13 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao rejeitar candidatura');
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      let errorMessage = axiosError.response?.data?.message || 'Erro ao rejeitar candidatura';
+      if (axiosError.response?.data?.errors) {
+        const firstError = Object.values(axiosError.response.data.errors)[0]?.[0];
+        if (firstError) errorMessage = firstError;
+      }
+      setError(errorMessage);
       return false;
     }
   }, [fetchCandidatura]);
@@ -109,8 +123,13 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao ressubmeter candidatura');
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      let errorMessage = axiosError.response?.data?.message || 'Erro ao resubmeter candidatura';
+      if (axiosError.response?.data?.errors) {
+        const firstError = Object.values(axiosError.response.data.errors)[0]?.[0];
+        if (firstError) errorMessage = firstError;
+      }
+      setError(errorMessage);
       return false;
     }
   }, [fetchCandidatura]);
