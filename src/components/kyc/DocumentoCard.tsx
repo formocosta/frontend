@@ -12,6 +12,7 @@ interface DocumentoCardProps {
   onAprovar: (id: string) => Promise<boolean>;
   onRejeitar: (id: string, motivo: string) => Promise<boolean>;
   onDownload: (id: string) => Promise<boolean>;
+  onAbrir?: (id: string) => Promise<boolean>;
 }
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' }> = {
@@ -20,10 +21,10 @@ const statusConfig: Record<string, { label: string; variant: 'success' | 'danger
   rejeitado: { label: 'Rejeitado', variant: 'danger' },
 };
 
-export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload }: DocumentoCardProps) {
+export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onAbrir }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectMotivo, setRejectMotivo] = useState('');
-  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | 'download' | null>(null);
+  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | 'download' | 'abrir' | null>(null);
 
   const status = statusConfig[documento.status] || statusConfig.pendente;
 
@@ -47,6 +48,13 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload }: 
   async function handleDownload() {
     setLoading('download');
     await onDownload(documento.id);
+    setLoading(null);
+  }
+
+  async function handleAbrir() {
+    if (!onAbrir) return;
+    setLoading('abrir');
+    await onAbrir(documento.id);
     setLoading(null);
   }
 
@@ -79,7 +87,18 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload }: 
           </div>
         )}
 
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100 flex-wrap">
+          {onAbrir && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleAbrir}
+              isLoading={loading === 'abrir'}
+              leftIcon={<FileText size={14} />}
+            >
+              Abrir
+            </Button>
+          )}
           <Button
             variant="outline"
             size="sm"
@@ -87,7 +106,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload }: 
             isLoading={loading === 'download'}
             leftIcon={<Download size={14} />}
           >
-            Visualizar / Baixar
+            Baixar
           </Button>
 
           {documento.status === 'pendente' && (

@@ -174,7 +174,8 @@ export function usePagamentos() {
   const downloadComprovativo = useCallback(async (pagamentoId: string): Promise<boolean> => {
     try {
       const response = await PagamentosBackofficeService.downloadComprovativo(pagamentoId);
-      const contentType = response.headers?.['content-type'] || 'application/pdf';
+      const contentTypeRaw = response.headers?.['content-type'] || 'application/pdf';
+      const contentType = String(contentTypeRaw);
       const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
       const link = document.createElement('a');
       link.href = url;

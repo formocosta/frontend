@@ -69,6 +69,7 @@ export default function KycDetailPage() {
     agendarEntrevista,
     atualizarEntrevista,
     downloadDocumento,
+    abrirDocumento,
   } = useCandidaturaDetail();
 
   const [showRejeitarModal, setShowRejeitarModal] = useState(false);
@@ -378,6 +379,7 @@ export default function KycDetailPage() {
                     onAprovar={aprovarDocumento}
                     onRejeitar={rejeitarDocumento}
                     onDownload={downloadDocumento}
+                    onAbrir={abrirDocumento}
                   />
                 ))}
               </div>

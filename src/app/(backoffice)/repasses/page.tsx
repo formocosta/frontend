@@ -69,7 +69,7 @@ export default function RepassesPage() {
     setActionLoading(false);
   }
 
-  const totalPages = meta ? Math.ceil(meta.total / 15) : 1;
+  const totalPages = meta ? Math.ceil(Number(meta.total) / 15) : 1;
 
   // Filtro Local baseado na Pesquisa (IBAN, Referência ou ID)
   const filteredRepasses = useMemo(() => {
@@ -81,6 +81,8 @@ export default function RepassesPage() {
       (rep.iban_destino && rep.iban_destino.toLowerCase().includes(lowerSearch))
     );
   }, [repasses, search]);
+
+  const totalCount = meta?.total !== undefined ? Number(meta.total) : filteredRepasses.length;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -197,7 +199,7 @@ export default function RepassesPage() {
       {!loading && filteredRepasses.length > 0 && (
         <div className="space-y-4">
           <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest bg-gray-50 inline-block px-2.5 py-1 rounded-sm border border-gray-100">
-            {meta?.total || filteredRepasses.length} repasse{(meta?.total !== 1 && filteredRepasses.length !== 1) ? 's' : ''} {search && '(Filtrados)'}
+            {totalCount} repasse{(totalCount !== 1) ? 's' : ''} {search ? '(Filtrados)' : ''}
           </p>
 
           <div className="bg-white rounded-sm border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">

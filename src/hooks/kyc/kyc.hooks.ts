@@ -57,6 +57,7 @@ export interface UseCandidaturaDetailReturn {
   listarEntrevistas: (id: string) => Promise<Entrevista[]>;
   atualizarEntrevista: (entrevistaId: string, data: AtualizarEntrevistaRequest) => Promise<boolean>;
   downloadDocumento: (documentoId: string) => Promise<boolean>;
+  abrirDocumento: (documentoId: string) => Promise<boolean>;
 }
 
 export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
@@ -194,7 +195,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
   const downloadDocumento = useCallback(async (documentoId: string): Promise<boolean> => {
     try {
       const response = await KycBackofficeService.downloadDocumento(documentoId);
-      const contentType = response.headers['content-type'] || 'application/octet-stream';
+      const contentTypeRaw = response.headers['content-type'] || 'application/octet-stream';
+      const contentType = String(contentTypeRaw);
       const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
       const link = document.createElement('a');
       link.href = url;
@@ -227,6 +229,20 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       return false;
     }
   }, []);
+  const abrirDocumento = useCallback(async (documentoId: string): Promise<boolean> => {
+    try {
+      const response = await KycBackofficeService.downloadDocumento(documentoId);
+      const contentTypeRaw = response.headers['content-type'] || 'application/octet-stream';
+      const contentType = String(contentTypeRaw);
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
+      window.open(url, '_blank');
+      return true;
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao abrir documento');
+      return false;
+    }
+  }, []);
 
   return {
     candidatura,
@@ -243,5 +259,6 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
     listarEntrevistas,
     atualizarEntrevista,
     downloadDocumento,
+    abrirDocumento,
   };
 }
