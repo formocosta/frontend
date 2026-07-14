@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BookOpen, Plus, Edit, Trash2, ChevronDown, ChevronRight, FolderOpen, MoreVertical, LayoutGrid } from 'lucide-react';
+import { BookOpen, Plus, Edit, Trash2, ChevronDown, 
+         ChevronRight, FolderOpen, LayoutGrid } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/common/form/Button';
 import { Input } from '@/components/common/form/Input';
@@ -16,11 +17,13 @@ import { Categoria } from '@/shared/types/backoffice/finance.types';
 import {
   criarCategoriaSchema,
   criarSubcategoriaSchema,
+  CriarCategoriaFormData,
+  CriarSubcategoriaFormData,
 } from '@/shared/schemas/finance.schema';
 
 export default function CatalogoPage() {
   const {
-    categorias, loading, error, fetchCategorias,
+    categorias = [], loading, error, fetchCategorias,
     criarCategoria, actualizarCategoria, eliminarCategoria,
     criarSubcategoria, actualizarSubcategoria
   } = useCatalogo();
@@ -171,7 +174,8 @@ export default function CatalogoPage() {
   }
 
   // Filter localmente as categorias pelo nome
-  const filteredCategorias = categorias.filter((cat) => 
+  const safeCategorias = Array.isArray(categorias) ? categorias : [];
+  const filteredCategorias = safeCategorias.filter((cat) => 
     cat.nome.toLowerCase().includes(search.toLowerCase()) || 
     (cat.descricao && cat.descricao.toLowerCase().includes(search.toLowerCase()))
   );
@@ -204,14 +208,14 @@ export default function CatalogoPage() {
         </div>
       )}
 
-      {loading && categorias.length === 0 && (
+      {loading && safeCategorias.length === 0 && (
         <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
           <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
           <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar catálogo...</p>
         </div>
       )}
 
-      {!loading && categorias.length === 0 && (
+      {!loading && safeCategorias.length === 0 && (
         <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
           <div className="w-14 h-14 rounded-sm bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
             <BookOpen size={28} />
@@ -223,7 +227,7 @@ export default function CatalogoPage() {
         </div>
       )}
       
-      {!loading && categorias.length > 0 && filteredCategorias.length === 0 && (
+      {!loading && safeCategorias.length > 0 && filteredCategorias.length === 0 && (
          <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
           <p className="text-[12px] text-gray-500 font-bold">Nenhum resultado encontrado para "{search}"</p>
         </div>
