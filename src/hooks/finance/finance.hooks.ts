@@ -174,10 +174,18 @@ export function usePagamentos() {
   const downloadComprovativo = useCallback(async (pagamentoId: string): Promise<boolean> => {
     try {
       const response = await PagamentosBackofficeService.downloadComprovativo(pagamentoId);
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const contentType = response.headers?.['content-type'] || 'application/pdf';
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `comprovativo_${pagamentoId}.pdf`);
+      
+      let filename = `comprovativo_${pagamentoId}`;
+      if (contentType.includes('pdf')) filename += '.pdf';
+      else if (contentType.includes('png')) filename += '.png';
+      else if (contentType.includes('jpeg') || contentType.includes('jpg')) filename += '.jpg';
+      else filename += '.pdf'; // Fallback to pdf as it was the default
+
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();

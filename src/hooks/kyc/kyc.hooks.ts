@@ -194,7 +194,8 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
   const downloadDocumento = useCallback(async (documentoId: string): Promise<boolean> => {
     try {
       const response = await KycBackofficeService.downloadDocumento(documentoId);
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const contentType = response.headers['content-type'] || 'application/octet-stream';
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
       const link = document.createElement('a');
       link.href = url;
 
@@ -205,6 +206,13 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
         if (matches && matches[1]) {
           filename = matches[1];
         }
+      }
+      
+      // Fallback extension if filename lacks one based on common content types
+      if (!filename.includes('.')) {
+        if (contentType.includes('pdf')) filename += '.pdf';
+        else if (contentType.includes('png')) filename += '.png';
+        else if (contentType.includes('jpeg') || contentType.includes('jpg')) filename += '.jpg';
       }
 
       link.setAttribute('download', filename);

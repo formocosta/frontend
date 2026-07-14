@@ -16,6 +16,7 @@ import { Button } from '@/components/common/form/Button';
 import { StatusBadge } from '@/components/common/ui/Badge';
 import { useSolicitacaoDetail } from '@/hooks/solicitacoes/solicitacoes.hooks';
 
+
 export default function SolicitacaoDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -28,6 +29,8 @@ export default function SolicitacaoDetailPage() {
     fetchSolicitacao,
     fetchMensagens,
   } = useSolicitacaoDetail();
+  
+
 
   useEffect(() => {
     fetchSolicitacao(id);
