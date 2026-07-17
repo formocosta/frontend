@@ -14,14 +14,12 @@ import {
   ChevronLeft,
   LogOut,
   Users,
-  UserCheck,
 } from 'lucide-react';
 
 const MAIN_NAV = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, allowedRoles: ['admin', 'operador'] },
   { label: 'Candidaturas KYC', href: '/kyc', icon: FileCheck, allowedRoles: ['admin', 'operador'] },
   { label: 'Solicitações', href: '/solicitacoes', icon: ClipboardList, allowedRoles: ['admin', 'operador'] },
-  { label: 'Prestadores', href: '/prestadores', icon: UserCheck, allowedRoles: ['admin', 'operador'] },
   { label: 'Clientes', href: '/clientes', icon: Users, allowedRoles: ['admin', 'operador'] },
   { label: 'Catálogo', href: '/catalogo', icon: BookOpen, allowedRoles: ['admin'] },
   { label: 'Pagamentos', href: '/pagamentos', icon: CreditCard, allowedRoles: ['admin'] },
