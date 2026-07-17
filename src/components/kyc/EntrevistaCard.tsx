@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Video, MapPin, Calendar, Clock, Edit } from 'lucide-react';
+import { Video, MapPin, Calendar, Clock, Edit, ClipboardCheck } from 'lucide-react';
 import { Entrevista } from '@/shared/types/backoffice/kyc.types';
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/form/Button';
@@ -133,9 +133,9 @@ export function EntrevistaCard({ entrevista, onAtualizar }: EntrevistaCardProps)
             variant="ghost"
             size="sm"
             onClick={() => setShowEditModal(true)}
-            leftIcon={<Edit size={14} />}
+            leftIcon={<ClipboardCheck size={14} />}
           >
-            Actualizar
+            Registar Resultado
           </Button>
         </div>
       </div>
@@ -143,7 +143,7 @@ export function EntrevistaCard({ entrevista, onAtualizar }: EntrevistaCardProps)
       <Modal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        title="Actualizar Entrevista"
+        title="Registar Resultado da Entrevista"
         size="md"
         footer={
           <>
