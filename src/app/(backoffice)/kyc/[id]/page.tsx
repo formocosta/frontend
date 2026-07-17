@@ -198,7 +198,9 @@ export default function KycDetailPage() {
   if (!candidatura) return null;
 
   const user = candidatura.user;
-  const canAct = candidatura.status_verificacao === 'pendente' || candidatura.status_verificacao === 'em_analise';
+  const canAct = candidatura.status_verificacao === 'pendente' || 
+                 candidatura.status_verificacao === 'em_analise' || 
+                 candidatura.status_verificacao === 'entrevista_agendada';
   const localizacao = [candidatura.provincia, candidatura.municipio, candidatura.bairro]
     .filter(Boolean)
     .join(', ');
