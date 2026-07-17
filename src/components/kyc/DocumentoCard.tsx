@@ -12,28 +12,31 @@ interface DocumentoCardProps {
   onAprovar: (id: string) => Promise<boolean>;
   onRejeitar: (id: string, motivo: string) => Promise<boolean>;
   onDownload: (id: string) => Promise<boolean>;
-  onAbrir?: (id: string) => Promise<boolean>;
+  onVisualizar?: (id: string) => Promise<{ url: string; type: string } | null>;
 }
-
+ 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' }> = {
   pendente: { label: 'Pendente', variant: 'warning' },
   aprovado: { label: 'Aprovado', variant: 'success' },
   rejeitado: { label: 'Rejeitado', variant: 'danger' },
 };
-
-export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onAbrir }: DocumentoCardProps) {
+ 
+export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onVisualizar }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectMotivo, setRejectMotivo] = useState('');
-  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | 'download' | 'abrir' | null>(null);
-
+  const [loading, setLoading] = useState<'aprovar' | 'rejeitar' | 'download' | 'visualizar' | null>(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewUrl, setViewUrl] = useState<string | null>(null);
+  const [viewType, setViewType] = useState<string>('');
+ 
   const status = statusConfig[documento.status] || statusConfig.pendente;
-
+ 
   async function handleAprovar() {
     setLoading('aprovar');
     await onAprovar(documento.id);
     setLoading(null);
   }
-
+ 
   async function handleRejeitar() {
     if (!rejectMotivo.trim()) return;
     setLoading('rejeitar');
@@ -44,18 +47,31 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
     }
     setLoading(null);
   }
-
+ 
   async function handleDownload() {
     setLoading('download');
     await onDownload(documento.id);
     setLoading(null);
   }
-
-  async function handleAbrir() {
-    if (!onAbrir) return;
-    setLoading('abrir');
-    await onAbrir(documento.id);
+ 
+  async function handleVisualizar() {
+    if (!onVisualizar) return;
+    setLoading('visualizar');
+    const res = await onVisualizar(documento.id);
+    if (res) {
+      setViewUrl(res.url);
+      setViewType(res.type);
+      setShowViewModal(true);
+    }
     setLoading(null);
+  }
+ 
+  function handleCloseViewModal() {
+    setShowViewModal(false);
+    if (viewUrl) {
+      window.URL.revokeObjectURL(viewUrl);
+      setViewUrl(null);
+    }
   }
 
   return (
@@ -88,15 +104,15 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
         )}
 
         <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100 flex-wrap">
-          {onAbrir && (
+          {onVisualizar && (
             <Button
               variant="outline"
               size="sm"
-              onClick={handleAbrir}
-              isLoading={loading === 'abrir'}
+              onClick={handleVisualizar}
+              isLoading={loading === 'visualizar'}
               leftIcon={<FileText size={14} />}
             >
-              Abrir
+              Visualizar
             </Button>
           )}
           <Button
@@ -108,7 +124,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
           >
             Baixar
           </Button>
-
+ 
           {documento.status === 'pendente' && (
             <>
               <Button
@@ -132,7 +148,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
           )}
         </div>
       </div>
-
+ 
       <Modal
         isOpen={showRejectModal}
         onClose={() => {
@@ -175,6 +191,29 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
             className="w-full rounded-sm border border-slate-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 bg-slate-50 focus:bg-white text-sm px-3 py-2.5 resize-none text-slate-800 placeholder:text-slate-400 outline-none"
             rows={3}
           />
+        </div>
+      </Modal>
+ 
+      <Modal
+        isOpen={showViewModal}
+        onClose={handleCloseViewModal}
+        title={`Visualizar Documento: ${documento.tipo_documento_id || 'Documento'}`}
+        size="lg"
+      >
+        <div className="flex flex-col items-center justify-center min-h-[300px] w-full">
+          {viewUrl && viewType.startsWith('image/') && (
+            <img src={viewUrl} alt="Visualização do documento" className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-sm" />
+          )}
+          {viewUrl && viewType.includes('pdf') && (
+            <iframe src={viewUrl} className="w-full h-[65vh] border border-gray-100 rounded-lg" title="Documento PDF" />
+          )}
+          {viewUrl && !viewType.startsWith('image/') && !viewType.includes('pdf') && (
+            <div className="text-center p-6 space-y-4">
+              <FileText size={48} className="mx-auto text-gray-300" />
+              <p className="text-sm text-gray-500">Este tipo de ficheiro ({viewType}) não pode ser pré-visualizado diretamente.</p>
+              <Button variant="primary" onClick={handleDownload}>Descarregar Ficheiro</Button>
+            </div>
+          )}
         </div>
       </Modal>
     </>

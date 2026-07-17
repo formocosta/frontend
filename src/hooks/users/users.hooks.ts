@@ -102,3 +102,29 @@ export function usePrestadorDetail() {
  
   return { prestador, loading, error, fetchPrestador };
 }
+ 
+export function usePrestadorDocumentos() {
+  const [loading, setLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+ 
+  const obterDocumentoBlob = useCallback(async (documentoId: string): Promise<{ url: string; type: string } | null> => {
+    setLoading(documentoId);
+    setError(null);
+    try {
+      const { KycBackofficeService } = await import('@/service/backoffice/kyc.service');
+      const response = await KycBackofficeService.downloadDocumento(documentoId);
+      const contentTypeRaw = response.headers['content-type'] || 'application/octet-stream';
+      const contentType = String(contentTypeRaw);
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
+      return { url, type: contentType };
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar documento');
+      return null;
+    } finally {
+      setLoading(null);
+    }
+  }, []);
+ 
+  return { loading, error, obterDocumentoBlob };
+}

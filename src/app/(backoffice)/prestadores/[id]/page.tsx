@@ -2,16 +2,42 @@
  
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { usePrestadorDetail } from '@/hooks/users/users.hooks';
+import { usePrestadorDetail, usePrestadorDocumentos } from '@/hooks/users/users.hooks';
 import { ArrowLeft, User, Mail, Phone, Calendar, ShieldCheck, MapPin, Star, Award, BookOpen, FileText, CalendarCheck } from 'lucide-react';
 import Link from 'next/link';
 import { StatusBadge } from '@/components/common/ui/Badge';
+import { Modal } from '@/components/common/ui/Modal';
+import { Button } from '@/components/common/form/Button';
  
 export default function PrestadorDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { prestador, loading, error, fetchPrestador } = usePrestadorDetail();
+  const { loading: loadingDoc, obterDocumentoBlob } = usePrestadorDocumentos();
   const [activeTab, setActiveTab] = useState<'perfil' | 'documentos' | 'servicos' | 'entrevistas'>('perfil');
+  
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewUrl, setViewUrl] = useState<string | null>(null);
+  const [viewType, setViewType] = useState<string>('');
+  const [viewTitle, setViewTitle] = useState<string>('Documento');
+ 
+  async function handleVisualizar(documentoId: string, tipoDocumento: string) {
+    setViewTitle(tipoDocumento.replace('_', ' ').toUpperCase());
+    const res = await obterDocumentoBlob(documentoId);
+    if (res) {
+      setViewUrl(res.url);
+      setViewType(res.type);
+      setShowViewModal(true);
+    }
+  }
+ 
+  function handleCloseViewModal() {
+    setShowViewModal(false);
+    if (viewUrl) {
+      window.URL.revokeObjectURL(viewUrl);
+      setViewUrl(null);
+    }
+  }
  
   useEffect(() => {
     if (id) {
@@ -210,14 +236,13 @@ export default function PrestadorDetailPage() {
                         <StatusBadge status={doc.status} />
                       </div>
                     </div>
-                    <a
-                      href={doc.url_arquivo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 bg-white border border-gray-200 text-gray-600 rounded-sm hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 text-[11px] font-bold shadow-sm transition-all"
+                    <button
+                      onClick={() => handleVisualizar(doc.id, doc.tipo_documento)}
+                      disabled={loadingDoc === doc.id}
+                      className="px-3 py-1.5 bg-white border border-gray-200 text-gray-600 rounded-sm hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 text-[11px] font-bold shadow-sm transition-all cursor-pointer disabled:opacity-50"
                     >
-                      Visualizar
-                    </a>
+                      {loadingDoc === doc.id ? 'A carregar...' : 'Visualizar'}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -306,6 +331,35 @@ export default function PrestadorDetailPage() {
           </div>
         )}
       </div>
+ 
+      <Modal
+        isOpen={showViewModal}
+        onClose={handleCloseViewModal}
+        title={`Visualizar Documento: ${viewTitle}`}
+        size="lg"
+      >
+        <div className="flex flex-col items-center justify-center min-h-[300px] w-full">
+          {viewUrl && viewType.startsWith('image/') && (
+            <img src={viewUrl} alt="Visualização do documento" className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-sm" />
+          )}
+          {viewUrl && viewType.includes('pdf') && (
+            <iframe src={viewUrl} className="w-full h-[65vh] border border-gray-100 rounded-lg" title="Documento PDF" />
+          )}
+          {viewUrl && !viewType.startsWith('image/') && !viewType.includes('pdf') && (
+            <div className="text-center p-6 space-y-4">
+              <FileText size={48} className="mx-auto text-gray-300" />
+              <p className="text-sm text-gray-500">Este tipo de ficheiro ({viewType}) não pode ser pré-visualizado diretamente.</p>
+              <a
+                href={viewUrl}
+                download
+                className="px-4 py-2 bg-[#42b883] text-white rounded-sm font-bold text-xs hover:bg-[#42b883]/90 transition-all inline-block"
+              >
+                Descarregar Ficheiro
+              </a>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }

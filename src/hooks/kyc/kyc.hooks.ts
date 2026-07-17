@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { AxiosError } from 'axios';
 import { KycBackofficeService } from '@/service/backoffice/kyc.service';
+import { useAuthStore } from '@/shared/store/auth.store';
 import {
   Candidatura,
   Entrevista,
@@ -57,7 +58,7 @@ export interface UseCandidaturaDetailReturn {
   listarEntrevistas: (id: string) => Promise<Entrevista[]>;
   atualizarEntrevista: (entrevistaId: string, data: AtualizarEntrevistaRequest) => Promise<boolean>;
   downloadDocumento: (documentoId: string) => Promise<boolean>;
-  abrirDocumento: (documentoId: string) => Promise<boolean>;
+  obterDocumentoBlob: (documentoId: string) => Promise<{ url: string; type: string } | null>;
 }
 
 export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
@@ -248,18 +249,17 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       return false;
     }
   }, []);
-  const abrirDocumento = useCallback(async (documentoId: string): Promise<boolean> => {
+  const obterDocumentoBlob = useCallback(async (documentoId: string): Promise<{ url: string; type: string } | null> => {
     try {
       const response = await KycBackofficeService.downloadDocumento(documentoId);
       const contentTypeRaw = response.headers['content-type'] || 'application/octet-stream';
       const contentType = String(contentTypeRaw);
       const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
-      window.open(url, '_blank');
-      return true;
+      return { url, type: contentType };
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao abrir documento');
-      return false;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar documento');
+      return null;
     }
   }, []);
 
@@ -278,6 +278,6 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
     listarEntrevistas,
     atualizarEntrevista,
     downloadDocumento,
-    abrirDocumento,
+    obterDocumentoBlob,
   };
 }
