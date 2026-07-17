@@ -161,7 +161,12 @@ export default function KycDetailPage() {
 
   async function handleAgendar(data: AgendarEntrevistaFormData) {
     setActionLoading(true);
-    const success = await agendarEntrevista(id, data);
+    // Clean payload: remove empty link_video so backend doesn't validate it as a URL
+    const payload = {
+      ...data,
+      link_video: data.link_video?.trim() || undefined,
+    };
+    const success = await agendarEntrevista(id, payload);
     if (success) {
       setShowAgendarModal(false);
       agendarForm.reset();

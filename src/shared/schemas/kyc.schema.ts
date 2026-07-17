@@ -24,8 +24,33 @@ export const agendarEntrevistaSchema = z.object({
   }),
   agendada_para: z
     .string()
-    .min(1, "A data da entrevista é obrigatória"),
-  link_video: z.string().url("URL inválida").optional().or(z.literal("")),
+    .min(1, "A data da entrevista é obrigatória")
+    .transform((val) => {
+      // datetime-local gives "2026-07-17T14:00" — append :00 seconds if missing
+      if (val && val.length === 16) return val + ':00';
+      return val;
+    }),
+  link_video: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (data.tipo === 'video_chamada') {
+    if (!data.link_video || data.link_video.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'O link de videochamada é obrigatório para entrevistas por vídeo.',
+        path: ['link_video'],
+      });
+    } else {
+      try {
+        new URL(data.link_video);
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Insira uma URL válida (ex: https://meet.google.com/...).',
+          path: ['link_video'],
+        });
+      }
+    }
+  }
 });
 
 export type AgendarEntrevistaFormData = z.infer<typeof agendarEntrevistaSchema>;
