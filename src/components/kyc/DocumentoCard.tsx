@@ -20,6 +20,14 @@ const statusConfig: Record<string, { label: string; variant: 'success' | 'danger
   aprovado: { label: 'Aprovado', variant: 'success' },
   rejeitado: { label: 'Rejeitado', variant: 'danger' },
 };
+
+const DOCUMENT_TYPE_LABELS: Record<string, string> = {
+  bi: 'BI / Passaporte',
+  nif: 'NIF',
+  certificado_registo: 'Certificado de Registo Comercial',
+  comprovativo_iban: 'Comprovativo de IBAN',
+  outros: 'Outro Documento',
+};
  
 export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onVisualizar }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -30,6 +38,8 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
   const [viewType, setViewType] = useState<string>('');
  
   const status = statusConfig[documento.status] || statusConfig.pendente;
+  const tipo = documento.tipo_documento || documento.tipo_documento_id;
+  const docLabel = tipo ? (DOCUMENT_TYPE_LABELS[tipo] || tipo.toUpperCase()) : 'Documento';
  
   async function handleAprovar() {
     setLoading('aprovar');
@@ -84,7 +94,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900">
-                {documento.tipo_documento_id || 'Documento'}
+                {docLabel}
               </p>
               <p className="text-[11px] text-gray-500 font-medium">
                 ID: {documento.id.slice(0, 8)}...
@@ -197,7 +207,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
       <Modal
         isOpen={showViewModal}
         onClose={handleCloseViewModal}
-        title={`Visualizar Documento: ${documento.tipo_documento_id || 'Documento'}`}
+        title={`Visualizar Documento: ${docLabel}`}
         size="lg"
       >
         <div className="flex flex-col items-center justify-center min-h-[300px] w-full">
