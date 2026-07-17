@@ -161,7 +161,12 @@ export default function KycDetailPage() {
 
   async function handleAgendar(data: AgendarEntrevistaFormData) {
     setActionLoading(true);
-    const success = await agendarEntrevista(id, data);
+    const date = new Date(data.agendada_para);
+    const formattedData = {
+      ...data,
+      agendada_para: isNaN(date.getTime()) ? data.agendada_para : date.toISOString(),
+    };
+    const success = await agendarEntrevista(id, formattedData);
     if (success) {
       setShowAgendarModal(false);
       agendarForm.reset();
