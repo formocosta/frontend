@@ -69,7 +69,7 @@ export default function KycDetailPage() {
     agendarEntrevista,
     atualizarEntrevista,
     downloadDocumento,
-    abrirDocumento,
+    obterDocumentoBlob,
   } = useCandidaturaDetail();
 
   const [showRejeitarModal, setShowRejeitarModal] = useState(false);
@@ -109,11 +109,11 @@ export default function KycDetailPage() {
     const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
     const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
 
-    const hasBi = docs.some(d => d.tipo_documento_id === 'bi' && d.status === 'aprovado');
-    const hasNif = docs.some(d => d.tipo_documento_id === 'nif' && d.status === 'aprovado');
-    const hasIban = docs.some(d => d.tipo_documento_id === 'comprovativo_iban' && d.status === 'aprovado');
+    const hasBi = docs.some(d => (d.tipo_documento === 'bi' || d.tipo_documento_id === 'bi') && d.status === 'aprovado');
+    const hasNif = docs.some(d => (d.tipo_documento === 'nif' || d.tipo_documento_id === 'nif') && d.status === 'aprovado');
+    const hasIban = docs.some(d => (d.tipo_documento === 'comprovativo_iban' || d.tipo_documento_id === 'comprovativo_iban') && d.status === 'aprovado');
     const hasCertificado = candidatura?.tipo_prestador === 'coletivo'
-      ? docs.some(d => d.tipo_documento_id === 'certificado_registo' && d.status === 'aprovado')
+      ? docs.some(d => (d.tipo_documento === 'certificado_registo' || d.tipo_documento_id === 'certificado_registo') && d.status === 'aprovado')
       : true;
 
     const allDocsApproved = hasBi && hasNif && hasIban && hasCertificado;
@@ -429,7 +429,7 @@ export default function KycDetailPage() {
                     onAprovar={aprovarDocumento}
                     onRejeitar={rejeitarDocumento}
                     onDownload={downloadDocumento}
-                    onAbrir={abrirDocumento}
+                    onVisualizar={obterDocumentoBlob}
                   />
                 ))}
               </div>

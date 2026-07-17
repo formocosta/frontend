@@ -13,6 +13,7 @@ export interface CandidaturaUser {
 
 export interface Documento {
   id: string;
+  tipo_documento?: string;
   tipo_documento_id?: string;
   status: DocumentStatus;
   motivo_rejeicao?: string;

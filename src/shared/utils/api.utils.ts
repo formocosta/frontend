@@ -45,11 +45,29 @@ apiClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        const authStore = useAuthStore.getState();
+        const hasRefreshToken = !!authStore.refreshToken;
+        
+        // Do not attempt to refresh token for auth-related public endpoints
+        const isIgnoredUrl = originalRequest.url ? [
+            '/v1/auth/login',
+            '/v1/auth/clientes/registar',
+            '/v1/auth/prestadores/registar',
+            '/v1/auth/otp/verificar',
+            '/v1/auth/otp/reenviar',
+            '/v1/auth/email/verificar',
+            '/v1/auth/email/reenviar',
+            '/v1/auth/2fa/verify',
+            '/v1/auth/2fa/validate'
+        ].some(url => originalRequest.url.includes(url)) : false;
+
         // Prevent infinite loops if refresh also fails with 401
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
-            originalRequest.url !== '/v1/auth/refresh'
+            originalRequest.url !== '/v1/auth/refresh' &&
+            hasRefreshToken &&
+            !isIgnoredUrl
         ) {
             if (isRefreshing) {
                 return new Promise<string>((resolve, reject) => {
