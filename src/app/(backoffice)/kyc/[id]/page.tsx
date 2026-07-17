@@ -624,6 +624,11 @@ export default function KycDetailPage() {
         }
       >
         <form className="space-y-5">
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-sm text-[13px] font-medium">
+              {error}
+            </div>
+          )}
           <Select
             label="Tipo de Entrevista"
             options={entrevistaTipoOptions}
