@@ -67,6 +67,7 @@ export default function KycDetailPage() {
     aprovarDocumento,
     rejeitarDocumento,
     agendarEntrevista,
+    listarEntrevistas,
     atualizarEntrevista,
     downloadDocumento,
     obterDocumentoBlob,
@@ -78,6 +79,7 @@ export default function KycDetailPage() {
   const [showConfirmAprovar, setShowConfirmAprovar] = useState(false);
   const [showConfirmResubmeter, setShowConfirmResubmeter] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [entrevistasExtras, setEntrevistasExtras] = useState<any[]>([]);
 
   const rejeitarForm = useForm<RejeitarCandidaturaFormData>({
     resolver: zodResolver(rejeitarCandidaturaSchema),
@@ -94,7 +96,8 @@ export default function KycDetailPage() {
 
   useEffect(() => {
     fetchCandidatura(id);
-  }, [id, fetchCandidatura]);
+    listarEntrevistas(id).then(setEntrevistasExtras);
+  }, [id, fetchCandidatura, listarEntrevistas]);
 
   useEffect(() => {
     if (candidatura) {
@@ -104,7 +107,9 @@ export default function KycDetailPage() {
 
   const validacaoAprovacao = useMemo(() => {
     const docs = candidatura?.documentos || [];
-    const entrevistas = candidatura?.entrevistas || [];
+    const entrevistas = (candidatura?.entrevistas && candidatura.entrevistas.length > 0) 
+      ? candidatura.entrevistas 
+      : entrevistasExtras;
 
     const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
     const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
@@ -126,7 +131,7 @@ export default function KycDetailPage() {
         !allDocsApproved ? 'Todos os documentos obrigatórios devem estar submetidos e aprovados.' : null
       ].filter(Boolean) as string[]
     };
-  }, [candidatura]);
+  }, [candidatura, entrevistasExtras]);
 
   async function handleAprovar() {
     setActionLoading(true);
@@ -161,15 +166,16 @@ export default function KycDetailPage() {
 
   async function handleAgendar(data: AgendarEntrevistaFormData) {
     setActionLoading(true);
-    const date = new Date(data.agendada_para);
-    const formattedData = {
+    // Clean payload: remove empty link_video so backend doesn't validate it as a URL
+    const payload = {
       ...data,
-      agendada_para: isNaN(date.getTime()) ? data.agendada_para : date.toISOString(),
+      link_video: data.link_video?.trim() || undefined,
     };
-    const success = await agendarEntrevista(id, formattedData);
+    const success = await agendarEntrevista(id, payload);
     if (success) {
       setShowAgendarModal(false);
       agendarForm.reset();
+      listarEntrevistas(id).then(setEntrevistasExtras);
     }
     setActionLoading(false);
   }
@@ -198,10 +204,16 @@ export default function KycDetailPage() {
   if (!candidatura) return null;
 
   const user = candidatura.user;
-  const canAct = candidatura.status_verificacao === 'pendente' || candidatura.status_verificacao === 'em_analise';
+  const canAct = candidatura.status_verificacao === 'pendente' || 
+                 candidatura.status_verificacao === 'em_analise' || 
+                 candidatura.status_verificacao === 'entrevista_agendada';
   const localizacao = [candidatura.provincia, candidatura.municipio, candidatura.bairro]
     .filter(Boolean)
     .join(', ');
+
+  const entrevistasAtuais = (candidatura.entrevistas && candidatura.entrevistas.length > 0) 
+    ? candidatura.entrevistas 
+    : entrevistasExtras;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -457,19 +469,23 @@ export default function KycDetailPage() {
               )}
             </div>
             
-            {candidatura.entrevistas && candidatura.entrevistas.length > 0 ? (
+            {entrevistasAtuais && entrevistasAtuais.length > 0 ? (
               <div className="space-y-4">
-                {candidatura.entrevistas.map((ent, i) => (
+                {entrevistasAtuais.map((ent, i) => (
                   <div key={ent.id} className="relative">
                     {/* Timeline line connecting items */}
-                    {i !== candidatura.entrevistas!.length - 1 && (
+                    {i !== entrevistasAtuais.length - 1 && (
                        <div className="absolute left-6 top-10 bottom-[-20px] w-[2px] bg-gray-100 z-0"></div>
                     )}
                     <div className="relative z-10">
                       <EntrevistaCard
                         entrevista={ent}
                         onAtualizar={async (entId, data) => {
-                          return atualizarEntrevista(entId, data);
+                          const success = await atualizarEntrevista(entId, data);
+                          if (success) {
+                            listarEntrevistas(id).then(setEntrevistasExtras);
+                          }
+                          return success;
                         }}
                       />
                     </div>
@@ -622,6 +638,11 @@ export default function KycDetailPage() {
         }
       >
         <form className="space-y-5">
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-sm text-[13px] font-medium">
+              {error}
+            </div>
+          )}
           <Select
             label="Tipo de Entrevista"
             options={entrevistaTipoOptions}

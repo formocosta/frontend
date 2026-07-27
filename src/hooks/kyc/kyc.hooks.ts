@@ -181,8 +181,15 @@ export function useCandidaturaDetail(): UseCandidaturaDetailReturn {
       await fetchCandidatura(id);
       return true;
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao agendar entrevista');
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      const responseData = axiosError.response?.data;
+      // Flatten field-level validation errors from 422
+      if (responseData?.errors) {
+        const allMessages = Object.values(responseData.errors).flat().join(' ');
+        setError(allMessages || responseData?.message || 'Erro ao agendar entrevista');
+      } else {
+        setError(responseData?.message || 'Erro ao agendar entrevista');
+      }
       return false;
     }
   }, [fetchCandidatura]);

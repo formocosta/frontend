@@ -1,7 +1,7 @@
 export type DocumentStatus = 'pendente' | 'aprovado' | 'rejeitado';
 export type InterviewStatus = 'agendada' | 'realizada' | 'cancelada' | 'nao_compareceu' | 'faltou';
 export type InterviewType = 'presencial' | 'video_chamada';
-export type StatusVerificacao = 'pendente' | 'em_analise' | 'aprovado' | 'rejeitado';
+export type StatusVerificacao = 'pendente' | 'em_analise' | 'aprovado' | 'rejeitado' | 'entrevista_agendada';
 export type TipoPrestador = 'singular' | 'coletivo';
 
 export interface CandidaturaUser {
