@@ -6,6 +6,8 @@ import { UsersBackofficeService } from '@/service/backoffice/users.service';
 import {
   Cliente,
   ListClientesParams,
+  PrestadorUser,
+  ListPrestadoresParams,
   PaginatedResponse
 } from '@/shared/types/backoffice/users.types';
  
@@ -55,6 +57,52 @@ export function useClienteDetail() {
   return { cliente, loading, error, fetchCliente };
 }
  
+export function usePrestadores() {
+  const [prestadores, setPrestadores] = useState<PrestadorUser[]>([]);
+  const [meta, setMeta] = useState<PaginatedResponse<PrestadorUser>['meta'] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPrestadores = useCallback(async (params?: ListPrestadoresParams) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await UsersBackofficeService.getPrestadores(params);
+      setPrestadores(response.data || []);
+      setMeta(response.meta || null);
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar prestadores');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { prestadores, meta, loading, error, fetchPrestadores };
+}
+
+export function usePrestadorDetail() {
+  const [prestadorUser, setPrestadorUser] = useState<PrestadorUser | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPrestador = useCallback(async (id: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await UsersBackofficeService.getPrestadorById(id);
+      setPrestadorUser(response.data || null);
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar detalhes do prestador');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { prestadorUser, loading, error, fetchPrestador };
+}
+
 export function usePrestadorDocumentos() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
