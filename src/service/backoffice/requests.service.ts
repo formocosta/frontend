@@ -14,7 +14,7 @@ export const RequestsBackofficeService = {
   },
 
   getSolicitacaoById: async (id: string) => {
-    const response = await apiClient.get<{ data: Solicitacao }>(`/v1/solicitacoes/${id}`);
+    const response = await apiClient.get<{ data: Solicitacao }>(`/v1/backoffice/solicitacoes/${id}`);
     return response.data;
   },
 
