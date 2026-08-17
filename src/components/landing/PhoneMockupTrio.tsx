@@ -12,8 +12,8 @@ import {
 export function PhoneMockupTrio() {
   return (
     <div className="mt-4 relative max-w-5xl mx-auto flex items-center justify-center">
-      {/* Background Arc / Circle Accent */}
-      <div className="absolute bottom-0 w-[75%] h-[240px] bg-gradient-to-t from-primary-700 to-primary-600 rounded-t-full shadow-2xl overflow-hidden -z-10" />
+      {/* Background Arc / Circle Accent (Orange Arch matching reference design) */}
+      <div className="absolute bottom-0 w-[90%] sm:w-[85%] h-[260px] sm:h-[300px] bg-[#f2811d] rounded-t-full shadow-xl overflow-hidden -z-10" />
 
       {/* Smartphone Container Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end w-full max-w-3xl px-4 pt-4">

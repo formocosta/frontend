@@ -10,7 +10,7 @@ export function HeroSection() {
         <div className="text-center max-w-3xl mx-auto space-y-4 pt-2">
           
           {/* Main Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#02562b] tracking-tight leading-[1.15]">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#02562b] tracking-tight leading-[1.15]">
             Sua Plataforma All-in-One de Serviços & Gestão
           </h1>
 
