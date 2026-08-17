@@ -33,29 +33,24 @@ export function LandingHeader() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-          <a href="#inicio" className="hover:text-primary-700 transition-colors">Início</a>
-          <a href="#vantagens" className="hover:text-primary-700 transition-colors">Vantagens</a>
-          <a href="#como-funciona" className="hover:text-primary-700 transition-colors">Como Funciona</a>
-          <a href="#para-quem" className="hover:text-primary-700 transition-colors">Para Quem É</a>
-          <a href="#depoimentos" className="hover:text-primary-700 transition-colors">Avaliações</a>
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
+          <a href="#inicio" className="text-slate-900 font-semibold border-b-2 border-slate-900 pb-0.5">Home</a>
+          <a href="#vantagens" className="hover:text-primary-700 transition-colors">Features</a>
+          <a href="#como-funciona" className="hover:text-primary-700 transition-colors">Services</a>
+          <a href="#depoimentos" className="hover:text-primary-700 transition-colors">Reviews</a>
+          <a href="#equipa" className="hover:text-primary-700 transition-colors">Team</a>
+          <a href="#precos" className="hover:text-primary-700 transition-colors">Pricing</a>
+          <a href="#contacto" className="hover:text-primary-700 transition-colors">Contact</a>
         </nav>
 
         {/* Header Action Buttons */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm font-semibold text-slate-700 hover:text-primary-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 hover:border-primary-300 bg-white"
-          >
-            Portal Backoffice
-          </Link>
-          
+        <div className="hidden md:flex items-center gap-3">
           <a
             href="#download"
-            className="bg-primary-700 hover:bg-primary-800 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 active:scale-95"
+            className="bg-[#02562b] hover:bg-[#014220] text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 active:scale-95"
           >
-            <Download size={16} />
-            <span>Baixar App</span>
+            <span>Download App</span>
+            <span className="text-xs">›</span>
           </a>
         </div>
 
