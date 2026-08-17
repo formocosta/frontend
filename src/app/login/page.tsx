@@ -51,9 +51,9 @@ export default function LoginPage() {
 
   return (
     <main className="h-screen w-full flex items-center justify-center font-sans bg-[#f3f4f6] p-4 sm:p-8 selection:bg-primary-200 selection:text-primary-900">
-      <div className="bg-white rounded-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[1000px] flex flex-col lg:flex-row overflow-hidden min-h-[650px] relative h-full max-h-[800px] p-4">
+      <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] w-full max-w-[820px] flex flex-col lg:flex-row overflow-hidden min-h-[550px] relative h-auto p-3 sm:p-4">
         
-        <section className="relative rounded-md hidden lg:flex lg:w-[45%] flex-col pt-12 px-12 pb-0 overflow-hidden bg-primary-700">
+        <section className="relative rounded-xl hidden lg:flex lg:w-[45%] flex-col pt-10 px-8 pb-0 overflow-hidden bg-primary-700">
           
           {/* Decorative SVGs for the background */}
           <div className="absolute top-0 right-0 -mt-10 -mr-10 text-primary-600/30">
@@ -88,7 +88,7 @@ export default function LoginPage() {
         </section>
 
         {/* ── RIGHT COLUMN: Form ──────────────────────────────────── */}
-        <section className="w-full lg:w-[55%] flex flex-col justify-center px-8 sm:px-14 lg:px-20 py-12 relative z-10 bg-white">
+        <section className="w-full lg:w-[55%] flex flex-col justify-center px-6 sm:px-10 lg:px-10 py-8 relative z-10 bg-white">
           <div className="w-full max-w-[340px] mx-auto">
             
             <div className="mb-8">
