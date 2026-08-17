@@ -21,7 +21,7 @@ export function PhoneMockupTrio() {
 
       {/* Smartphone Container Flex (Tightly grouped & overlapping like the reference design) */}
       <div className="flex items-center justify-center -space-x-12 sm:-space-x-16 md:-space-x-20 w-full max-w-4xl px-4 pt-4 z-10">
-        
+
         {/* Left Smartphone Mockup (Tilted left -14deg, overlapping under center) */}
         <div className="hidden sm:block z-0 transform -rotate-[14deg] translate-x-6 translate-y-8 hover:rotate-0 transition-transform duration-500 origin-bottom-right">
           <div className="bg-slate-900 p-3.5 rounded-[40px] shadow-2xl border-4 border-slate-800 w-[240px] sm:w-[280px]">
@@ -30,7 +30,7 @@ export function PhoneMockupTrio() {
                 <span className="font-extrabold text-slate-800 text-xs">Painel Profissional</span>
                 <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-[9px]">Online</span>
               </div>
-              
+
               <div className="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 space-y-1">
                 <div className="text-[10px] text-slate-400 font-bold uppercase">Ganhos Hoje</div>
                 <div className="text-lg font-black text-primary-700">45.000 Kz</div>
@@ -56,12 +56,12 @@ export function PhoneMockupTrio() {
         {/* Center Main Smartphone Mockup (Upright, Front & Centered) */}
         <div className="z-20 transform hover:scale-105 transition-transform duration-500">
           <div className="bg-slate-900 p-4 rounded-[44px] shadow-2xl border-4 border-slate-800 ring-1 ring-white/20 w-[270px] sm:w-[310px]">
-            
+
             {/* Speaker Notch */}
             <div className="w-28 h-4 bg-slate-800 mx-auto rounded-b-xl mb-2.5" />
 
             <div className="bg-white rounded-[32px] p-4 text-xs space-y-3.5 min-h-[440px] max-h-[460px] shadow-inner overflow-hidden">
-              
+
               <div className="flex items-center justify-between pt-0.5">
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-sm">
@@ -162,7 +162,7 @@ export function PhoneMockupTrio() {
 
       </div>
 
-      </div>
-    
+    </div>
+
   );
 }
