@@ -4,32 +4,22 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Download, Menu, X } from 'lucide-react';
-import iconLogo from '@/assets/images/icon3.png';
+import iconLogo from '@/assets/images/icon2.png';
 
 export function LandingHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all">
+    <header className="sticky top-0 z-50 bg-[#f4f2e6] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-12 h-10 flex items-center justify-center bg-primary-700 rounded-xl p-1.5 shadow-md group-hover:scale-105 transition-transform">
-            <Image
-              src={iconLogo}
-              alt="Formocosta Logo"
-              className="w-full h-full object-contain brightness-0 invert"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight text-slate-900">
-              Formo<span className="text-primary-700">costa</span>
-            </span>
-            <span className="text-[10px] text-primary-600 font-bold uppercase tracking-widest -mt-1">
-              Mobile App
-            </span>
-          </div>
+        <Link href="/" className="flex items-center group">
+          <Image
+            src={iconLogo}
+            alt="Formocosta Logo"
+            className="w-42 h-12 object-contain group-hover:scale-105 transition-transform"
+          />
         </Link>
 
         {/* Desktop Navigation */}
