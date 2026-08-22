@@ -29,7 +29,7 @@ export default function SolicitacaoDetailPage() {
     fetchSolicitacao,
     fetchMensagens,
   } = useSolicitacaoDetail();
-  
+
 
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function SolicitacaoDetailPage() {
         <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft size={16} />}>
           Voltar
         </Button>
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
           <p className="text-sm text-red-700 font-medium">{error}</p>
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function SolicitacaoDetailPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 font-medium">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-medium">
           {error}
         </div>
       )}
@@ -90,7 +90,7 @@ export default function SolicitacaoDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Description */}
           {solicitacao.descricao_cliente && (
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="bg-white rounded-md border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
                 <FileText size={16} />
                 Descrição do Cliente
@@ -103,7 +103,7 @@ export default function SolicitacaoDetailPage() {
 
           {/* Service details */}
           {solicitacao.servico && (
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="bg-white rounded-md border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-900 mb-3">Detalhes do Serviço</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2 border-b border-gray-50">
@@ -136,7 +136,7 @@ export default function SolicitacaoDetailPage() {
           )}
 
           {/* Messages */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
+          <div className="bg-white rounded-md border border-gray-100 p-5">
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-4">
               <MessageSquare size={16} />
               Mensagens ({solicitacao.mensagens?.length || 0})
@@ -163,7 +163,7 @@ export default function SolicitacaoDetailPage() {
         {/* Sidebar info */}
         <div className="space-y-6">
           {/* Location */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
+          <div className="bg-white rounded-md border border-gray-100 p-5">
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
               <MapPin size={16} />
               Localização
@@ -188,7 +188,7 @@ export default function SolicitacaoDetailPage() {
           </div>
 
           {/* Schedule */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
+          <div className="bg-white rounded-md border border-gray-100 p-5">
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
               <Calendar size={16} />
               Agendamento
@@ -213,7 +213,7 @@ export default function SolicitacaoDetailPage() {
 
           {/* Provider */}
           {solicitacao.prestador && (
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="bg-white rounded-md border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
                 <User size={16} />
                 Prestador
@@ -237,7 +237,7 @@ export default function SolicitacaoDetailPage() {
 
           {/* Price */}
           {solicitacao.preco_acordado != null && (
-            <div className="bg-[#42b883]/5 border border-[#42b883]/20 rounded-xl p-5">
+            <div className="bg-[#42b883]/5 border border-[#42b883]/20 rounded-md p-5">
               <h3 className="text-sm font-bold text-gray-900 mb-2">Preço Acordado</h3>
               <p className="text-xl font-extrabold text-[#42b883]">
                 {Number(solicitacao.preco_acordado).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
@@ -246,7 +246,7 @@ export default function SolicitacaoDetailPage() {
           )}
 
           {/* Timeline */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
+          <div className="bg-white rounded-md border border-gray-100 p-5">
             <h3 className="text-sm font-bold text-gray-900 mb-3">Cronograma</h3>
             <div className="space-y-3 text-[11px]">
               <div className="flex items-center gap-3">

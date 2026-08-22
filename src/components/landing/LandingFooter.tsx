@@ -7,11 +7,11 @@ export function LandingFooter() {
     <footer className="bg-slate-900 text-slate-400 text-sm border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          
+
           {/* Brand column */}
           <div className="space-y-4 md:col-span-1">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-9 flex items-center justify-center bg-primary-700 rounded-xl p-1 shadow-md">
+              <div className="w-10 h-9 flex items-center justify-center bg-primary-700 rounded-md p-1 shadow-md">
                 <Image
                   src={iconLogo}
                   alt="Formocosta Logo"

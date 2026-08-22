@@ -31,7 +31,7 @@ export function PhoneMockupTrio() {
                 <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-[9px]">Online</span>
               </div>
 
-              <div className="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 space-y-1">
+              <div className="bg-white p-3.5 rounded-md shadow-sm border border-slate-100 space-y-1">
                 <div className="text-[10px] text-slate-400 font-bold uppercase">Ganhos Hoje</div>
                 <div className="text-lg font-black text-primary-700">45.000 Kz</div>
                 <div className="text-[10px] text-emerald-600 font-medium">↑ +18% esta semana</div>
@@ -95,7 +95,7 @@ export function PhoneMockupTrio() {
                 </div>
               </div>
 
-              <div className="bg-slate-900 text-white p-2.5 rounded-xl space-y-1.5 shadow-md">
+              <div className="bg-slate-900 text-white p-2.5 rounded-md space-y-1.5 shadow-md">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center font-bold text-white text-xs">
                     DR
@@ -143,7 +143,7 @@ export function PhoneMockupTrio() {
                 <span className="text-[10px] text-emerald-200">Agora</span>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10 flex gap-2.5">
+              <div className="bg-white/10 backdrop-blur-sm p-3 rounded-md border border-white/10 flex gap-2.5">
                 <CheckCircle2 size={18} className="text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <div className="font-bold text-white text-xs">Serviço Confirmado!</div>
@@ -151,7 +151,7 @@ export function PhoneMockupTrio() {
                 </div>
               </div>
 
-              <div className="bg-white/15 p-3 rounded-xl space-y-1 border border-white/10">
+              <div className="bg-white/15 p-3 rounded-md space-y-1 border border-white/10">
                 <div className="text-[10px] text-amber-300 font-bold">Dica Formocosta</div>
                 <div className="text-[10px] text-slate-100 leading-snug">Acompanhe o estado do seu pedido em tempo real.</div>
               </div>

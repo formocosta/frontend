@@ -24,7 +24,7 @@ export function CandidaturaCard({ candidatura }: CandidaturaCardProps) {
   return (
     <Link
       href={`/kyc/${candidatura.id}`}
-      className="block bg-white rounded-xl border border-gray-100 hover:border-[#42b883]/30 hover:shadow-lg hover:shadow-[#42b883]/5 transition-all duration-300 group"
+      className="block bg-white rounded-md border border-gray-100 hover:border-[#42b883]/30 hover:shadow-lg hover:shadow-[#42b883]/5 transition-all duration-300 group"
     >
       <div className="p-5">
         <div className="flex items-start gap-4">
@@ -83,7 +83,7 @@ export function CandidaturaCard({ candidatura }: CandidaturaCardProps) {
           </div>
 
           {/* Arrow */}
-          <div className="shrink-0 w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#42b883]/10 group-hover:text-[#42b883] transition-all">
+          <div className="shrink-0 w-9 h-9 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#42b883]/10 group-hover:text-[#42b883] transition-all">
             <ChevronRight size={16} />
           </div>
         </div>

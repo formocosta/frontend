@@ -83,7 +83,7 @@ export function EntrevistaCard({ entrevista, onAtualizar }: EntrevistaCardProps)
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
+      <div className="bg-white rounded-md border border-gray-100 p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">

@@ -12,7 +12,7 @@ export function LandingHeader() {
   return (
     <header className="sticky top-0 z-50 bg-[#f4f2e6] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        
+
         {/* Brand Logo */}
         <Link href="/" className="flex items-center group">
           <Image
@@ -37,7 +37,7 @@ export function LandingHeader() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#download"
-            className="bg-[#02562b] hover:bg-[#014220] text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 active:scale-95"
+            className="bg-[#02562b] hover:bg-[#014220] text-white font-semibold text-sm px-5 py-2.5 rounded-md shadow-sm transition-all flex items-center gap-2 active:scale-95"
           >
             <span>Download App</span>
             <span className="text-xs">›</span>
@@ -97,14 +97,14 @@ export function LandingHeader() {
           <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
             <Link
               href="/login"
-              className="w-full text-center py-2.5 text-sm font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50"
+              className="w-full text-center py-2.5 text-sm font-semibold text-slate-700 border border-slate-200 rounded-md hover:bg-slate-50"
             >
               Aceder ao Backoffice
             </Link>
             <a
               href="#download"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 text-sm font-semibold text-white bg-primary-700 rounded-xl shadow"
+              className="w-full text-center py-2.5 text-sm font-semibold text-white bg-primary-700 rounded-md shadow"
             >
               Baixar Aplicativo Móvel
             </a>

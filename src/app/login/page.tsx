@@ -52,9 +52,9 @@ export default function LoginPage() {
   return (
     <main className="h-screen w-full flex items-center justify-center font-sans bg-[#f3f4f6] p-4 sm:p-8 selection:bg-primary-200 selection:text-primary-900">
       <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] w-full max-w-[820px] flex flex-col lg:flex-row overflow-hidden min-h-[550px] relative h-auto p-3 sm:p-4">
-        
-        <section className="relative rounded-xl hidden lg:flex lg:w-[45%] flex-col pt-10 px-8 pb-0 overflow-hidden bg-primary-700">
-          
+
+        <section className="relative rounded-md hidden lg:flex lg:w-[45%] flex-col pt-10 px-8 pb-0 overflow-hidden bg-primary-700">
+
           {/* Decorative SVGs for the background */}
           <div className="absolute top-0 right-0 -mt-10 -mr-10 text-primary-600/30">
             <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
@@ -65,12 +65,12 @@ export default function LoginPage() {
           {/* Top Content */}
           <div className="relative z-10">
             <Image src={icon} alt="Logo" className="w-40 h-24 object-contain object-left mb-8 drop-shadow-md brightness-0 invert" />
-            
+
             <div className="relative">
               <svg className="absolute -top-4 -left-4 w-10 h-10 text-primary-500/40" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
-              <p className="relative z-10 text-[15px] text-white/95 font-medium leading-[1.7] max-w-[90%] tracking-wide"> 
+              <p className="relative z-10 text-[15px] text-white/95 font-medium leading-[1.7] max-w-[90%] tracking-wide">
                 Conecte clientes a profissionais qualificados, faça o acompanhamento e simplifique as operações do seu negócio com total controlo.
               </p>
             </div>
@@ -78,9 +78,9 @@ export default function LoginPage() {
 
           {/* Bottom Content / Image */}
           <div className="relative z-10 flex-1 flex items-end justify-center mt-12 w-full h-full bg-primary-800/30 rounded-t-[32px] overflow-hidden backdrop-blur-sm border border-primary-600/30 border-b-0">
-            <Image 
-              src={profissionalImage} 
-              alt="Profissional" 
+            <Image
+              src={profissionalImage}
+              alt="Profissional"
               className="w-full h-auto object-cover object-bottom"
             />
           </div>
@@ -90,10 +90,10 @@ export default function LoginPage() {
         {/* ── RIGHT COLUMN: Form ──────────────────────────────────── */}
         <section className="w-full lg:w-[55%] flex flex-col justify-center px-6 sm:px-10 lg:px-10 py-8 relative z-10 bg-white">
           <div className="w-full max-w-[340px] mx-auto">
-            
+
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-[#42b883]">
+                <div className="w-10 h-10 rounded-md bg-green-50 flex items-center justify-center text-[#42b883]">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
@@ -131,7 +131,7 @@ export default function LoginPage() {
                   </svg>
                   Entrar com o Google
                 </Button>
-                
+
               </div>
 
               <div className="flex items-center gap-4 mb-6">
@@ -198,7 +198,7 @@ export default function LoginPage() {
                 </a>
               </span>
             </div>
-            
+
           </div>
         </section>
 

@@ -14,7 +14,7 @@ interface DocumentoCardProps {
   onDownload: (id: string) => Promise<boolean>;
   onVisualizar?: (id: string) => Promise<{ url: string; type: string } | null>;
 }
- 
+
 const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' }> = {
   pendente: { label: 'Pendente', variant: 'warning' },
   aprovado: { label: 'Aprovado', variant: 'success' },
@@ -28,7 +28,7 @@ const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   comprovativo_iban: 'Comprovativo de IBAN',
   outros: 'Outro Documento',
 };
- 
+
 export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onVisualizar }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectMotivo, setRejectMotivo] = useState('');
@@ -36,17 +36,17 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewUrl, setViewUrl] = useState<string | null>(null);
   const [viewType, setViewType] = useState<string>('');
- 
+
   const status = statusConfig[documento.status] || statusConfig.pendente;
   const tipo = documento.tipo_documento || documento.tipo_documento_id;
   const docLabel = tipo ? (DOCUMENT_TYPE_LABELS[tipo] || tipo.toUpperCase()) : 'Documento';
- 
+
   async function handleAprovar() {
     setLoading('aprovar');
     await onAprovar(documento.id);
     setLoading(null);
   }
- 
+
   async function handleRejeitar() {
     if (!rejectMotivo.trim()) return;
     setLoading('rejeitar');
@@ -57,13 +57,13 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
     }
     setLoading(null);
   }
- 
+
   async function handleDownload() {
     setLoading('download');
     await onDownload(documento.id);
     setLoading(null);
   }
- 
+
   async function handleVisualizar() {
     if (!onVisualizar) return;
     setLoading('visualizar');
@@ -75,7 +75,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
     }
     setLoading(null);
   }
- 
+
   function handleCloseViewModal() {
     setShowViewModal(false);
     if (viewUrl) {
@@ -86,7 +86,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
+      <div className="bg-white rounded-md border border-gray-100 p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500">
@@ -134,7 +134,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
           >
             Baixar
           </Button>
- 
+
           {documento.status === 'pendente' && (
             <>
               <Button
@@ -158,7 +158,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
           )}
         </div>
       </div>
- 
+
       <Modal
         isOpen={showRejectModal}
         onClose={() => {
@@ -203,7 +203,7 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
           />
         </div>
       </Modal>
- 
+
       <Modal
         isOpen={showViewModal}
         onClose={handleCloseViewModal}

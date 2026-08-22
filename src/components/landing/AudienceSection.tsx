@@ -9,7 +9,7 @@ export function AudienceSection() {
   return (
     <section id="para-quem" className="py-20 bg-white border-y border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-block px-3.5 py-1 rounded-full bg-primary-100 text-primary-800 text-xs font-bold uppercase tracking-wider">
             UMA PLATAFORMA, DUAS SOLUÇÕES
@@ -25,11 +25,10 @@ export function AudienceSection() {
             <button
               type="button"
               onClick={() => setActiveTab('clients')}
-              className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                activeTab === 'clients'
+              className={`px-6 py-2.5 rounded-md font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'clients'
                   ? 'bg-primary-700 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
             >
               <Users size={16} />
               <span>Para Clientes</span>
@@ -37,11 +36,10 @@ export function AudienceSection() {
             <button
               type="button"
               onClick={() => setActiveTab('pros')}
-              className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                activeTab === 'pros'
+              className={`px-6 py-2.5 rounded-md font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'pros'
                   ? 'bg-primary-700 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
             >
               <Briefcase size={16} />
               <span>Para Profissionais</span>
@@ -83,15 +81,15 @@ export function AudienceSection() {
               <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-inner space-y-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-slate-400">O que você ganha como cliente</div>
                 <div className="space-y-3">
-                  <div className="p-3 bg-primary-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-primary-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-primary-900">Economia de Tempo</span>
                     <span className="text-xs font-black text-primary-700">100% Digital</span>
                   </div>
-                  <div className="p-3 bg-emerald-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-emerald-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-emerald-900">Histórico de Atendimentos</span>
                     <span className="text-xs font-black text-emerald-700">Organizado</span>
                   </div>
-                  <div className="p-3 bg-blue-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-blue-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-blue-900">Suporte Dedicado</span>
                     <span className="text-xs font-black text-blue-700">Sempre Ativo</span>
                   </div>
@@ -130,15 +128,15 @@ export function AudienceSection() {
               <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-inner space-y-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-slate-400">O que você ganha como profissional</div>
                 <div className="space-y-3">
-                  <div className="p-3 bg-primary-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-primary-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-primary-900">Mais Clientes Mensais</span>
                     <span className="text-xs font-black text-primary-700">Crescimento</span>
                   </div>
-                  <div className="p-3 bg-emerald-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-emerald-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-emerald-900">Controlo de Agenda</span>
                     <span className="text-xs font-black text-emerald-700">Sem Faltas</span>
                   </div>
-                  <div className="p-3 bg-amber-50 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-amber-50 rounded-md flex items-center justify-between">
                     <span className="text-xs font-bold text-amber-900">Reputação de Marca</span>
                     <span className="text-xs font-black text-amber-700">Avaliações 5★</span>
                   </div>

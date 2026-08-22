@@ -9,7 +9,7 @@ export function DownloadBanner() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="bg-gradient-to-r from-primary-800 to-primary-900 rounded-3xl p-8 sm:p-14 border border-primary-700/50 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10">
-          
+
           {/* CTA Text */}
           <div className="space-y-6 max-w-xl">
             <span className="px-3.5 py-1.5 rounded-full bg-primary-700 text-primary-200 font-bold text-xs uppercase tracking-wider border border-primary-600">
@@ -21,10 +21,10 @@ export function DownloadBanner() {
             <p className="text-primary-100 text-base sm:text-lg leading-relaxed">
               Descarregue gratuitamente e tenha o melhor catálogo de serviços e profissionais qualificados sempre à mão.
             </p>
-            
+
             {/* Store Buttons */}
             <div className="pt-2 flex flex-wrap gap-4">
-              
+
               <a
                 href="#"
                 className="bg-white text-slate-900 hover:bg-slate-100 px-6 py-3.5 rounded-2xl flex items-center gap-3 shadow-lg transition-all font-bold text-sm"
@@ -51,7 +51,7 @@ export function DownloadBanner() {
           {/* QR Code Graphic */}
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 flex flex-col items-center text-center space-y-3">
             <div className="w-32 h-32 bg-white rounded-2xl p-2 shadow-inner flex items-center justify-center">
-              <div className="w-full h-full border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400">
+              <div className="w-full h-full border-2 border-dashed border-slate-300 rounded-md flex flex-col items-center justify-center text-slate-400">
                 <Smartphone size={32} className="text-primary-700 mb-1" />
                 <span className="text-[9px] font-bold text-slate-600">QR CODE APP</span>
               </div>
