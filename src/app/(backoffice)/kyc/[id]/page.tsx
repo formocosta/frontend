@@ -28,6 +28,7 @@ import { Input } from '@/components/common/form/Input';
 import { Select, SelectOption } from '@/components/common/form/Select';
 import { StatusBadge } from '@/components/common/ui/Badge';
 import { Modal, ConfirmModal } from '@/components/common/ui/Modal';
+import type { Documento, Entrevista } from '@/shared/types/backoffice/kyc.types';
 import { DocumentoCard } from '@/components/kyc/DocumentoCard';
 import { EntrevistaCard } from '@/components/kyc/EntrevistaCard';
 import { useCandidaturaDetail } from '@/hooks/kyc/kyc.hooks';
@@ -49,6 +50,46 @@ const tipoLabels: Record<string, string> = {
   singular: 'Pessoa Singular',
   coletivo: 'Pessoa Coletiva',
 };
+
+function DocStatusSummary({ documents }: { documents: Documento[] }) {
+  const total = documents.length || 0;
+  const aprovados = documents.filter(d => d.status === 'aprovado').length;
+  const pendentes = documents.filter(d => d.status === 'pendente').length;
+  const rejeitados = documents.filter(d => d.status === 'rejeitado').length;
+  const progress = total > 0 ? Math.round((aprovados / total) * 100) : 0;
+
+  const items = [
+    { label: 'Aprovados', count: aprovados, dot: 'bg-emerald-500', text: 'text-emerald-600' },
+    { label: 'Pendentes', count: pendentes, dot: 'bg-amber-400', text: 'text-amber-600' },
+    { label: 'Rejeitados', count: rejeitados, dot: 'bg-red-500', text: 'text-red-600' },
+  ];
+
+  return (
+    <div className="mt-5">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Progresso da análise</span>
+        <span className="text-[12px] font-black text-gray-900">{progress}%</span>
+      </div>
+      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-[#42b883] to-emerald-500 rounded-full transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-3 mt-4">
+        {items.map(({ label, count, dot, text }) => (
+          <div key={label} className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5 flex items-center gap-2.5">
+            <span className={`w-2 h-2 rounded-full ${dot}`}></span>
+            <div className="min-w-0">
+              <p className="text-lg font-black text-gray-900 leading-none">{count}</p>
+              <p className={`text-[10px] font-bold uppercase tracking-wide mt-1 ${text}`}>{label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function KycDetailPage() {
   const params = useParams();
@@ -79,7 +120,7 @@ export default function KycDetailPage() {
   const [showConfirmAprovar, setShowConfirmAprovar] = useState(false);
   const [showConfirmResubmeter, setShowConfirmResubmeter] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [entrevistasExtras, setEntrevistasExtras] = useState<any[]>([]);
+  const [entrevistasExtras, setEntrevistasExtras] = useState<Entrevista[]>([]);
 
   const rejeitarForm = useForm<RejeitarCandidaturaFormData>({
     resolver: zodResolver(rejeitarCandidaturaSchema),
@@ -419,37 +460,51 @@ export default function KycDetailPage() {
         <div className="w-full lg:w-[65%] flex flex-col gap-6">
           
           {/* Documents Section */}
-          <div className="bg-white rounded-sm border border-gray-100 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-              <h3 className="text-base font-black text-gray-900 flex items-center gap-2 tracking-tight">
-                <FileText size={20} className="text-[#42b883]" />
-                Documentação Analisada
-              </h3>
-              <span className="bg-gray-100 text-gray-600 text-[11px] font-bold px-3 py-1 rounded-sm">
-                {candidatura.documentos?.length || 0} anexos
-              </span>
+          <div className="bg-white rounded-sm border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+            <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <h3 className="text-base font-black text-gray-900 flex items-center gap-2 tracking-tight">
+                    <span className="w-9 h-9 rounded-lg bg-[#42b883]/10 text-[#42b883] flex items-center justify-center">
+                      <FileText size={18} />
+                    </span>
+                    Documentação Analisada
+                  </h3>
+                  <p className="text-[12px] text-gray-500 font-medium mt-1 ml-11">
+                    Aprove ou rejeite cada ficheiro submetido pelo prestador
+                  </p>
+                </div>
+                <span className="bg-gray-900 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                  {candidatura.documentos?.length || 0} anexos
+                </span>
+              </div>
+              <DocStatusSummary documents={candidatura.documentos || []} />
             </div>
-            
-            {candidatura.documentos && candidatura.documentos.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {candidatura.documentos.map((doc) => (
-                  <DocumentoCard
-                    key={doc.id}
-                    documento={doc}
-                    onAprovar={aprovarDocumento}
-                    onRejeitar={rejeitarDocumento}
-                    onDownload={downloadDocumento}
-                    onVisualizar={obterDocumentoBlob}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-gray-50 rounded-sm p-12 text-center border border-dashed border-gray-200">
-                <FileText size={32} className="mx-auto text-gray-300 mb-3" />
-                <p className="text-sm text-gray-900 font-bold">Sem Documentação</p>
-                <p className="text-[12px] text-gray-500 font-medium mt-1">O prestador ainda não submeteu ou não existem ficheiros anexados a esta candidatura.</p>
-              </div>
-            )}
+
+            <div className="p-6">
+              {candidatura.documentos && candidatura.documentos.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {candidatura.documentos.map((doc) => (
+                    <DocumentoCard
+                      key={doc.id}
+                      documento={doc}
+                      onAprovar={aprovarDocumento}
+                      onRejeitar={rejeitarDocumento}
+                      onDownload={downloadDocumento}
+                      onVisualizar={obterDocumentoBlob}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-gray-50 rounded-lg p-12 text-center border border-dashed border-gray-200">
+                  <span className="w-14 h-14 rounded-2xl bg-white border border-gray-100 flex items-center justify-center mx-auto mb-4 shadow-sm">
+                    <FileText size={28} className="text-gray-300" />
+                  </span>
+                  <p className="text-sm text-gray-900 font-bold">Sem Documentação</p>
+                  <p className="text-[12px] text-gray-500 font-medium mt-1 max-w-xs mx-auto">O prestador ainda não submeteu ou não existem ficheiros anexados a esta candidatura.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Interviews Section */}

@@ -1,9 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, CheckCircle, XCircle, Download } from 'lucide-react';
+import {
+  FileText,
+  CheckCircle,
+  XCircle,
+  Download,
+  FileSignature,
+  Landmark,
+  IdCard,
+  Eye,
+  CalendarClock,
+} from 'lucide-react';
 import { Documento } from '@/shared/types/backoffice/kyc.types';
-import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/form/Button';
 import { Modal } from '@/components/common/ui/Modal';
 
@@ -15,19 +24,25 @@ interface DocumentoCardProps {
   onVisualizar?: (id: string) => Promise<{ url: string; type: string } | null>;
 }
 
-const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning' }> = {
-  pendente: { label: 'Pendente', variant: 'warning' },
-  aprovado: { label: 'Aprovado', variant: 'success' },
-  rejeitado: { label: 'Rejeitado', variant: 'danger' },
+const statusConfig: Record<string, { label: string; variant: 'success' | 'danger' | 'warning'; dot: string; pill: string }> = {
+  pendente: { label: 'Pendente', variant: 'warning', dot: 'bg-amber-400', pill: 'bg-amber-50 text-amber-700 border-amber-200' },
+  aprovado: { label: 'Aprovado', variant: 'success', dot: 'bg-emerald-500', pill: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  rejeitado: { label: 'Rejeitado', variant: 'danger', dot: 'bg-red-500', pill: 'bg-red-50 text-red-700 border-red-200' },
 };
 
-const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  bi: 'BI / Passaporte',
-  nif: 'NIF',
-  certificado_registo: 'Certificado de Registo Comercial',
-  comprovativo_iban: 'Comprovativo de IBAN',
-  outros: 'Outro Documento',
+const DOCUMENT_TYPE_META: Record<string, { label: string; icon: React.ElementType; color: string; bg: string; ring: string }> = {
+  bi: { label: 'BI / Passaporte', icon: IdCard, color: 'text-blue-600', bg: 'bg-blue-50', ring: 'ring-blue-100' },
+  nif: { label: 'NIF', icon: FileSignature, color: 'text-violet-600', bg: 'bg-violet-50', ring: 'ring-violet-100' },
+  certificado_registo: { label: 'Certificado de Registo', icon: FileText, color: 'text-teal-600', bg: 'bg-teal-50', ring: 'ring-teal-100' },
+  comprovativo_iban: { label: 'Comprovativo de IBAN', icon: Landmark, color: 'text-cyan-600', bg: 'bg-cyan-50', ring: 'ring-cyan-100' },
+  outros: { label: 'Outro Documento', icon: FileText, color: 'text-gray-600', bg: 'bg-gray-50', ring: 'ring-gray-100' },
 };
+
+function formatFileName(caminho?: string) {
+  if (!caminho) return null;
+  const base = caminho.split('/').pop() || caminho;
+  return base.length > 28 ? `${base.slice(0, 26)}…` : base;
+}
 
 export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, onVisualizar }: DocumentoCardProps) {
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -38,8 +53,11 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
   const [viewType, setViewType] = useState<string>('');
 
   const status = statusConfig[documento.status] || statusConfig.pendente;
-  const tipo = documento.tipo_documento || documento.tipo_documento_id;
-  const docLabel = tipo ? (DOCUMENT_TYPE_LABELS[tipo] || tipo.toUpperCase()) : 'Documento';
+  const tipo = documento.tipo_documento || documento.tipo_documento_id || 'outros';
+  const meta = DOCUMENT_TYPE_META[tipo] || DOCUMENT_TYPE_META.outros;
+  const TypeIcon = meta.icon;
+  const docLabel = meta.label;
+  const fileName = formatFileName(documento.caminho_arquivo);
 
   async function handleAprovar() {
     setLoading('aprovar');
@@ -86,43 +104,62 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
 
   return (
     <>
-      <div className="bg-white rounded-md border border-gray-100 p-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500">
-              <FileText size={18} />
+      <div className={`relative bg-white rounded-xl border border-gray-100 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.07)] hover:border-gray-200 transition-all duration-200 overflow-hidden group`}>
+        {/* Top accent color bar by doc type */}
+        <div className={`absolute top-0 left-0 right-0 h-1 ${meta.color} opacity-90`}></div>
+
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className={`relative w-12 h-12 rounded-xl ${meta.bg} ${meta.ring} ring-2 flex items-center justify-center shrink-0 ${meta.color}`}>
+              <TypeIcon size={22} />
+              {documento.status === 'pendente' && (
+                <span className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${status.dot} ring-2 ring-white`}></span>
+              )}
             </div>
-            <div>
-              <p className="text-sm font-bold text-gray-900">
-                {docLabel}
-              </p>
-              <p className="text-[11px] text-gray-500 font-medium">
-                ID: {documento.id.slice(0, 8)}...
-              </p>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-gray-900 leading-tight">{docLabel}</p>
+              {fileName ? (
+                <p className="text-[11px] text-gray-500 font-medium truncate mt-0.5">{fileName}</p>
+              ) : (
+                <p className="text-[11px] text-gray-400 font-medium mt-0.5">ID: {documento.id.slice(0, 10)}…</p>
+              )}
+              <div className="mt-1.5 flex items-center gap-3">
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400">
+                  <CalendarClock size={11} />
+                  {documento.created_at
+                    ? new Date(documento.created_at).toLocaleDateString('pt-AO')
+                    : '—'}
+                </span>
+              </div>
             </div>
           </div>
 
-          <Badge variant={status.variant}>{status.label}</Badge>
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border shrink-0 ${status.pill}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`}></span>
+            {status.label}
+          </span>
         </div>
 
         {documento.motivo_rejeicao && (
-          <div className="mt-3 p-2.5 bg-red-50 rounded-lg border border-red-100">
+          <div className="mt-3 p-2.5 bg-red-50 rounded-lg border border-red-100 flex items-start gap-2">
+            <XCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
             <p className="text-[11px] text-red-700 font-medium">
               <span className="font-bold">Motivo da rejeição:</span> {documento.motivo_rejeicao}
             </p>
           </div>
         )}
 
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100 flex-wrap">
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-50 flex-wrap">
           {onVisualizar && (
             <Button
               variant="outline"
               size="sm"
               onClick={handleVisualizar}
               isLoading={loading === 'visualizar'}
-              leftIcon={<FileText size={14} />}
+              leftIcon={<Eye size={14} />}
+              className="flex-1 min-w-[86px]"
             >
-              Visualizar
+              Ver
             </Button>
           )}
           <Button
@@ -131,18 +168,20 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
             onClick={handleDownload}
             isLoading={loading === 'download'}
             leftIcon={<Download size={14} />}
+            className="flex-1 min-w-[86px]"
           >
             Baixar
           </Button>
 
           {documento.status === 'pendente' && (
-            <>
+            <div className="flex items-center gap-2 w-full mt-1">
               <Button
                 variant="primary"
                 size="sm"
                 onClick={handleAprovar}
                 isLoading={loading === 'aprovar'}
                 leftIcon={<CheckCircle size={14} />}
+                className="flex-1"
               >
                 Aprovar
               </Button>
@@ -151,10 +190,11 @@ export function DocumentoCard({ documento, onAprovar, onRejeitar, onDownload, on
                 size="sm"
                 onClick={() => setShowRejectModal(true)}
                 leftIcon={<XCircle size={14} />}
+                className="flex-1"
               >
                 Rejeitar
               </Button>
-            </>
+            </div>
           )}
         </div>
       </div>
