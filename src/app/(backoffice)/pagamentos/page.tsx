@@ -51,21 +51,21 @@ export default function PagamentosPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-[13px] text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-[13px] text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-sm p-4 text-[13px] text-emerald-700 font-bold shadow-sm">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4 text-[13px] text-emerald-700 font-bold shadow-sm">
           {success}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Confirm payment section */}
-        <div className="bg-white rounded-sm border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
-          <div className="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <div className="bg-white rounded-md border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
+          <div className="w-12 h-12 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <CheckCircle size={24} strokeWidth={2.5} />
           </div>
           <h3 className="text-[16px] font-black text-gray-900 tracking-tight mb-2">
@@ -81,12 +81,12 @@ export default function PagamentosPage() {
                 placeholder="Ex: 550e8400-e29b-41d4-a716-446655440000"
                 value={selectedSolicitacaoId}
                 onChange={(e) => setSelectedSolicitacaoId(e.target.value)}
-                className="rounded-sm font-mono text-[13px]"
+                className="rounded-md font-mono text-[13px]"
               />
             </div>
             <Button
               variant="primary"
-              className="rounded-sm font-bold shadow-sm w-full sm:w-auto"
+              className="rounded-md font-bold shadow-sm w-full sm:w-auto"
               onClick={() => {
                 if (selectedSolicitacaoId) setShowConfirmarModal(true);
               }}
@@ -99,8 +99,8 @@ export default function PagamentosPage() {
         </div>
 
         {/* Download Receipt section */}
-        <div className="bg-white rounded-sm border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
-          <div className="w-12 h-12 rounded-sm bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <div className="bg-white rounded-md border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
+          <div className="w-12 h-12 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <FileText size={24} strokeWidth={2.5} />
           </div>
           <h3 className="text-[16px] font-black text-gray-900 tracking-tight mb-2">
@@ -116,12 +116,12 @@ export default function PagamentosPage() {
                 placeholder="Ex: pay_abc123"
                 value={downloadPagamentoId}
                 onChange={(e) => setDownloadPagamentoId(e.target.value)}
-                className="rounded-sm font-mono text-[13px]"
+                className="rounded-md font-mono text-[13px]"
               />
             </div>
             <Button
               variant="outline"
-              className="rounded-sm font-bold shadow-sm w-full sm:w-auto bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+              className="rounded-md font-bold shadow-sm w-full sm:w-auto bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
               onClick={handleDownload}
               disabled={!downloadPagamentoId || loading}
               isLoading={loading && !!downloadPagamentoId}
@@ -134,28 +134,28 @@ export default function PagamentosPage() {
       </div>
 
       {/* Info card */}
-      <div className="bg-gray-50/50 border border-gray-100 rounded-sm p-6 shadow-inner">
+      <div className="bg-gray-50/50 border border-gray-100 rounded-md p-6 shadow-inner">
         <h3 className="text-[14px] font-black text-gray-900 mb-4 tracking-tight flex items-center gap-2">
-           <Info size={16} className="text-gray-400" />
-           Como funciona o fluxo de pagamentos?
+          <Info size={16} className="text-gray-400" />
+          Como funciona o fluxo de pagamentos?
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-           <div className="bg-white p-4 rounded-sm border border-gray-100 shadow-sm relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 text-gray-50 opacity-50 font-black text-7xl select-none">1</div>
-              <p className="text-[12px] font-bold text-gray-700 relative z-10">O cliente submete uma solicitação de serviço na app.</p>
-           </div>
-           <div className="bg-white p-4 rounded-sm border border-gray-100 shadow-sm relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 text-gray-50 opacity-50 font-black text-7xl select-none">2</div>
-              <p className="text-[12px] font-bold text-gray-700 relative z-10">Após conclusão, o pagamento fica pendente no sistema.</p>
-           </div>
-           <div className="bg-white p-4 rounded-sm border border-gray-100 shadow-sm relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 text-emerald-50 opacity-50 font-black text-7xl select-none">3</div>
-              <p className="text-[12px] font-bold text-emerald-700 relative z-10">O operador confirma o pagamento manualmente neste ecrã.</p>
-           </div>
-           <div className="bg-white p-4 rounded-sm border border-gray-100 shadow-sm relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 text-blue-50 opacity-50 font-black text-7xl select-none">4</div>
-              <p className="text-[12px] font-bold text-blue-700 relative z-10">O repasse para o prestador é gerado de forma automática.</p>
-           </div>
+          <div className="bg-white p-4 rounded-md border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="absolute -right-4 -bottom-4 text-gray-50 opacity-50 font-black text-7xl select-none">1</div>
+            <p className="text-[12px] font-bold text-gray-700 relative z-10">O cliente submete uma solicitação de serviço na app.</p>
+          </div>
+          <div className="bg-white p-4 rounded-md border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="absolute -right-4 -bottom-4 text-gray-50 opacity-50 font-black text-7xl select-none">2</div>
+            <p className="text-[12px] font-bold text-gray-700 relative z-10">Após conclusão, o pagamento fica pendente no sistema.</p>
+          </div>
+          <div className="bg-white p-4 rounded-md border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="absolute -right-4 -bottom-4 text-emerald-50 opacity-50 font-black text-7xl select-none">3</div>
+            <p className="text-[12px] font-bold text-emerald-700 relative z-10">O operador confirma o pagamento manualmente neste ecrã.</p>
+          </div>
+          <div className="bg-white p-4 rounded-md border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="absolute -right-4 -bottom-4 text-blue-50 opacity-50 font-black text-7xl select-none">4</div>
+            <p className="text-[12px] font-bold text-blue-700 relative z-10">O repasse para o prestador é gerado de forma automática.</p>
+          </div>
         </div>
       </div>
 
@@ -173,7 +173,7 @@ export default function PagamentosPage() {
           <>
             <Button
               variant="outline"
-              className="rounded-sm font-bold"
+              className="rounded-md font-bold"
               onClick={() => {
                 setShowConfirmarModal(false);
                 setSelectedSolicitacaoId('');
@@ -185,7 +185,7 @@ export default function PagamentosPage() {
             </Button>
             <Button
               variant="primary"
-              className="rounded-sm font-bold bg-[#42b883] hover:bg-[#3aa374]"
+              className="rounded-md font-bold bg-[#42b883] hover:bg-[#3aa374]"
               onClick={confirmarForm.handleSubmit(handleConfirmar)}
               isLoading={loading}
               leftIcon={<CheckCircle size={14} strokeWidth={2.5} />}
@@ -196,12 +196,12 @@ export default function PagamentosPage() {
         }
       >
         <div className="space-y-5">
-          <div className="bg-amber-50/50 border border-amber-100 rounded-sm p-4 text-center">
+          <div className="bg-amber-50/50 border border-amber-100 rounded-md p-4 text-center">
             <p className="text-[11px] text-amber-600 font-bold uppercase tracking-widest mb-1">Atenção</p>
             <p className="text-[12px] text-amber-800 font-medium">Esta ação confirmará que o valor do serviço foi recebido e gerará a comissão do prestador.</p>
           </div>
 
-          <div className="bg-gray-50 rounded-sm p-3 border border-gray-100 flex flex-col items-center">
+          <div className="bg-gray-50 rounded-md p-3 border border-gray-100 flex flex-col items-center">
             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">ID da Solicitação Alvo</p>
             <p className="text-[12px] text-gray-900 font-black font-mono tracking-tight">{selectedSolicitacaoId}</p>
           </div>
@@ -211,7 +211,7 @@ export default function PagamentosPage() {
             placeholder="Ex: REF-123456"
             error={confirmarForm.formState.errors.referencia_externa?.message}
             {...confirmarForm.register('referencia_externa')}
-            className="rounded-sm"
+            className="rounded-md"
           />
         </div>
       </Modal>

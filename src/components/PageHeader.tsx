@@ -9,14 +9,14 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, description, action, backButton }: PageHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 mb-6 bg-white border border-gray-100 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 mb-6 bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
       <div className="flex items-center gap-4">
         {backButton && (
           <div className="shrink-0">
             {backButton}
           </div>
         )}
-        <div className="w-1.5 h-10 bg-gradient-to-b from-[#42b883] to-[#3aa374] rounded-sm hidden sm:block"></div>
+        <div className="w-1.5 h-10 bg-gradient-to-b from-[#42b883] to-[#3aa374] rounded-md hidden sm:block"></div>
         <div>
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">{title}</h1>
           {description && (

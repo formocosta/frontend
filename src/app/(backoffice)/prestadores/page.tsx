@@ -60,9 +60,9 @@ export default function PrestadoresPage() {
         ].map((stat, i) => (
           <div
             key={i}
-            className="relative bg-white rounded-sm border border-gray-100 p-5 flex flex-col justify-between min-h-[95px] overflow-hidden group shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:border-gray-200 transition-all duration-300"
+            className="relative bg-white rounded-md border border-gray-100 p-5 flex flex-col justify-between min-h-[95px] overflow-hidden group shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:border-gray-200 transition-all duration-300"
           >
-            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-sm opacity-50 transition-transform duration-300 group-hover:scale-125 ${stat.bgColor}`} />
+            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-md opacity-50 transition-transform duration-300 group-hover:scale-125 ${stat.bgColor}`} />
             <p className="text-[11px] text-gray-500 font-bold uppercase tracking-wider relative z-10">{stat.label}</p>
             <div className="flex items-baseline gap-2 relative z-10 mt-1">
               <p className={`text-3xl font-black tracking-tight ${stat.textColor}`}>{stat.value}</p>
@@ -83,23 +83,23 @@ export default function PrestadoresPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
 
       {/* Loading */}
       {loading && prestadores.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
-          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-md animate-spin" />
           <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar prestadores...</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && prestadores.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-sm bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
             <UserCheck size={28} />
           </div>
           <h3 className="text-[15px] font-black text-gray-900 tracking-tight">Sem prestadores encontrados</h3>
@@ -113,7 +113,7 @@ export default function PrestadoresPage() {
 
       {/* Table Content */}
       {!loading && prestadores.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -146,10 +146,10 @@ export default function PrestadoresPage() {
                             <img
                               src={p.foto_perfil_url}
                               alt={p.nome_completo}
-                              className="w-10 h-10 rounded-sm object-cover border border-gray-100 shadow-sm shrink-0"
+                              className="w-10 h-10 rounded-md object-cover border border-gray-100 shadow-sm shrink-0"
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-sm bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm">
+                            <div className="w-10 h-10 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm">
                               {p.nome_completo.charAt(0)}
                             </div>
                           )}
@@ -196,11 +196,10 @@ export default function PrestadoresPage() {
                         <div className="space-y-1.5">
                           <StatusBadge status={p.prestador?.status_verificacao || 'pendente'} />
                           <div className="block">
-                            <span className={`text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-sm border ${
-                              p.status === 'activo'
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                : 'bg-red-50 text-red-700 border-red-200'
-                            }`}>
+                            <span className={`text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md border ${p.status === 'activo'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : 'bg-red-50 text-red-700 border-red-200'
+                              }`}>
                               Conta {p.status === 'activo' ? 'Ativa' : 'Inativa'}
                             </span>
                           </div>
@@ -232,7 +231,7 @@ export default function PrestadoresPage() {
                       <td className="px-5 py-4 align-top text-right">
                         <Link
                           href={`/prestadores/${p.id}`}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
                           title="Ver Detalhes do Prestador"
                         >
                           <ChevronRight size={16} />
@@ -255,7 +254,7 @@ export default function PrestadoresPage() {
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
-                  className="px-3 py-1.5 text-[11px] font-black bg-white border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-3 py-1.5 text-[11px] font-black bg-white border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   Anterior
                 </button>
@@ -265,7 +264,7 @@ export default function PrestadoresPage() {
                 <button
                   disabled={page === meta.last_page}
                   onClick={() => setPage(page + 1)}
-                  className="px-3 py-1.5 text-[11px] font-black bg-white border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-3 py-1.5 text-[11px] font-black bg-white border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   Próxima
                 </button>

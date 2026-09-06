@@ -17,7 +17,10 @@ export interface Documento {
   tipo_documento_id?: string;
   status: DocumentStatus;
   motivo_rejeicao?: string;
+  nota_revisao?: string;
   caminho_arquivo?: string;
+  url_arquivo?: string;
+  revisado_em?: string;
   created_at?: string;
   updated_at?: string;
 }

@@ -76,23 +76,23 @@ export default function SolicitacoesPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
 
       {/* Loading */}
       {loading && solicitacoes.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
-          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-md animate-spin" />
           <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar solicitações...</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && solicitacoes.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-sm bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
             <ClipboardList size={28} />
           </div>
           <h3 className="text-[15px] font-black text-gray-900 tracking-tight">Sem solicitações</h3>
@@ -106,7 +106,7 @@ export default function SolicitacoesPage() {
 
       {/* Table Content */}
       {!loading && solicitacoes.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -144,7 +144,7 @@ export default function SolicitacoesPage() {
                         <td className="px-5 py-4 align-top">
                           <div className="space-y-1.5 text-[11px] font-bold text-gray-600">
                             {(dataFormatada || solicitacao.hora_pretendida) && (
-                              <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-sm border border-gray-100 w-fit">
+                              <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100 w-fit">
                                 <Calendar size={12} className="text-[#42b883]" />
                                 <span>{dataFormatada} {solicitacao.hora_pretendida && `às ${solicitacao.hora_pretendida}`}</span>
                               </div>
@@ -162,14 +162,14 @@ export default function SolicitacoesPage() {
                         <td className="px-5 py-4 align-top">
                           <div className="space-y-1.5 text-[11px] font-bold">
                             {solicitacao.prestador ? (
-                              <div className="flex items-center gap-1.5 text-blue-600 bg-blue-50 px-2 py-1 rounded-sm border border-blue-100 w-fit">
+                              <div className="flex items-center gap-1.5 text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit">
                                 <User size={12} />
                                 <span className="truncate max-w-[150px]">{solicitacao.prestador.nome}</span>
                               </div>
                             ) : (
                               <span className="text-gray-400 font-semibold italic">Sem prestador atribuído</span>
                             )}
-                            
+
                             {solicitacao.preco_acordado != null && (
                               <div className="text-[13px] font-black text-[#42b883] tracking-tight mt-1">
                                 {Number(solicitacao.preco_acordado).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
@@ -191,7 +191,7 @@ export default function SolicitacoesPage() {
                         <td className="px-5 py-4 align-top text-right">
                           <Link
                             href={`/solicitacoes/${solicitacao.id}`}
-                            className="inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/10 transition-all shadow-sm group-hover:border-[#42b883]/50"
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/10 transition-all shadow-sm group-hover:border-[#42b883]/50"
                             title="Ver Detalhes"
                           >
                             <ChevronRight size={16} />
@@ -212,13 +212,13 @@ export default function SolicitacoesPage() {
               </tbody>
             </table>
           </div>
-          
+
           {/* Pagination Footer */}
           <div className="px-5 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-[11px] text-gray-500 font-black tracking-widest uppercase">
               {meta?.total || solicitacoes.length} {meta?.total === 1 || solicitacoes.length === 1 ? 'solicitação' : 'solicitações'}
             </p>
-            
+
             {totalPages > 1 && (
               <div className="flex items-center gap-3">
                 <span className="text-[11px] text-gray-500 font-bold">
@@ -227,7 +227,7 @@ export default function SolicitacoesPage() {
                 <div className="flex items-center gap-1.5">
                   <Button
                     variant="outline"
-                    className="h-7 px-3 text-[11px] rounded-sm bg-white border-gray-200 text-gray-600 font-bold hover:bg-gray-50 hover:text-gray-900"
+                    className="h-7 px-3 text-[11px] rounded-md bg-white border-gray-200 text-gray-600 font-bold hover:bg-gray-50 hover:text-gray-900"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
                   >
@@ -235,7 +235,7 @@ export default function SolicitacoesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-7 px-3 text-[11px] rounded-sm bg-white border-gray-200 text-gray-600 font-bold hover:bg-gray-50 hover:text-gray-900"
+                    className="h-7 px-3 text-[11px] rounded-md bg-white border-gray-200 text-gray-600 font-bold hover:bg-gray-50 hover:text-gray-900"
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
                   >

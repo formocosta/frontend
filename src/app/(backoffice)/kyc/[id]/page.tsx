@@ -148,8 +148,8 @@ export default function KycDetailPage() {
 
   const validacaoAprovacao = useMemo(() => {
     const docs = candidatura?.documentos || [];
-    const entrevistas = (candidatura?.entrevistas && candidatura.entrevistas.length > 0) 
-      ? candidatura.entrevistas 
+    const entrevistas = (candidatura?.entrevistas && candidatura.entrevistas.length > 0)
+      ? candidatura.entrevistas
       : entrevistasExtras;
 
     const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
@@ -224,7 +224,7 @@ export default function KycDetailPage() {
   if (loading && !candidatura) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-md animate-spin" />
       </div>
     );
   }
@@ -235,7 +235,7 @@ export default function KycDetailPage() {
         <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft size={16} />}>
           Voltar
         </Button>
-        <div className="bg-red-50 border border-red-200 rounded-sm p-6 text-center">
+        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
           <p className="text-sm text-red-700 font-medium">{error}</p>
         </div>
       </div>
@@ -245,15 +245,15 @@ export default function KycDetailPage() {
   if (!candidatura) return null;
 
   const user = candidatura.user;
-  const canAct = candidatura.status_verificacao === 'pendente' || 
-                 candidatura.status_verificacao === 'em_analise' || 
-                 candidatura.status_verificacao === 'entrevista_agendada';
+  const canAct = candidatura.status_verificacao === 'pendente' ||
+    candidatura.status_verificacao === 'em_analise' ||
+    candidatura.status_verificacao === 'entrevista_agendada';
   const localizacao = [candidatura.provincia, candidatura.municipio, candidatura.bairro]
     .filter(Boolean)
     .join(', ');
 
-  const entrevistasAtuais = (candidatura.entrevistas && candidatura.entrevistas.length > 0) 
-    ? candidatura.entrevistas 
+  const entrevistasAtuais = (candidatura.entrevistas && candidatura.entrevistas.length > 0)
+    ? candidatura.entrevistas
     : entrevistasExtras;
 
   return (
@@ -263,9 +263,9 @@ export default function KycDetailPage() {
         title="Dossiê de Verificação KYC"
         description={`Submetido em ${new Date(candidatura.created_at).toLocaleDateString('pt-AO')}`}
         backButton={
-          <button 
-            onClick={() => router.back()} 
-            className="w-9 h-9 flex items-center justify-center rounded-sm bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+          <button
+            onClick={() => router.back()}
+            className="w-9 h-9 flex items-center justify-center rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
           >
             <ArrowLeft size={16} />
           </button>
@@ -274,37 +274,37 @@ export default function KycDetailPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-medium shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-medium shadow-sm">
           {error}
         </div>
       )}
 
       {/* Main Grid Layout */}
       <div className="flex flex-col lg:flex-row gap-6">
-        
+
         {/* LEFTSIDE COLUMN (Profile & Actions) */}
         <div className="w-full lg:w-[35%] flex flex-col gap-6">
-          
+
           {/* Creative Profile Card */}
-          <div className="bg-white rounded-sm border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden relative">
+          <div className="bg-white rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden relative">
             <div className="h-24 bg-gradient-to-r from-[#42b883] to-[#3aa374]"></div>
             <div className="px-6 pb-6 pt-0 relative">
-              <div className="w-20 h-20 rounded-sm bg-white border-4 border-white flex items-center justify-center -mt-10 mb-3 shadow-md mx-auto">
-                <div className="w-full h-full bg-[#42b883]/10 text-[#42b883] font-black text-2xl flex items-center justify-center rounded-sm">
+              <div className="w-20 h-20 rounded-md bg-white border-4 border-white flex items-center justify-center -mt-10 mb-3 shadow-md mx-auto">
+                <div className="w-full h-full bg-[#42b883]/10 text-[#42b883] font-black text-2xl flex items-center justify-center rounded-md">
                   {user.nome_completo.charAt(0)}
                 </div>
               </div>
               <div className="text-center mb-6">
                 <h2 className="text-lg font-black text-gray-900 tracking-tight">{user.nome_completo}</h2>
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-gray-50 text-gray-600 px-2.5 py-1 rounded-sm mt-1.5 border border-gray-100">
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-gray-50 text-gray-600 px-2.5 py-1 rounded-md mt-1.5 border border-gray-100">
                   <User size={12} />
                   {tipoLabels[candidatura.tipo_prestador] || candidatura.tipo_prestador}
                 </span>
               </div>
-              
+
               <div className="space-y-4 pt-4 border-t border-gray-50">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                  <div className="w-8 h-8 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                     <Mail size={14} />
                   </div>
                   <div>
@@ -312,9 +312,9 @@ export default function KycDetailPage() {
                     <p className="text-[13px] font-semibold text-gray-900 break-all">{user.email}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                  <div className="w-8 h-8 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                     <Phone size={14} />
                   </div>
                   <div>
@@ -322,10 +322,10 @@ export default function KycDetailPage() {
                     <p className="text-[13px] font-semibold text-gray-900">{user.telefone}</p>
                   </div>
                 </div>
-                
+
                 {candidatura.nif && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                       <FileText size={14} />
                     </div>
                     <div>
@@ -337,7 +337,7 @@ export default function KycDetailPage() {
 
                 {candidatura.nome_comercial && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                       <Building size={14} />
                     </div>
                     <div>
@@ -346,10 +346,10 @@ export default function KycDetailPage() {
                     </div>
                   </div>
                 )}
-                
+
                 {localizacao && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-sm bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                       <MapPin size={14} />
                     </div>
                     <div>
@@ -364,7 +364,7 @@ export default function KycDetailPage() {
 
           {/* Action Panel */}
           {canAct && (
-            <div className="bg-white rounded-sm border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-md border border-gray-100 shadow-sm overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-100 px-5 py-3">
                 <h3 className="text-[13px] font-black text-gray-900 uppercase flex items-center gap-2 tracking-wider">
                   <ShieldCheck size={16} className="text-[#42b883]" />
@@ -376,18 +376,17 @@ export default function KycDetailPage() {
                   <button
                     onClick={() => setShowConfirmAprovar(true)}
                     disabled={!validacaoAprovacao.isAprovavel}
-                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-sm font-bold text-[13px] transition-colors shadow-sm ${
-                      validacaoAprovacao.isAprovavel
-                        ? 'bg-[#42b883] hover:bg-[#3aa374] text-white'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
+                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-md font-bold text-[13px] transition-colors shadow-sm ${validacaoAprovacao.isAprovavel
+                      ? 'bg-[#42b883] hover:bg-[#3aa374] text-white'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      }`}
                   >
                     <CheckCircle size={16} />
                     Aprovar Candidatura
                   </button>
                   {!validacaoAprovacao.isAprovavel && (
-                    <div className="text-[11px] text-amber-700 bg-amber-50 p-2.5 rounded-sm border border-amber-200 flex flex-col gap-1">
-                      <span className="font-bold flex items-center gap-1.5"><AlertTriangle size={13}/> Requisitos Pendentes:</span>
+                    <div className="text-[11px] text-amber-700 bg-amber-50 p-2.5 rounded-md border border-amber-200 flex flex-col gap-1">
+                      <span className="font-bold flex items-center gap-1.5"><AlertTriangle size={13} /> Requisitos Pendentes:</span>
                       <ul className="list-disc pl-5 space-y-1 mt-1 font-medium">
                         {validacaoAprovacao.reasons.map((reason, i) => (
                           <li key={i}>{reason}</li>
@@ -399,14 +398,14 @@ export default function KycDetailPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setShowRejeitarModal(true)}
-                    className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2.5 rounded-sm font-bold text-[13px] transition-colors"
+                    className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2.5 rounded-md font-bold text-[13px] transition-colors"
                   >
                     <XCircle size={16} />
                     Rejeitar
                   </button>
                   <button
                     onClick={() => setShowConfirmResubmeter(true)}
-                    className="flex items-center justify-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200 py-2.5 rounded-sm font-bold text-[13px] transition-colors"
+                    className="flex items-center justify-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200 py-2.5 rounded-md font-bold text-[13px] transition-colors"
                   >
                     <RotateCcw size={16} />
                     Ressubmeter
@@ -415,15 +414,15 @@ export default function KycDetailPage() {
                 <div className="border-t border-gray-100 mt-2 pt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setShowAgendarModal(true)}
-                    className="flex items-center justify-between px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-sm font-semibold text-[13px] transition-colors"
+                    className="flex items-center justify-between px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md font-semibold text-[13px] transition-colors"
                   >
-                    <span className="flex items-center gap-2"><Plus size={16} className="text-gray-400"/> Agendar Entrevista</span>
+                    <span className="flex items-center gap-2"><Plus size={16} className="text-gray-400" /> Agendar Entrevista</span>
                   </button>
                   <button
                     onClick={() => setShowNotasModal(true)}
-                    className="flex items-center justify-between px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-sm font-semibold text-[13px] transition-colors"
+                    className="flex items-center justify-between px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md font-semibold text-[13px] transition-colors"
                   >
-                    <span className="flex items-center gap-2"><StickyNote size={16} className="text-gray-400"/> {candidatura.nota_operador ? 'Editar Nota Interna' : 'Adicionar Nota Interna'}</span>
+                    <span className="flex items-center gap-2"><StickyNote size={16} className="text-gray-400" /> {candidatura.nota_operador ? 'Editar Nota Interna' : 'Adicionar Nota Interna'}</span>
                   </button>
                 </div>
               </div>
@@ -432,7 +431,7 @@ export default function KycDetailPage() {
 
           {/* Operator note display */}
           {candidatura.nota_operador && (
-            <div className="bg-blue-50 border border-blue-200 rounded-sm p-5 relative shadow-sm">
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-5 relative shadow-sm">
               <div className="absolute top-0 right-0 w-8 h-8 bg-blue-100 rounded-bl-sm" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}></div>
               <div className="flex items-center justify-between mb-3 relative z-10">
                 <h3 className="text-[13px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-2">
@@ -442,13 +441,13 @@ export default function KycDetailPage() {
                 {canAct && (
                   <button
                     onClick={() => setShowNotasModal(true)}
-                    className="text-[11px] bg-white border border-blue-100 text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white font-bold transition-colors shadow-sm"
+                    className="text-[11px] bg-white border border-blue-100 text-blue-600 px-2 py-1 rounded-md hover:bg-blue-600 hover:text-white font-bold transition-colors shadow-sm"
                   >
                     Editar
                   </button>
                 )}
               </div>
-              <p className="text-[13px] text-blue-800 font-medium leading-relaxed bg-white/50 p-3 rounded-sm border border-blue-100/50">
+              <p className="text-[13px] text-blue-800 font-medium leading-relaxed bg-white/50 p-3 rounded-md border border-blue-100/50">
                 {candidatura.nota_operador}
               </p>
             </div>
@@ -458,9 +457,9 @@ export default function KycDetailPage() {
 
         {/* RIGHTSIDE COLUMN (Process & Audit) */}
         <div className="w-full lg:w-[65%] flex flex-col gap-6">
-          
+
           {/* Documents Section */}
-          <div className="bg-white rounded-sm border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="bg-white rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
             <div className="px-6 pt-6 pb-4 border-b border-gray-100">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
@@ -508,7 +507,7 @@ export default function KycDetailPage() {
           </div>
 
           {/* Interviews Section */}
-          <div className="bg-white rounded-sm border border-gray-100 shadow-sm p-6">
+          <div className="bg-white rounded-md border border-gray-100 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
               <h3 className="text-base font-black text-gray-900 flex items-center gap-2 tracking-tight">
                 <Calendar size={20} className="text-[#42b883]" />
@@ -517,20 +516,20 @@ export default function KycDetailPage() {
               {canAct && (
                 <button
                   onClick={() => setShowAgendarModal(true)}
-                  className="text-[11px] bg-gray-900 border border-gray-900 text-white px-3 py-1 rounded-sm hover:bg-gray-800 font-bold transition-colors shadow-sm flex items-center gap-1"
+                  className="text-[11px] bg-gray-900 border border-gray-900 text-white px-3 py-1 rounded-md hover:bg-gray-800 font-bold transition-colors shadow-sm flex items-center gap-1"
                 >
-                  <Plus size={14}/> Nova
+                  <Plus size={14} /> Nova
                 </button>
               )}
             </div>
-            
+
             {entrevistasAtuais && entrevistasAtuais.length > 0 ? (
               <div className="space-y-4">
                 {entrevistasAtuais.map((ent, i) => (
                   <div key={ent.id} className="relative">
                     {/* Timeline line connecting items */}
                     {i !== entrevistasAtuais.length - 1 && (
-                       <div className="absolute left-6 top-10 bottom-[-20px] w-[2px] bg-gray-100 z-0"></div>
+                      <div className="absolute left-6 top-10 bottom-[-20px] w-[2px] bg-gray-100 z-0"></div>
                     )}
                     <div className="relative z-10">
                       <EntrevistaCard
@@ -548,7 +547,7 @@ export default function KycDetailPage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-gray-50 rounded-sm p-12 text-center border border-dashed border-gray-200">
+              <div className="bg-gray-50 rounded-md p-12 text-center border border-dashed border-gray-200">
                 <Calendar size={32} className="mx-auto text-gray-300 mb-3" />
                 <p className="text-sm text-gray-900 font-bold">Sem Entrevistas</p>
                 <p className="text-[12px] text-gray-500 font-medium mt-1">Não existe histórico de agendamentos ou entrevistas realizadas para esta candidatura.</p>
@@ -614,7 +613,7 @@ export default function KycDetailPage() {
         }
       >
         <form className="space-y-4">
-          <div className="bg-red-50 text-red-700 p-3 rounded-sm flex items-start gap-2 mb-2 text-[12px] font-medium border border-red-100">
+          <div className="bg-red-50 text-red-700 p-3 rounded-md flex items-start gap-2 mb-2 text-[12px] font-medium border border-red-100">
             <AlertTriangle size={16} className="shrink-0 mt-0.5" />
             Esta ação é irreversível. O prestador será imediatamente notificado com o motivo especificado.
           </div>
@@ -694,7 +693,7 @@ export default function KycDetailPage() {
       >
         <form className="space-y-5">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-sm text-[13px] font-medium">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-[13px] font-medium">
               {error}
             </div>
           )}

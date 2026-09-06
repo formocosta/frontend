@@ -21,7 +21,7 @@ const sizes = {
 
 export function Badge({ children, variant = 'default', size = 'sm' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center font-bold rounded-sm border ${variants[variant]} ${sizes[size]}`}>
+    <span className={`inline-flex items-center font-bold rounded-md border ${variants[variant]} ${sizes[size]}`}>
       {children}
     </span>
   );

@@ -67,10 +67,10 @@ export default function DashboardPage() {
         title="Dashboard"
         description="Visão geral financeira do sistema em tempo real"
         action={
-          <Button 
-            variant="outline" 
-            className="rounded-sm bg-white hover:bg-gray-50 border-gray-200 text-gray-700 font-bold shadow-sm"
-            onClick={fetchResumo} 
+          <Button
+            variant="outline"
+            className="rounded-md bg-white hover:bg-gray-50 border-gray-200 text-gray-700 font-bold shadow-sm"
+            onClick={fetchResumo}
             leftIcon={<RefreshCw size={14} className={loading ? 'animate-spin text-[#42b883]' : 'text-gray-400'} />}
           >
             Actualizar Dados
@@ -79,7 +79,7 @@ export default function DashboardPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-sm text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
@@ -87,10 +87,10 @@ export default function DashboardPage() {
       {loading && !resumo && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-sm border border-gray-100 p-6 animate-pulse shadow-sm">
-              <div className="w-12 h-12 rounded-sm bg-gray-100 mb-6" />
-              <div className="w-24 h-3 bg-gray-200 rounded-sm mb-3" />
-              <div className="w-32 h-8 bg-gray-100 rounded-sm" />
+            <div key={i} className="bg-white rounded-md border border-gray-100 p-6 animate-pulse shadow-sm">
+              <div className="w-12 h-12 rounded-md bg-gray-100 mb-6" />
+              <div className="w-24 h-3 bg-gray-200 rounded-md mb-3" />
+              <div className="w-32 h-8 bg-gray-100 rounded-md" />
             </div>
           ))}
         </div>
@@ -102,17 +102,17 @@ export default function DashboardPage() {
             {cards.map((card) => (
               <div
                 key={card.label}
-                className={`bg-white rounded-sm border ${card.border} p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 relative overflow-hidden group`}
+                className={`bg-white rounded-md border ${card.border} p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 relative overflow-hidden group`}
               >
                 {/* Accent top border */}
                 <div className={`absolute top-0 left-0 right-0 h-1 ${card.accent}`} />
-                
+
                 <div className="flex justify-between items-start mb-6">
-                  <div className={`w-12 h-12 rounded-sm ${card.bg} flex items-center justify-center ${card.text} group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-12 h-12 rounded-md ${card.bg} flex items-center justify-center ${card.text} group-hover:scale-110 transition-transform duration-300`}>
                     <card.icon size={22} strokeWidth={2.5} />
                   </div>
                 </div>
-                
+
                 <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1.5">
                   {card.label}
                 </p>
@@ -124,9 +124,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Summary table */}
-          <div className="bg-white rounded-sm border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden mt-8">
+          <div className="bg-white rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden mt-8">
             <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-sm bg-gray-200/50 flex items-center justify-center text-gray-500">
+              <div className="w-8 h-8 rounded-md bg-gray-200/50 flex items-center justify-center text-gray-500">
                 <BarChart3 size={16} strokeWidth={2.5} />
               </div>
               <div>
@@ -134,24 +134,24 @@ export default function DashboardPage() {
                 <p className="text-[11px] font-semibold text-gray-500">Detalhamento global de comissões e repasses</p>
               </div>
             </div>
-            
+
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-0 border-b border-gray-50">
-              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-sm">
+              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-md">
                 <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Total de Receitas</span>
                 <span className="text-xl text-emerald-600 font-black">{formatCurrency(resumo.receitas_totais)}</span>
               </div>
-              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-sm">
+              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-md">
                 <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Total de Comissões</span>
                 <span className="text-xl text-blue-600 font-black">{formatCurrency(resumo.comissoes_totais)}</span>
               </div>
             </div>
-            
+
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-0 pt-0">
-              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-sm">
+              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-md">
                 <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Repasses Pendentes (Valor)</span>
                 <span className="text-xl text-amber-600 font-black">{formatCurrency(resumo.valor_repasses_pendentes)}</span>
               </div>
-              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-sm">
+              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-md">
                 <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Repasses Pendentes (Quantidade)</span>
                 <span className="text-xl text-purple-600 font-black">{resumo.quantidade_repasses_pendentes}</span>
               </div>

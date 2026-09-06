@@ -66,7 +66,7 @@ export default function SolicitacaoDetailPage() {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft size={16} />}>

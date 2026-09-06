@@ -75,7 +75,7 @@ export default function RepassesPage() {
   const filteredRepasses = useMemo(() => {
     if (!search.trim()) return repasses;
     const lowerSearch = search.toLowerCase();
-    return repasses.filter((rep) => 
+    return repasses.filter((rep) =>
       rep.id.toLowerCase().includes(lowerSearch) ||
       (rep.referencia_repasse && rep.referencia_repasse.toLowerCase().includes(lowerSearch)) ||
       (rep.iban_destino && rep.iban_destino.toLowerCase().includes(lowerSearch))
@@ -90,10 +90,10 @@ export default function RepassesPage() {
         title="Gestão de Repasses"
         description="Monitorize e processe os pagamentos devidos aos prestadores de serviços."
         action={
-          <Button 
-            variant="outline" 
-            className="rounded-sm font-bold shadow-sm bg-white hover:bg-gray-50 border-gray-200" 
-            onClick={loadData} 
+          <Button
+            variant="outline"
+            className="rounded-md font-bold shadow-sm bg-white hover:bg-gray-50 border-gray-200"
+            onClick={loadData}
             leftIcon={<RefreshCw size={14} strokeWidth={2.5} />}
           >
             Actualizar Dados
@@ -103,13 +103,13 @@ export default function RepassesPage() {
 
       {/* Alertas */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-sm p-4 text-[13px] text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-[13px] text-red-700 font-bold shadow-sm">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-sm p-4 text-[13px] text-emerald-700 font-bold shadow-sm">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4 text-[13px] text-emerald-700 font-bold shadow-sm">
           {success}
         </div>
       )}
@@ -117,9 +117,9 @@ export default function RepassesPage() {
       {/* Estatísticas Financeiras Premium */}
       {resumo && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-sm border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
+          <div className="bg-white rounded-md border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-sm bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-md bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
                 <Clock size={20} strokeWidth={2.5} />
               </div>
               <div>
@@ -128,10 +128,10 @@ export default function RepassesPage() {
               </div>
             </div>
           </div>
-          
-          <div className="bg-white rounded-sm border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
+
+          <div className="bg-white rounded-md border border-amber-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-amber-200 group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-sm bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-md bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
                 <DollarSign size={20} strokeWidth={2.5} />
               </div>
               <div>
@@ -140,10 +140,10 @@ export default function RepassesPage() {
               </div>
             </div>
           </div>
-          
-          <div className="bg-white rounded-sm border border-emerald-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-emerald-200 group">
+
+          <div className="bg-white rounded-md border border-emerald-100 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-emerald-200 group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-sm bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
                 <Wallet size={20} strokeWidth={2.5} />
               </div>
               <div>
@@ -167,16 +167,16 @@ export default function RepassesPage() {
 
       {/* Carregamento */}
       {loading && repasses.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
-          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-sm animate-spin" />
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-md animate-spin" />
           <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar registos de repasses...</p>
         </div>
       )}
 
       {/* Estado Vazio (Sem Dados) */}
       {!loading && repasses.length === 0 && (
-        <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-sm bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
             <ArrowLeftRight size={28} />
           </div>
           <h3 className="text-[15px] font-black text-gray-900 tracking-tight">Zero Repasses</h3>
@@ -187,10 +187,10 @@ export default function RepassesPage() {
           </p>
         </div>
       )}
-      
+
       {/* Estado Vazio (Sem Resultados de Pesquisa) */}
       {!loading && repasses.length > 0 && filteredRepasses.length === 0 && (
-         <div className="bg-white rounded-sm p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
+        <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center text-center">
           <p className="text-[12px] text-gray-500 font-bold">Nenhum repasse encontrado para a pesquisa "{search}".</p>
         </div>
       )}
@@ -198,11 +198,11 @@ export default function RepassesPage() {
       {/* Tabela de Resultados */}
       {!loading && filteredRepasses.length > 0 && (
         <div className="space-y-4">
-          <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest bg-gray-50 inline-block px-2.5 py-1 rounded-sm border border-gray-100">
+          <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest bg-gray-50 inline-block px-2.5 py-1 rounded-md border border-gray-100">
             {totalCount} repasse{(totalCount !== 1) ? 's' : ''} {search ? '(Filtrados)' : ''}
           </p>
 
-          <div className="bg-white rounded-sm border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="bg-white rounded-md border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -231,7 +231,7 @@ export default function RepassesPage() {
                         </div>
                       </td>
                       <td className="px-5 py-4">
-                        <span className="text-[12px] text-gray-600 font-mono font-bold bg-gray-50 px-2 py-1 rounded-sm border border-gray-100">{rep.id.slice(0, 13)}...</span>
+                        <span className="text-[12px] text-gray-600 font-mono font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">{rep.id.slice(0, 13)}...</span>
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex flex-col gap-1">
@@ -248,7 +248,7 @@ export default function RepassesPage() {
                         {rep.status === 'pendente' ? (
                           <Button
                             variant="primary"
-                            className="rounded-sm font-bold shadow-sm h-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="rounded-md font-bold shadow-sm h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={() => {
                               setSelectedRepasse(rep);
                               setShowProcessarModal(true);
@@ -275,10 +275,10 @@ export default function RepassesPage() {
                 Página {currentPage} de {totalPages}
               </p>
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="rounded-sm font-bold h-8" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
+                <Button variant="outline" className="rounded-md font-bold h-8" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
                   Anterior
                 </Button>
-                <Button variant="outline" className="rounded-sm font-bold h-8" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
+                <Button variant="outline" className="rounded-md font-bold h-8" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
                   Próxima
                 </Button>
               </div>
@@ -301,7 +301,7 @@ export default function RepassesPage() {
           <>
             <Button
               variant="outline"
-              className="rounded-sm font-bold"
+              className="rounded-md font-bold"
               onClick={() => {
                 setShowProcessarModal(false);
                 setSelectedRepasse(null);
@@ -313,7 +313,7 @@ export default function RepassesPage() {
             </Button>
             <Button
               variant="primary"
-              className="rounded-sm font-bold bg-[#42b883] hover:bg-[#3aa374]"
+              className="rounded-md font-bold bg-[#42b883] hover:bg-[#3aa374]"
               onClick={processarForm.handleSubmit(handleProcessar)}
               isLoading={actionLoading}
               leftIcon={<CheckCircle size={14} strokeWidth={2.5} />}
@@ -324,27 +324,27 @@ export default function RepassesPage() {
         }
       >
         <div className="space-y-5">
-          <div className="bg-[#42b883]/5 rounded-sm p-4 border border-[#42b883]/20 flex flex-col items-center justify-center">
+          <div className="bg-[#42b883]/5 rounded-md p-4 border border-[#42b883]/20 flex flex-col items-center justify-center">
             <p className="text-[11px] text-[#42b883] font-black uppercase tracking-widest mb-1">Montante a Liquidar</p>
             <p className="text-3xl font-black text-gray-900 tracking-tight">
               {selectedRepasse ? formatCurrency(Number(selectedRepasse.valor_repasse)) : '—'}
             </p>
           </div>
-          
+
           <div className="space-y-4 pt-2">
             <Input
               label="Referência da Transferência (Obrigatória)"
               placeholder="Ex: TPA-2026-X1Y2"
               error={processarForm.formState.errors.referencia_repasse?.message}
               {...processarForm.register('referencia_repasse')}
-              className="rounded-sm"
+              className="rounded-md"
             />
             <Input
               label="IBAN de Destino (Opcional)"
               placeholder="AO06 0040 0000 ..."
               error={processarForm.formState.errors.iban_destino?.message}
               {...processarForm.register('iban_destino')}
-              className="rounded-sm font-mono text-[13px]"
+              className="rounded-md font-mono text-[13px]"
             />
           </div>
         </div>
