@@ -8,7 +8,8 @@ import {
   ListClientesParams,
   PrestadorUser,
   ListPrestadoresParams,
-  PaginatedResponse
+  PaginatedResponse,
+  RejeitarPrestadorCandidaturaRequest
 } from '@/shared/types/backoffice/users.types';
  
 export function useClientes() {
@@ -127,4 +128,62 @@ export function usePrestadorDocumentos() {
   }, []);
  
   return { loading, error, obterDocumentoBlob };
+}
+
+export interface UsePrestadorCandidaturaActionsReturn {
+  aprovarCandidatura: (prestadorId: string) => Promise<boolean>;
+  rejeitarCandidatura: (prestadorId: string, data: RejeitarPrestadorCandidaturaRequest) => Promise<boolean>;
+  loading: boolean;
+  error: string | null;
+}
+
+export function usePrestadorCandidaturaActions(): UsePrestadorCandidaturaActionsReturn {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const aprovarCandidatura = useCallback(async (prestadorId: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await UsersBackofficeService.aprovarPrestadorCandidatura(prestadorId);
+      return true;
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      let errorMessage = axiosError.response?.data?.message || 'Erro ao aprovar candidatura do prestador';
+      if (axiosError.response?.data?.errors) {
+        const firstError = Object.values(axiosError.response.data.errors)[0]?.[0];
+        if (firstError) {
+          errorMessage = firstError;
+        }
+      }
+      setError(errorMessage);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const rejeitarCandidatura = useCallback(async (prestadorId: string, data: RejeitarPrestadorCandidaturaRequest): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await UsersBackofficeService.rejeitarPrestadorCandidatura(prestadorId, data);
+      return true;
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+      let errorMessage = axiosError.response?.data?.message || 'Erro ao rejeitar candidatura do prestador';
+      if (axiosError.response?.data?.errors) {
+        const firstError = Object.values(axiosError.response.data.errors)[0]?.[0];
+        if (firstError) {
+          errorMessage = firstError;
+        }
+      }
+      setError(errorMessage);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { aprovarCandidatura, rejeitarCandidatura, loading, error };
 }

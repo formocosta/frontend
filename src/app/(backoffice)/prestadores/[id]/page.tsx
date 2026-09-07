@@ -1,8 +1,11 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
-import { usePrestadorDetail, usePrestadorDocumentos } from '@/hooks/users/users.hooks';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { usePrestadorDetail, usePrestadorDocumentos, usePrestadorCandidaturaActions } from '@/hooks/users/users.hooks';
+import { useCandidaturaDetail } from '@/hooks/kyc/kyc.hooks';
 import {
   ArrowLeft,
   Mail,
@@ -14,28 +17,55 @@ import {
   Briefcase,
   FileText,
   Video,
-  CreditCard,
   Building,
   Download,
   Info,
-  CheckCircle2,
+  CheckCircle,
   XCircle,
-  Clock
+  AlertTriangle,
+  ClipboardCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import { StatusBadge } from '@/components/common/ui/Badge';
+import { Button } from '@/components/common/form/Button';
+import { Textarea } from '@/components/common/form/Textarea';
+import { Modal, ConfirmModal } from '@/components/common/ui/Modal';
+import { EntrevistaCard } from '@/components/kyc/EntrevistaCard';
+import type { Entrevista, AtualizarEntrevistaRequest } from '@/shared/types/backoffice/kyc.types';
+import {
+  rejeitarCandidaturaSchema,
+  RejeitarCandidaturaFormData,
+} from '@/shared/schemas/kyc.schema';
 
 export default function PrestadorDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { prestadorUser, loading, error, fetchPrestador } = usePrestadorDetail();
   const { loading: downloadingDocId, obterDocumentoBlob } = usePrestadorDocumentos();
+  const { aprovarCandidatura, rejeitarCandidatura, loading: candidaturaLoading, error: candidaturaError } = usePrestadorCandidaturaActions();
+  const {
+    candidatura,
+    error: kycError,
+    fetchCandidatura,
+    listarEntrevistas,
+    atualizarEntrevista,
+  } = useCandidaturaDetail();
+
+  const [showRejeitarModal, setShowRejeitarModal] = useState(false);
+  const [showConfirmAprovar, setShowConfirmAprovar] = useState(false);
+  const [entrevistasExtras, setEntrevistasExtras] = useState<Entrevista[]>([]);
+
+  const rejeitarForm = useForm<RejeitarCandidaturaFormData>({
+    resolver: zodResolver(rejeitarCandidaturaSchema),
+  });
 
   useEffect(() => {
     if (id) {
       fetchPrestador(id);
+      fetchCandidatura(id);
+      listarEntrevistas(id).then(setEntrevistasExtras);
     }
-  }, [id, fetchPrestador]);
+  }, [id, fetchPrestador, fetchCandidatura, listarEntrevistas]);
 
   const handleDownloadDoc = async (docId: string, tipoDoc: string) => {
     const result = await obterDocumentoBlob(docId);
@@ -49,6 +79,68 @@ export default function PrestadorDetailPage() {
       link.remove();
     }
   };
+
+  const handleAprovar = async () => {
+    const success = await aprovarCandidatura(id);
+    if (success) {
+      setShowConfirmAprovar(false);
+      fetchPrestador(id);
+      fetchCandidatura(id);
+    }
+  };
+
+  const handleRejeitar = async (data: RejeitarCandidaturaFormData) => {
+    const success = await rejeitarCandidatura(id, data);
+    if (success) {
+      setShowRejeitarModal(false);
+      rejeitarForm.reset();
+      fetchPrestador(id);
+      fetchCandidatura(id);
+    }
+  };
+
+  const handleAtualizarEntrevista = useCallback(async (entrevistaId: string, data: AtualizarEntrevistaRequest): Promise<boolean> => {
+    const success = await atualizarEntrevista(entrevistaId, data);
+    if (success) {
+      const extras = await listarEntrevistas(id);
+      setEntrevistasExtras(extras);
+      fetchPrestador(id);
+    }
+    return success;
+  }, [atualizarEntrevista, listarEntrevistas, fetchPrestador, id]);
+
+  const entrevistasAtuais = useMemo(() => {
+    if (candidatura?.entrevistas && candidatura.entrevistas.length > 0) {
+      return candidatura.entrevistas;
+    }
+    return entrevistasExtras;
+  }, [candidatura, entrevistasExtras]);
+
+  const validacaoAprovacao = useMemo(() => {
+    const docs = candidatura?.documentos || [];
+    const entrevistas = entrevistasAtuais;
+
+    const hasVideoApproved = entrevistas.some(e => e.tipo === 'video_chamada' && e.status === 'realizada' && e.resultado === 'aprovado');
+    const hasPresencialApproved = entrevistas.some(e => e.tipo === 'presencial' && e.status === 'realizada' && e.resultado === 'aprovado');
+
+    const hasBi = docs.some(d => (d.tipo_documento === 'bi' || d.tipo_documento_id === 'bi') && d.status === 'aprovado');
+    const hasNif = docs.some(d => (d.tipo_documento === 'nif' || d.tipo_documento_id === 'nif') && d.status === 'aprovado');
+    const hasIban = docs.some(d => (d.tipo_documento === 'comprovativo_iban' || d.tipo_documento_id === 'comprovativo_iban') && d.status === 'aprovado');
+    const hasCertificado = candidatura?.tipo_prestador === 'coletivo'
+      ? docs.some(d => (d.tipo_documento === 'certificado_registo' || d.tipo_documento_id === 'certificado_registo') && d.status === 'aprovado')
+      : true;
+
+    const allDocsApproved = hasBi && hasNif && hasIban && hasCertificado;
+    const allInterviewsApproved = hasVideoApproved && hasPresencialApproved;
+
+    return {
+      isAprovavel: allDocsApproved && allInterviewsApproved,
+      reasons: [
+        !allInterviewsApproved ? 'Ambas as entrevistas (vídeo e presencial) devem estar realizadas e aprovadas.' : null,
+        !allDocsApproved ? 'Todos os documentos obrigatórios devem estar submetidos e aprovados.' : null
+      ].filter(Boolean) as string[]
+    };
+  }, [candidatura, entrevistasAtuais]);
 
   if (loading) {
     return (
@@ -83,6 +175,14 @@ export default function PrestadorDetailPage() {
     ? Number(profile.avaliacao_media).toFixed(1)
     : null;
 
+  const canAct = !!profile && (
+    profile.status_verificacao === 'pendente' ||
+    profile.status_verificacao === 'em_analise' ||
+    profile.status_verificacao === 'entrevista_agendada'
+  );
+
+  const actionError = candidaturaError || kycError;
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header Back Link */}
@@ -94,6 +194,12 @@ export default function PrestadorDetailPage() {
           <ArrowLeft size={14} /> Voltar para Prestadores
         </Link>
       </div>
+
+      {actionError && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-medium shadow-sm">
+          {actionError}
+        </div>
+      )}
 
       {/* Main Profile Header Banner */}
       <div className="bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
@@ -285,7 +391,7 @@ export default function PrestadorDetailPage() {
           </div>
         </div>
 
-        {/* Right Column: Contact & Interview Info */}
+        {/* Right Column: Contact, Interviews & Actions */}
         <div className="space-y-6">
           {/* Access & Contact Card */}
           <div className="bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
@@ -344,43 +450,132 @@ export default function PrestadorDetailPage() {
             </div>
           </div>
 
+          {/* Action Panel: Aprovar / Rejeitar Candidatura */}
+          {canAct && (
+            <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-100 px-5 py-3">
+                <h3 className="text-[13px] font-black text-gray-900 uppercase flex items-center gap-2 tracking-wider">
+                  <ShieldCheck size={16} className="text-[#42b883]" />
+                  Aprovação da Candidatura
+                </h3>
+              </div>
+              <div className="p-5 flex flex-col gap-3">
+                <button
+                  onClick={() => setShowConfirmAprovar(true)}
+                  disabled={!validacaoAprovacao.isAprovavel}
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-md font-bold text-[13px] transition-colors shadow-sm ${validacaoAprovacao.isAprovavel
+                    ? 'bg-[#42b883] hover:bg-[#3aa374] text-white'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                >
+                  <CheckCircle size={16} />
+                  Aprovar e Ativar Conta
+                </button>
+                {!validacaoAprovacao.isAprovavel && (
+                  <div className="text-[11px] text-amber-700 bg-amber-50 p-2.5 rounded-md border border-amber-200 flex flex-col gap-1">
+                    <span className="font-bold flex items-center gap-1.5"><AlertTriangle size={13} /> Requisitos Pendentes:</span>
+                    <ul className="list-disc pl-5 space-y-1 mt-1 font-medium">
+                      {validacaoAprovacao.reasons.map((reason, i) => (
+                        <li key={i}>{reason}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowRejeitarModal(true)}
+                  className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2.5 rounded-md font-bold text-[13px] transition-colors"
+                >
+                  <XCircle size={16} />
+                  Rejeitar Candidatura
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Interviews Section */}
           <div className="bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-50 pb-2.5 flex items-center gap-2">
               <Video size={16} className="text-[#42b883]" />
-              Entrevistas ({profile?.entrevistas?.length || 0})
+              Entrevistas ({entrevistasAtuais?.length || 0})
             </h3>
 
-            {profile?.entrevistas && profile.entrevistas.length > 0 ? (
+            {entrevistasAtuais && entrevistasAtuais.length > 0 ? (
               <div className="space-y-3">
-                {profile.entrevistas.map((ent) => (
-                  <div key={ent.id} className="p-3.5 bg-gray-50/80 rounded-md border border-gray-100 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-black uppercase text-gray-800">
-                        {ent.tipo?.replace('_', ' ') || 'Entrevista'}
-                      </span>
-                      <StatusBadge status={ent.status || 'pendente'} />
-                    </div>
-                    {ent.agendada_para && (
-                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-600">
-                        <Clock size={12} className="text-gray-400" />
-                        <span>Agendada: {new Date(ent.agendada_para).toLocaleString('pt-AO')}</span>
-                      </div>
-                    )}
-                    {ent.resultado && (
-                      <div className="text-[11px] font-bold text-gray-700 bg-white p-2 rounded-md border border-gray-100">
-                        Resultado: <span className="capitalize">{ent.resultado}</span>
-                      </div>
-                    )}
-                  </div>
+                {entrevistasAtuais.map((ent) => (
+                  <EntrevistaCard
+                    key={ent.id}
+                    entrevista={ent}
+                    onAtualizar={handleAtualizarEntrevista}
+                  />
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-gray-400 font-medium py-4 text-center">Sem histórico de entrevistas.</p>
+              <div className="p-4 text-center">
+                <ClipboardCheck size={24} className="mx-auto text-gray-300 mb-2" />
+                <p className="text-xs text-gray-400 font-medium">Sem histórico de entrevistas.</p>
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Approve Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showConfirmAprovar}
+        onClose={() => setShowConfirmAprovar(false)}
+        onConfirm={handleAprovar}
+        title="Aprovar e Ativar Conta"
+        message="Tem a certeza que deseja aprovar esta candidatura? A conta do prestador será ativada e ele ganhará acesso completo."
+        confirmLabel="Confirmar Aprovação"
+        variant="success"
+        loading={candidaturaLoading}
+      />
+
+      {/* Reject Modal */}
+      <Modal
+        isOpen={showRejeitarModal}
+        onClose={() => {
+          setShowRejeitarModal(false);
+          rejeitarForm.reset();
+        }}
+        title="Rejeitar Candidatura"
+        size="sm"
+        footer={
+          <>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowRejeitarModal(false);
+                rejeitarForm.reset();
+              }}
+              disabled={candidaturaLoading}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="danger"
+              onClick={rejeitarForm.handleSubmit(handleRejeitar)}
+              isLoading={candidaturaLoading}
+            >
+              Confirmar Rejeição
+            </Button>
+          </>
+        }
+      >
+        <form className="space-y-4">
+          <div className="bg-red-50 text-red-700 p-3 rounded-md flex items-start gap-2 mb-2 text-[12px] font-medium border border-red-100">
+            <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+            Esta ação é irreversível. O prestador será imediatamente notificado com o motivo especificado e a conta ficará inativa.
+          </div>
+          <Textarea
+            label="Motivo da rejeição"
+            placeholder="Especifique detalhadamente por que razão esta candidatura foi negada..."
+            error={rejeitarForm.formState.errors.motivo_rejeicao?.message}
+            rows={4}
+            {...rejeitarForm.register('motivo_rejeicao')}
+          />
+        </form>
+      </Modal>
     </div>
   );
 }

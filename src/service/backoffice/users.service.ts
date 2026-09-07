@@ -4,7 +4,8 @@ import {
   ListClientesParams,
   PrestadorUser,
   ListPrestadoresParams,
-  PaginatedResponse
+  PaginatedResponse,
+  RejeitarPrestadorCandidaturaRequest
 } from '../../shared/types/backoffice/users.types';
  
 export const UsersBackofficeService = {
@@ -25,6 +26,16 @@ export const UsersBackofficeService = {
 
   getPrestadorById: async (id: string) => {
     const response = await apiClient.get<{ data: PrestadorUser }>(`/v1/backoffice/prestadores/${id}`);
+    return response.data;
+  },
+
+  aprovarPrestadorCandidatura: async (prestadorId: string) => {
+    const response = await apiClient.post(`/v1/backoffice/kyc/candidaturas/${prestadorId}/aprovar`);
+    return response.data;
+  },
+
+  rejeitarPrestadorCandidatura: async (prestadorId: string, data: RejeitarPrestadorCandidaturaRequest) => {
+    const response = await apiClient.post(`/v1/backoffice/kyc/candidaturas/${prestadorId}/rejeitar`, data);
     return response.data;
   },
 };

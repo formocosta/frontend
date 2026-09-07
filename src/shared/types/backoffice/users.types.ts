@@ -48,6 +48,17 @@ export interface PrestadorEntrevista {
   resultado: string | null;
 }
 
+export interface RejeitarPrestadorCandidaturaRequest {
+  motivo_rejeicao: string;
+}
+
+export interface AtualizarPrestadorEntrevistaRequest {
+  status?: string;
+  resultado?: 'aprovado' | 'reprovado' | 'inconclusivo';
+  notas?: string;
+  realizada_em?: string;
+}
+
 export interface PrestadorServicoItem {
   id: string;
   titulo_servico: string;
