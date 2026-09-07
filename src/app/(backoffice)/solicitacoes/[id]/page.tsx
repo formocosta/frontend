@@ -1,21 +1,120 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, type ReactNode, type ElementType } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
+  Package,
   MapPin,
   Calendar,
   Clock,
   FileText,
   MessageSquare,
   User,
+  Wallet,
+  Star,
+  CheckCircle2,
+  PlusCircle,
+  PlayCircle,
+  XCircle,
 } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
-import { Button } from '@/components/common/form/Button';
 import { StatusBadge } from '@/components/common/ui/Badge';
 import { useSolicitacaoDetail } from '@/hooks/solicitacoes/solicitacoes.hooks';
 
+const formatCurrency = (value: number) =>
+  Number(value).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' });
+
+const formatDate = (iso?: string | null, withHour = false) => {
+  if (!iso) return '';
+  const opts: Intl.DateTimeFormatOptions = withHour
+    ? { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }
+    : { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+  return new Date(iso).toLocaleDateString('pt-AO', opts);
+};
+
+const formatModalidade = (modalidade?: string | null) =>
+  !modalidade
+    ? 'Não especificada'
+    : modalidade.replace(/[_]+/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase());
+
+interface SectionCardProps {
+  icon: ElementType;
+  title: string;
+  action?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}
+
+function SectionCard({ icon: Icon, title, action, children, className }: SectionCardProps) {
+  return (
+    <div className={`bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] ${className || ''}`}>
+      <div className="flex items-center justify-between gap-3 pb-2.5 mb-4 border-b border-gray-50">
+        <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
+          <Icon size={15} className="text-[#42b883]" />
+          {title}
+        </h3>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+interface InfoRowProps {
+  label: string;
+  value: ReactNode;
+  valueClassName?: string;
+  last?: boolean;
+}
+
+function InfoRow({ label, value, valueClassName, last }: InfoRowProps) {
+  return (
+    <div className={`flex items-center justify-between gap-4 py-3 ${last ? '' : 'border-b border-gray-50'}`}>
+      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0">{label}</span>
+      <span className={`text-[13px] font-black text-gray-800 text-right ${valueClassName || ''}`}>{value}</span>
+    </div>
+  );
+}
+
+function StatCell({ icon: Icon, label, value }: { icon: ElementType; label: string; value: ReactNode }) {
+  return (
+    <div className="px-6 py-4 flex items-start gap-3 min-w-0">
+      <div className="w-8 h-8 shrink-0 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400">
+        <Icon size={15} />
+      </div>
+      <div className="min-w-0">
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</p>
+        <p className="text-[12px] font-bold text-gray-700 mt-0.5 truncate">{value || '—'}</p>
+      </div>
+    </div>
+  );
+}
+
+interface TimelineStepProps {
+  icon: ElementType;
+  iconClassName: string;
+  title: string;
+  date: string;
+  last?: boolean;
+}
+
+function TimelineStep({ icon: Icon, iconClassName, title, date, last }: TimelineStepProps) {
+  return (
+    <div className="flex gap-3">
+      <div className="flex flex-col items-center shrink-0">
+        <div className={`w-7 h-7 rounded-md flex items-center justify-center text-white shadow-sm ${iconClassName}`}>
+          <Icon size={13} />
+        </div>
+        {!last && <div className="w-px flex-1 bg-gray-200 my-1" />}
+      </div>
+      <div className={`${last ? '' : 'pb-2'} min-w-0`}>
+        <p className="text-[12px] font-black text-gray-900 tracking-tight">{title}</p>
+        <p className="text-[11px] text-gray-500 font-medium mt-0.5">{date}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function SolicitacaoDetailPage() {
   const params = useParams();
@@ -30,29 +129,41 @@ export default function SolicitacaoDetailPage() {
     fetchMensagens,
   } = useSolicitacaoDetail();
 
-
-
   useEffect(() => {
-    fetchSolicitacao(id);
-    fetchMensagens(id);
+    if (id) {
+      fetchSolicitacao(id);
+      fetchMensagens(id);
+    }
   }, [id, fetchSolicitacao, fetchMensagens]);
 
   if (loading && !solicitacao) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-full animate-spin" />
+      <div className="bg-white rounded-md p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-10 h-10 border-2 border-[#42b883] border-t-transparent rounded-md animate-spin" />
+        <p className="text-sm text-gray-500 mt-4 font-black tracking-tight">A carregar detalhes da solicitação...</p>
       </div>
     );
   }
 
   if (error && !solicitacao) {
     return (
-      <div className="space-y-4">
-        <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft size={16} />}>
-          Voltar
-        </Button>
-        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
-          <p className="text-sm text-red-700 font-medium">{error}</p>
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <PageHeader
+          title="Detalhes da Solicitação"
+          description="Não foi possível carregar esta solicitação."
+          backButton={
+            <button
+              onClick={() => router.back()}
+              className="w-9 h-9 flex items-center justify-center rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+            >
+              <ArrowLeft size={16} />
+            </button>
+          }
+        />
+        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center shadow-sm">
+          <XCircle size={24} className="mx-auto text-red-400 mb-2" />
+          <h3 className="text-base font-black text-red-900 tracking-tight">Erro ao carregar</h3>
+          <p className="text-xs text-red-700 mt-2 font-medium">{error}</p>
         </div>
       </div>
     );
@@ -61,237 +172,267 @@ export default function SolicitacaoDetailPage() {
   if (!solicitacao) return null;
 
   const localizacao = [solicitacao.provincia, solicitacao.municipio].filter(Boolean).join(', ');
-  const dataFormatada = solicitacao.data_pretendida
-    ? new Date(solicitacao.data_pretendida).toLocaleDateString('pt-AO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
-    : null;
+  const servico = solicitacao.servico;
+  const precoAcordado = solicitacao.preco_acordado;
+  const totalMensagens = solicitacao.mensagens?.length || 0;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft size={16} />}>
-          Voltar
-        </Button>
-        <PageHeader
-          title={solicitacao.servico?.titulo_servico || 'Solicitação'}
-          description={`Criada em ${new Date(solicitacao.created_at).toLocaleDateString('pt-AO')}`}
-          action={<StatusBadge status={solicitacao.status_id} />}
-        />
-      </div>
+      <PageHeader
+        title="Detalhes da Solicitação"
+        description={`${servico?.titulo_servico || 'Solicitação de serviço'} • Criada em ${formatDate(solicitacao.created_at, true)}`}
+        backButton={
+          <button
+            onClick={() => router.back()}
+            className="w-9 h-9 flex items-center justify-center rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+          >
+            <ArrowLeft size={16} />
+          </button>
+        }
+        action={<StatusBadge status={solicitacao.status_id} />}
+      />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-medium">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-medium shadow-sm">
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main info */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Description */}
-          {solicitacao.descricao_cliente && (
-            <div className="bg-white rounded-md border border-gray-100 p-5">
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                <FileText size={16} />
-                Descrição do Cliente
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
+      {/* Overview / Resumo */}
+      <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="p-6 flex flex-col md:flex-row md:items-center gap-5 border-b border-gray-50 bg-gradient-to-r from-[#42b883]/[0.06] to-transparent">
+          <div className="w-14 h-14 shrink-0 rounded-md bg-white border border-[#42b883]/25 flex items-center justify-center text-[#42b883] shadow-sm">
+            <Package size={26} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Serviço Solicitado</p>
+            <h2 className="text-lg font-black text-gray-900 tracking-tight truncate">
+              {servico?.titulo_servico || 'Solicitação de Serviço'}
+            </h2>
+            {solicitacao.descricao_cliente ? (
+              <p className="text-[12px] text-gray-500 font-medium mt-1 leading-relaxed line-clamp-2">
                 {solicitacao.descricao_cliente}
               </p>
+            ) : (
+              <p className="text-[12px] text-gray-400 font-medium mt-1">Sem descrição fornecida pelo cliente.</p>
+            )}
+          </div>
+          {precoAcordado != null && (
+            <div className="shrink-0 text-left md:text-right">
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Preço Acordado</p>
+              <p className="text-2xl font-black text-[#42b883] tracking-tight mt-0.5">{formatCurrency(precoAcordado)}</p>
             </div>
           )}
+        </div>
 
-          {/* Service details */}
-          {solicitacao.servico && (
-            <div className="bg-white rounded-md border border-gray-100 p-5">
-              <h3 className="text-sm font-bold text-gray-900 mb-3">Detalhes do Serviço</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between py-2 border-b border-gray-50">
-                  <span className="text-[12px] text-gray-500 font-medium">Serviço</span>
-                  <span className="text-[12px] text-gray-900 font-bold">{solicitacao.servico.titulo_servico}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 divide-gray-50 sm:divide-x">
+          <StatCell icon={MapPin} label="Localização" value={localizacao || 'Não definida'} />
+          <StatCell icon={Calendar} label="Data Pretendida" value={solicitacao.data_pretendida ? formatDate(solicitacao.data_pretendida, false) : 'Não definida'} />
+          <StatCell icon={Clock} label="Hora" value={solicitacao.hora_pretendida || 'Não definida'} />
+          <StatCell icon={User} label="Prestador" value={solicitacao.prestador?.nome || 'Sem prestador'} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Coluna principal */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Descrição do cliente */}
+          {solicitacao.descricao_cliente && (
+            <SectionCard icon={FileText} title="Descrição do Cliente">
+              <div className="bg-gray-50/80 border border-gray-100 rounded-md p-4">
+                <p className="text-[13px] text-gray-600 font-medium leading-relaxed">
+                  {solicitacao.descricao_cliente}
+                </p>
+              </div>
+            </SectionCard>
+          )}
+
+          {/* Detalhes do serviço */}
+          {servico && (
+            <SectionCard icon={Package} title="Detalhes do Serviço">
+              <div>
+                <InfoRow label="Serviço" value={servico.titulo_servico} />
+                <InfoRow label="Preço Base" value={formatCurrency(Number(servico.preco_base))} />
+                <InfoRow
+                  label="Preço para o Cliente"
+                  value={formatCurrency(Number(servico.preco_cliente))}
+                  valueClassName="text-[#42b883]"
+                />
+                <InfoRow label="Modalidade" value={formatModalidade(servico.modalidade_preco)} last />
+              </div>
+              {servico.descricao_detalhada && (
+                <div className="mt-4 pt-4 border-t border-gray-50">
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Descrição Detalhada</p>
+                  <p className="text-[12px] text-gray-500 font-medium leading-relaxed">{servico.descricao_detalhada}</p>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-50">
-                  <span className="text-[12px] text-gray-500 font-medium">Preço Base</span>
-                  <span className="text-[12px] text-gray-900 font-bold">
-                    {Number(solicitacao.servico.preco_base).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
-                  </span>
+              )}
+            </SectionCard>
+          )}
+
+          {/* Mensagens */}
+          <SectionCard
+            icon={MessageSquare}
+            title="Mensagens"
+            action={
+              <span className="text-[10px] font-black text-[#42b883] bg-[#42b883]/10 px-2 py-1 rounded-md">
+                {totalMensagens} {totalMensagens === 1 ? 'mensagem' : 'mensagens'}
+              </span>
+            }
+          >
+            {solicitacao.mensagens && solicitacao.mensagens.length > 0 ? (
+              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-100">
+                {solicitacao.mensagens.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className="group bg-gray-50/80 border border-gray-100 rounded-lg p-3.5 hover:border-[#42b883]/25 hover:bg-gray-50 transition-all"
+                  >
+                    <p className="text-[13px] text-gray-700 font-medium leading-relaxed">{msg.conteudo}</p>
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100/80">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">
+                        Mensagem #{String(msg.id).slice(-4)}
+                      </span>
+                      {msg.created_at && (
+                        <span className="text-[10px] text-gray-400 font-semibold">
+                          {formatDate(msg.created_at, true)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-6 text-center text-gray-400 border border-dashed border-gray-100 rounded-md">
+                <MessageSquare size={22} className="mb-2" />
+                <p className="text-xs font-medium">Nenhuma mensagem registada nesta solicitação</p>
+              </div>
+            )}
+          </SectionCard>
+        </div>
+
+        {/* Coluna lateral */}
+        <div className="space-y-6">
+          {/* Cronograma */}
+          <SectionCard icon={Calendar} title="Cronograma">
+            <div>
+              <TimelineStep
+                icon={PlusCircle}
+                iconClassName="bg-gray-400"
+                title="Criada"
+                date={formatDate(solicitacao.created_at, true)}
+              />
+              {solicitacao.aceite_em && (
+                <TimelineStep
+                  icon={CheckCircle2}
+                  iconClassName="bg-blue-500"
+                  title="Aceite"
+                  date={formatDate(solicitacao.aceite_em, true)}
+                />
+              )}
+              {solicitacao.iniciado_em && (
+                <TimelineStep
+                  icon={PlayCircle}
+                  iconClassName="bg-amber-500"
+                  title="Iniciada"
+                  date={formatDate(solicitacao.iniciado_em, true)}
+                />
+              )}
+              {solicitacao.concluido_em && (
+                <TimelineStep
+                  icon={CheckCircle2}
+                  iconClassName="bg-emerald-500"
+                  title="Concluída"
+                  date={formatDate(solicitacao.concluido_em, true)}
+                  last
+                />
+              )}
+              {!solicitacao.aceite_em && !solicitacao.iniciado_em && !solicitacao.concluido_em && (
+                <p className="text-[11px] text-gray-400 font-medium pl-10 py-1">Sem eventos registados até ao momento.</p>
+              )}
+            </div>
+            {solicitacao.motivo_rejeicao && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-100 rounded-md">
+                <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-0.5">Motivo de Rejeição</p>
+                <p className="text-[11px] text-red-700 font-medium leading-relaxed">{solicitacao.motivo_rejeicao}</p>
+              </div>
+            )}
+          </SectionCard>
+
+          {/* Prestador */}
+          {solicitacao.prestador && (
+            <SectionCard icon={User} title="Prestador Atribuído">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 shrink-0 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-lg shadow-inner">
+                  {solicitacao.prestador.nome?.charAt(0) || '?'}
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-50">
-                  <span className="text-[12px] text-gray-500 font-medium">Preço Cliente</span>
-                  <span className="text-[12px] text-[#42b883] font-bold">
-                    {Number(solicitacao.servico.preco_cliente).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-[12px] text-gray-500 font-medium">Modalidade</span>
-                  <span className="text-[12px] text-gray-900 font-bold capitalize">{solicitacao.servico.modalidade_preco}</span>
+                <div className="min-w-0">
+                  <p className="text-[14px] font-black text-gray-900 tracking-tight truncate">
+                    {solicitacao.prestador.nome}
+                  </p>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">ID: {solicitacao.prestador.id}</span>
+                  {solicitacao.prestador.avaliacao_media != null && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <Star size={12} className="fill-amber-500 text-amber-500" />
+                      <span className="text-[12px] font-black text-amber-600">
+                        {Number(solicitacao.prestador.avaliacao_media).toFixed(1)}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
-              {solicitacao.servico.descricao_detalhada && (
-                <p className="text-[12px] text-gray-500 mt-3 pt-3 border-t border-gray-50">
-                  {solicitacao.servico.descricao_detalhada}
+            </SectionCard>
+          )}
+
+          {/* Preço acordado */}
+          {precoAcordado != null && (
+            <div className="bg-[#42b883]/[0.05] border border-[#42b883]/20 rounded-md p-6 shadow-[0_4px_24px_rgba(66,184,131,0.04)]">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+                  <Wallet size={13} />
+                  Preço Acordado
+                </p>
+                <StatusBadge status={solicitacao.status_id} />
+              </div>
+              <p className="text-2xl font-black text-[#42b883] tracking-tight">{formatCurrency(precoAcordado)}</p>
+              {servico && (
+                <p className="text-[11px] text-gray-400 font-medium mt-1.5">
+                  Preço base do serviço: {formatCurrency(Number(servico.preco_base))}
                 </p>
               )}
             </div>
           )}
 
-          {/* Messages */}
-          <div className="bg-white rounded-md border border-gray-100 p-5">
-            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-4">
-              <MessageSquare size={16} />
-              Mensagens ({solicitacao.mensagens?.length || 0})
-            </h3>
-            {solicitacao.mensagens && solicitacao.mensagens.length > 0 ? (
-              <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                {solicitacao.mensagens.map((msg) => (
-                  <div key={msg.id} className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-[12px] text-gray-700">{msg.conteudo}</p>
-                    <p className="text-[10px] text-gray-400 font-medium mt-1">
-                      {new Date(msg.created_at || '').toLocaleDateString('pt-AO', { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                ))}
+          {/* Localização */}
+          <SectionCard icon={MapPin} title="Localização">
+            {localizacao || solicitacao.morada_execucao ? (
+              <div className="space-y-0">
+                {localizacao && (
+                  <InfoRow label="Província / Município" value={localizacao} />
+                )}
+                {solicitacao.morada_execucao && (
+                  <InfoRow label="Morada de Execução" value={solicitacao.morada_execucao} last={!localizacao} />
+                )}
               </div>
             ) : (
-              <p className="text-xs text-gray-500 font-medium text-center py-4">
-                Nenhuma mensagem nesta solicitação
-              </p>
+              <p className="text-[11px] text-gray-400 font-medium py-1">Sem localização definida.</p>
             )}
-          </div>
-        </div>
+          </SectionCard>
 
-        {/* Sidebar info */}
-        <div className="space-y-6">
-          {/* Location */}
-          <div className="bg-white rounded-md border border-gray-100 p-5">
-            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-              <MapPin size={16} />
-              Localização
-            </h3>
-            <div className="space-y-2 text-[12px]">
-              {localizacao && (
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin size={12} className="text-gray-400" />
-                  <span>{localizacao}</span>
-                </div>
-              )}
-              {solicitacao.morada_execucao && (
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin size={12} className="text-gray-400" />
-                  <span>{solicitacao.morada_execucao}</span>
-                </div>
-              )}
-              {!localizacao && !solicitacao.morada_execucao && (
-                <p className="text-gray-400 font-medium">Sem localização definida</p>
-              )}
-            </div>
-          </div>
-
-          {/* Schedule */}
-          <div className="bg-white rounded-md border border-gray-100 p-5">
-            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-              <Calendar size={16} />
-              Agendamento
-            </h3>
-            <div className="space-y-2 text-[12px]">
-              {dataFormatada ? (
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Calendar size={12} className="text-gray-400" />
-                  <span>{dataFormatada}</span>
-                </div>
-              ) : (
-                <p className="text-gray-400 font-medium">Sem data definida</p>
-              )}
-              {solicitacao.hora_pretendida && (
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Clock size={12} className="text-gray-400" />
-                  <span>{solicitacao.hora_pretendida}</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Provider */}
-          {solicitacao.prestador && (
-            <div className="bg-white rounded-md border border-gray-100 p-5">
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                <User size={16} />
-                Prestador
-              </h3>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-sm">
-                  {solicitacao.prestador.nome?.charAt(0) || '?'}
-                </div>
-                <div>
-                  <p className="text-[13px] font-bold text-gray-900">{solicitacao.prestador.nome}</p>
-                  {solicitacao.prestador.avaliacao_media != null && (
-                    <div className="flex items-center gap-1 text-[11px] text-amber-600 font-semibold">
-                      <span>{Number(solicitacao.prestador.avaliacao_media).toFixed(1)}</span>
-                      <span>★</span>
-                    </div>
-                  )}
-                </div>
+          {/* Agendamento */}
+          <SectionCard icon={Clock} title="Agendamento">
+            {solicitacao.data_pretendida || solicitacao.hora_pretendida ? (
+              <div className="space-y-0">
+                {solicitacao.data_pretendida && (
+                  <InfoRow label="Data Pretendida" value={formatDate(solicitacao.data_pretendida, false)} />
+                )}
+                {solicitacao.hora_pretendida && (
+                  <InfoRow label="Hora Pretendida" value={solicitacao.hora_pretendida} last={!solicitacao.data_pretendida} />
+                )}
               </div>
-            </div>
-          )}
-
-          {/* Price */}
-          {solicitacao.preco_acordado != null && (
-            <div className="bg-[#42b883]/5 border border-[#42b883]/20 rounded-md p-5">
-              <h3 className="text-sm font-bold text-gray-900 mb-2">Preço Acordado</h3>
-              <p className="text-xl font-extrabold text-[#42b883]">
-                {Number(solicitacao.preco_acordado).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
-              </p>
-            </div>
-          )}
-
-          {/* Timeline */}
-          <div className="bg-white rounded-md border border-gray-100 p-5">
-            <h3 className="text-sm font-bold text-gray-900 mb-3">Cronograma</h3>
-            <div className="space-y-3 text-[11px]">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-gray-300" />
-                <div>
-                  <p className="text-gray-900 font-bold">Criada</p>
-                  <p className="text-gray-500">{new Date(solicitacao.created_at).toLocaleDateString('pt-AO', { hour: '2-digit', minute: '2-digit' })}</p>
-                </div>
-              </div>
-              {solicitacao.aceite_em && (
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  <div>
-                    <p className="text-gray-900 font-bold">Aceite</p>
-                    <p className="text-gray-500">{new Date(solicitacao.aceite_em).toLocaleDateString('pt-AO', { hour: '2-digit', minute: '2-digit' })}</p>
-                  </div>
-                </div>
-              )}
-              {solicitacao.iniciado_em && (
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-amber-500" />
-                  <div>
-                    <p className="text-gray-900 font-bold">Iniciada</p>
-                    <p className="text-gray-500">{new Date(solicitacao.iniciado_em).toLocaleDateString('pt-AO', { hour: '2-digit', minute: '2-digit' })}</p>
-                  </div>
-                </div>
-              )}
-              {solicitacao.concluido_em && (
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <div>
-                    <p className="text-gray-900 font-bold">Concluída</p>
-                    <p className="text-gray-500">{new Date(solicitacao.concluido_em).toLocaleDateString('pt-AO', { hour: '2-digit', minute: '2-digit' })}</p>
-                  </div>
-                </div>
-              )}
-              {solicitacao.motivo_rejeicao && (
-                <div className="mt-2 p-2 bg-red-50 rounded-lg border border-red-100">
-                  <p className="text-[11px] text-red-700 font-medium">
-                    <span className="font-bold">Motivo rejeição:</span> {solicitacao.motivo_rejeicao}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+            ) : (
+              <p className="text-[11px] text-gray-400 font-medium py-1">Sem data definida.</p>
+            )}
+          </SectionCard>
         </div>
       </div>
     </div>
