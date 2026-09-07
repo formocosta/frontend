@@ -74,7 +74,14 @@ export function EntrevistaCard({ entrevista, onAtualizar }: EntrevistaCardProps)
 
   async function onSubmit(data: AtualizarEntrevistaFormData) {
     setLoading(true);
-    const success = await onAtualizar(entrevista.id, data);
+    // Gravar o resultado implica que a entrevista foi realizada.
+    // Se o operador apenas definiu o resultado (aprovar/reprovar) sem alterar o estado,
+    // garantimos que a estado passa a "realizada" para que a aprovação final fique disponível.
+    const payload: AtualizarEntrevistaFormData = {
+      ...data,
+      ...(data.resultado ? { status: 'realizada' as const } : {}),
+    };
+    const success = await onAtualizar(entrevista.id, payload);
     if (success) {
       setShowEditModal(false);
     }

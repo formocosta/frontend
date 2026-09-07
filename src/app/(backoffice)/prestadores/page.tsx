@@ -229,13 +229,22 @@ export default function PrestadoresPage() {
                         })}
                       </td>
                       <td className="px-5 py-4 align-top text-right">
-                        <Link
-                          href={`/prestadores/${p.id}`}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
-                          title="Ver Detalhes do Prestador"
-                        >
-                          <ChevronRight size={16} />
-                        </Link>
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/kyc/${p.id}`}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                            title="Processo KYC / Candidatura"
+                          >
+                            <ShieldCheck size={16} />
+                          </Link>
+                          <Link
+                            href={`/prestadores/${p.id}`}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                            title="Ver Detalhes do Prestador"
+                          >
+                            <ChevronRight size={16} />
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   );
