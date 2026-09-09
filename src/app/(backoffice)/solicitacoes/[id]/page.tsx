@@ -132,7 +132,7 @@ export default function SolicitacaoDetailPage() {
     fetchMensagens,
   } = useSolicitacaoDetail();
 
-  const { confirmarPagamento, loading: confirmingPayment } = usePagamentos();
+  const { confirmarPagamento, downloadComprovativo, loading: confirmingPayment } = usePagamentos();
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
   const handleConfirmarPagamento = async () => {
@@ -458,6 +458,17 @@ export default function SolicitacaoDetailPage() {
                       : 'Aguardando Confirmação'}
                   </span>
                 </div>
+
+                {/* Botão para descarregar o comprovativo enviado pelo cliente se existir pagamento */}
+                {solicitacao.pagamento?.id && (
+                  <button
+                    onClick={() => downloadComprovativo(solicitacao.pagamento!.id)}
+                    className="w-full mt-2 py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[12px] font-black rounded-md shadow-sm transition-all flex items-center justify-center gap-2"
+                  >
+                    <FileText size={14} />
+                    Ver / Descarregar Comprovativo
+                  </button>
+                )}
 
                 {/* Botão para Confirmar Pagamento do Cliente se ainda não confirmado */}
                 {solicitacao.pagamento?.status !== 'confirmado' && (
