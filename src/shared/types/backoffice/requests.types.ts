@@ -57,6 +57,8 @@ export interface Solicitacao {
   updated_at: string;
   servico: SolicitacaoServico | null;
   prestador: SolicitacaoPrestador | null;
+  pagamento?: import('./finance.types').Pagamento | null;
+  repasse?: import('./finance.types').Repasse | null;
   mensagens?: Mensagem[];
 }
 

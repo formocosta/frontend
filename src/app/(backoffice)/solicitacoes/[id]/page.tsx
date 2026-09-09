@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type ReactNode, type ElementType } from 'react';
+import { useEffect, useState, type ReactNode, type ElementType } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -17,10 +17,13 @@ import {
   PlusCircle,
   PlayCircle,
   XCircle,
+  CreditCard,
+  ArrowLeftRight,
 } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { StatusBadge } from '@/components/common/ui/Badge';
 import { useSolicitacaoDetail } from '@/hooks/solicitacoes/solicitacoes.hooks';
+import { usePagamentos } from '@/hooks/finance/finance.hooks';
 
 const formatCurrency = (value: number) =>
   Number(value).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' });
@@ -128,6 +131,19 @@ export default function SolicitacaoDetailPage() {
     fetchSolicitacao,
     fetchMensagens,
   } = useSolicitacaoDetail();
+
+  const { confirmarPagamento, loading: confirmingPayment } = usePagamentos();
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
+
+  const handleConfirmarPagamento = async () => {
+    if (!id) return;
+    const ok = await confirmarPagamento(id);
+    if (ok) {
+      setActionSuccess('Pagamento confirmado com sucesso! O repasse pendente foi gerado automaticamente.');
+      fetchSolicitacao(id);
+      setTimeout(() => setActionSuccess(null), 5000);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -383,9 +399,9 @@ export default function SolicitacaoDetailPage() {
             </SectionCard>
           )}
 
-          {/* Preço acordado */}
+          {/* Preço acordado & Gestão Financeira */}
           {precoAcordado != null && (
-            <div className="bg-[#42b883]/[0.05] border border-[#42b883]/20 rounded-md p-6 shadow-[0_4px_24px_rgba(66,184,131,0.04)]">
+            <div className="bg-[#42b883]/[0.05] border border-[#42b883]/20 rounded-md p-6 shadow-[0_4px_24px_rgba(66,184,131,0.04)] space-y-4">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
                   <Wallet size={13} />
@@ -399,6 +415,72 @@ export default function SolicitacaoDetailPage() {
                   Preço base do serviço: {formatCurrency(Number(servico.preco_base))}
                 </p>
               )}
+
+              {/* Status do Pagamento do Cliente */}
+              <div className="pt-3 border-t border-gray-200/60 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <CreditCard size={13} className="text-[#42b883]" />
+                    Pagamento Cliente
+                  </span>
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded ${
+                    solicitacao.pagamento?.status === 'confirmado'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : solicitacao.pagamento?.status === 'pendente'
+                      ? 'bg-amber-100 text-amber-800'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {solicitacao.pagamento?.status === 'confirmado'
+                      ? 'Confirmado'
+                      : solicitacao.pagamento?.status === 'pendente'
+                      ? 'Em Análise (Comprovativo Recebido)'
+                      : 'Pendente'}
+                  </span>
+                </div>
+
+                {/* Status do Repasse ao Prestador */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <ArrowLeftRight size={13} className="text-blue-500" />
+                    Repasse Prestador
+                  </span>
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded ${
+                    solicitacao.repasse?.status === 'pago'
+                      ? 'bg-blue-100 text-blue-800'
+                      : solicitacao.repasse?.status === 'pendente'
+                      ? 'bg-amber-100 text-amber-800'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {solicitacao.repasse?.status === 'pago'
+                      ? `Pago (${formatCurrency(Number(solicitacao.repasse.valor_repasse))})`
+                      : solicitacao.repasse?.status === 'pendente'
+                      ? `Repasse Pendente (${formatCurrency(Number(solicitacao.repasse.valor_repasse))})`
+                      : 'Aguardando Confirmação'}
+                  </span>
+                </div>
+
+                {/* Botão para Confirmar Pagamento do Cliente se ainda não confirmado */}
+                {solicitacao.pagamento?.status !== 'confirmado' && (
+                  <button
+                    onClick={handleConfirmarPagamento}
+                    disabled={confirmingPayment}
+                    className="w-full mt-3 py-2.5 px-4 bg-[#42b883] hover:bg-[#3aa374] text-white text-[12px] font-black rounded-md shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <CheckCircle2 size={16} />
+                    {confirmingPayment ? 'A confirmar...' : 'Confirmar Pagamento do Cliente'}
+                  </button>
+                )}
+
+                {solicitacao.repasse?.status === 'pendente' && (
+                  <button
+                    onClick={() => router.push('/repasses')}
+                    className="w-full mt-2 py-2 px-4 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-black rounded-md shadow-sm transition-all flex items-center justify-center gap-2"
+                  >
+                    <ArrowLeftRight size={14} />
+                    Processar Repasse ao Prestador
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
