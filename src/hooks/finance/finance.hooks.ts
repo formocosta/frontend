@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { AxiosError } from 'axios';
 import { FinanceBackofficeService, CatalogoBackofficeService, PagamentosBackofficeService } from '@/service/backoffice/finance.service';
-import { FinancialSummary, Categoria, Repasse, Pagamento, PagamentosStats } from '@/shared/types/backoffice/finance.types';
+import { FinancialSummary, Categoria, Repasse, Pagamento, PagamentosStats, PagamentosMeta } from '@/shared/types/backoffice/finance.types';
 
 // Dashboard hook
 export function useFinanceiro() {
@@ -155,7 +155,7 @@ export function useRepasses() {
 export function usePagamentos() {
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([]);
   const [stats, setStats] = useState<PagamentosStats | null>(null);
-  const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
+  const [meta, setMeta] = useState<PagamentosMeta | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

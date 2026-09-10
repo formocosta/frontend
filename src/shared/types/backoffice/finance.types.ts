@@ -86,14 +86,16 @@ export interface ConfirmarPagamentoRequest {
   referencia_externa?: string;
 }
 
+export interface PagamentosMeta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   links?: Record<string, unknown> | null;
-  meta?: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  } | null;
+  meta?: PagamentosMeta | Record<string, any> | null;
   stats?: PagamentosStats;
 }
