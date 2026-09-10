@@ -1,164 +1,161 @@
 'use client';
 
-import { useEffect } from 'react';
-import { DollarSign, TrendingUp, Clock, ArrowLeftRight, RefreshCw, BarChart3 } from 'lucide-react';
-import PageHeader from '@/components/PageHeader';
-import { useFinanceiro } from '@/hooks/finance/finance.hooks';
-import { Button } from '@/components/common/form/Button';
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' });
-}
+import { useState } from 'react';
+import { Search, RefreshCw, ChevronDown, Check } from 'lucide-react';
+import { useDashboardOverview } from '@/hooks/dashboard/dashboard.hooks';
+import DashboardAlertBanner from '@/components/dashboard/DashboardAlertBanner';
+import PerformanceHojeCards from '@/components/dashboard/PerformanceHojeCards';
+import DateRangeFilter from '@/components/dashboard/DateRangeFilter';
+import VendasComparativeChart from '@/components/dashboard/VendasComparativeChart';
+import PromoBannerCard from '@/components/dashboard/PromoBannerCard';
+import ServicoMetricsCard from '@/components/dashboard/ServicoMetricsCard';
+import AvaliacoesCard from '@/components/dashboard/AvaliacoesCard';
+import ClientesDonutCard from '@/components/dashboard/ClientesDonutCard';
 
 export default function DashboardPage() {
-  const { resumo, loading, error, fetchResumo } = useFinanceiro();
+  const {
+    data,
+    loading,
+    error,
+    periodo,
+    setPeriodo,
+    metricTab,
+    setMetricTab,
+    selectedEstablishment,
+    setSelectedEstablishment,
+    refresh,
+  } = useDashboardOverview();
 
-  useEffect(() => {
-    fetchResumo();
-  }, [fetchResumo]);
+  const [isEstablishmentOpen, setIsEstablishmentOpen] = useState(false);
 
-  const cards = [
-    {
-      label: 'Receitas Totais',
-      value: resumo?.receitas_totais ?? 0,
-      icon: DollarSign,
-      color: 'emerald',
-      bg: 'bg-emerald-50',
-      text: 'text-emerald-600',
-      border: 'border-emerald-100',
-      accent: 'bg-emerald-500',
-    },
-    {
-      label: 'Comissões Totais',
-      value: resumo?.comissoes_totais ?? 0,
-      icon: TrendingUp,
-      color: 'blue',
-      bg: 'bg-blue-50',
-      text: 'text-blue-600',
-      border: 'border-blue-100',
-      accent: 'bg-blue-500',
-    },
-    {
-      label: 'Repasses Pendentes',
-      value: resumo?.valor_repasses_pendentes ?? 0,
-      icon: Clock,
-      color: 'amber',
-      bg: 'bg-amber-50',
-      text: 'text-amber-600',
-      border: 'border-amber-100',
-      accent: 'bg-amber-500',
-    },
-    {
-      label: 'Qtd. Repasses Pendentes',
-      value: resumo?.quantidade_repasses_pendentes ?? 0,
-      icon: ArrowLeftRight,
-      color: 'purple',
-      bg: 'bg-purple-50',
-      text: 'text-purple-600',
-      border: 'border-purple-100',
-      accent: 'bg-purple-500',
-      isCount: true,
-    },
+  const establishmentOptions = [
+    { id: 'todos', label: 'Todos os estabelecimentos' },
+    { id: 'benditta', label: 'Benditta Marmitta' },
+    { id: 'central', label: 'Restaurante Central' },
+    { id: 'sabor_express', label: 'Sabor & Express' },
   ];
 
-  return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <PageHeader
-        title="Dashboard"
-        description="Visão geral financeira do sistema em tempo real"
-        action={
-          <Button
-            variant="outline"
-            className="rounded-md bg-white hover:bg-gray-50 border-gray-200 text-gray-700 font-bold shadow-sm"
-            onClick={fetchResumo}
-            leftIcon={<RefreshCw size={14} className={loading ? 'animate-spin text-[#42b883]' : 'text-gray-400'} />}
-          >
-            Actualizar Dados
-          </Button>
-        }
-      />
+  const currentEstablishmentLabel =
+    establishmentOptions.find((e) => e.id === selectedEstablishment)?.label ||
+    'Todos os estabelecimentos';
 
+  return (
+    <div className="space-y-4 max-w-[1400px] mx-auto pb-10">
+      {/* Top Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+        <div>
+          <h1 className="text-[24px] font-bold text-gray-900 tracking-tight">Visão geral</h1>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          {/* Store / Establishment Dropdown Filter */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsEstablishmentOpen(!isEstablishmentOpen)}
+              className="inline-flex items-center justify-between gap-4 bg-white border border-gray-200 hover:border-gray-300 rounded-md px-3.5 py-1.5 text-[13px] text-gray-700 shadow-2xs font-normal cursor-pointer transition-colors min-w-[200px]"
+            >
+              <span className="truncate">{currentEstablishmentLabel}</span>
+              <Search size={14} className="text-gray-400 shrink-0" />
+            </button>
+
+            {isEstablishmentOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-20"
+                  onClick={() => setIsEstablishmentOpen(false)}
+                />
+                <div className="absolute right-0 mt-1 w-64 rounded-lg bg-white shadow-xl border border-gray-100 py-1.5 z-30 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-3 py-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    Estabelecimentos
+                  </div>
+                  {establishmentOptions.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedEstablishment(item.id);
+                        setIsEstablishmentOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-[13px] text-left transition-colors cursor-pointer ${
+                        selectedEstablishment === item.id
+                          ? 'bg-blue-50/70 text-blue-600 font-semibold'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="truncate">{item.label}</span>
+                      {selectedEstablishment === item.id && (
+                        <Check size={14} className="text-blue-600 shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Quick Refresh Button */}
+          <button
+            type="button"
+            onClick={refresh}
+            title="Actualizar dados"
+            className="p-2 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors shadow-2xs cursor-pointer"
+          >
+            <RefreshCw size={15} className={loading ? 'animate-spin text-blue-600' : ''} />
+          </button>
+        </div>
+      </div>
+
+      {/* Error alert if any */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 text-sm text-red-700 font-bold shadow-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      {loading && !resumo && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-md border border-gray-100 p-6 animate-pulse shadow-sm">
-              <div className="w-12 h-12 rounded-md bg-gray-100 mb-6" />
-              <div className="w-24 h-3 bg-gray-200 rounded-md mb-3" />
-              <div className="w-32 h-8 bg-gray-100 rounded-md" />
-            </div>
-          ))}
+      {/* Top Warning Banner: Inactive store notice */}
+      <DashboardAlertBanner alerta={data.alerta} />
+
+      {/* Performance do dia: 5 KPI cards */}
+      <PerformanceHojeCards data={data.performance_hoje} currencyPrefix="R$" />
+
+      {/* Date Filter Bar */}
+      <div className="pt-2">
+        <DateRangeFilter
+          periodo={periodo}
+          onPeriodoChange={setPeriodo}
+          formattedRangeLabel={data.vendas_grafico.label_atual}
+        />
+      </div>
+
+      {/* Main Content Grid: Left 8 cols (Vendas chart + Avaliações + Clientes), Right 4 cols (Promo banner + Serviço) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        {/* Left Column (8 cols) */}
+        <div className="lg:col-span-8 space-y-4">
+          {/* Main Vendas Comparative Chart */}
+          <VendasComparativeChart
+            data={data.vendas_grafico}
+            activeMetric={metricTab}
+            onMetricChange={setMetricTab}
+            currencyPrefix="R$"
+          />
+
+          {/* Bottom Row: Avaliações + Clientes Donut */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AvaliacoesCard data={data.avaliacoes} />
+            <ClientesDonutCard data={data.clientes} />
+          </div>
         </div>
-      )}
 
-      {resumo && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cards.map((card) => (
-              <div
-                key={card.label}
-                className={`bg-white rounded-md border ${card.border} p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 relative overflow-hidden group`}
-              >
-                {/* Accent top border */}
-                <div className={`absolute top-0 left-0 right-0 h-1 ${card.accent}`} />
+        {/* Right Column (4 cols) */}
+        <div className="lg:col-span-4 space-y-4">
+          {/* Promo Referral Banner */}
+          <PromoBannerCard />
 
-                <div className="flex justify-between items-start mb-6">
-                  <div className={`w-12 h-12 rounded-md ${card.bg} flex items-center justify-center ${card.text} group-hover:scale-110 transition-transform duration-300`}>
-                    <card.icon size={22} strokeWidth={2.5} />
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1.5">
-                  {card.label}
-                </p>
-                <p className={`text-2xl xl:text-3xl font-black ${card.text} tracking-tight`}>
-                  {card.isCount ? card.value : formatCurrency(card.value)}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Summary table */}
-          <div className="bg-white rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden mt-8">
-            <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-md bg-gray-200/50 flex items-center justify-center text-gray-500">
-                <BarChart3 size={16} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h3 className="text-[14px] font-black text-gray-900 tracking-tight">Resumo Financeiro Detalhado</h3>
-                <p className="text-[11px] font-semibold text-gray-500">Detalhamento global de comissões e repasses</p>
-              </div>
-            </div>
-
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-0 border-b border-gray-50">
-              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-md">
-                <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Total de Receitas</span>
-                <span className="text-xl text-emerald-600 font-black">{formatCurrency(resumo.receitas_totais)}</span>
-              </div>
-              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-md">
-                <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Total de Comissões</span>
-                <span className="text-xl text-blue-600 font-black">{formatCurrency(resumo.comissoes_totais)}</span>
-              </div>
-            </div>
-
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-0 pt-0">
-              <div className="flex flex-col py-4 px-2 border-b md:border-b-0 md:border-r border-gray-100 group hover:bg-gray-50/50 transition-colors rounded-md">
-                <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Repasses Pendentes (Valor)</span>
-                <span className="text-xl text-amber-600 font-black">{formatCurrency(resumo.valor_repasses_pendentes)}</span>
-              </div>
-              <div className="flex flex-col py-4 px-2 md:pl-8 group hover:bg-gray-50/50 transition-colors rounded-md">
-                <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest mb-1">Repasses Pendentes (Quantidade)</span>
-                <span className="text-xl text-purple-600 font-black">{resumo.quantidade_repasses_pendentes}</span>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+          {/* Serviço Quality Metrics */}
+          <ServicoMetricsCard data={data.servico} />
+        </div>
+      </div>
     </div>
   );
 }
