@@ -15,6 +15,7 @@ import {
   LogOut,
   Users,
   UserCheck,
+  ShieldCheck,
 } from 'lucide-react';
 
 const MAIN_NAV = [
@@ -26,6 +27,7 @@ const MAIN_NAV = [
   { label: 'Catálogo', href: '/catalogo', icon: BookOpen, allowedRoles: ['admin'] },
   { label: 'Pagamentos', href: '/pagamentos', icon: CreditCard, allowedRoles: ['admin'] },
   { label: 'Repasses', href: '/repasses', icon: ArrowLeftRight, allowedRoles: ['admin'] },
+  { label: 'Utilizadores', href: '/utilizadores', icon: ShieldCheck, allowedRoles: ['admin'] },
 ];
 
 function NavItem({ href, icon: Icon, label, active }: { href: string; icon: React.ElementType; label: string; active: boolean }) {

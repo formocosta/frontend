@@ -1,11 +1,22 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/shared/store/auth.store'
 import Header from './Header'
 import Sidebar from './Sidebar'
 
 export default function Container({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const router = useRouter()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const accessToken = useAuthStore((state) => state.accessToken)
+
+  useEffect(() => {
+    if (!isAuthenticated && !accessToken) {
+      router.push('/login')
+    }
+  }, [isAuthenticated, accessToken, router])
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#f3f4f6]">

@@ -80,6 +80,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setAuth: (user, accessToken, refreshToken) => {
+        if (typeof window !== 'undefined') {
+          document.cookie = `access_token=${accessToken}; path=/; max-age=86400; SameSite=Lax`;
+        }
         set({ user, accessToken, refreshToken, isAuthenticated: true });
         get().setupAutoRefresh();
       },
@@ -87,6 +90,9 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user }),
 
       logout: () => {
+        if (typeof window !== 'undefined') {
+          document.cookie = 'access_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
         set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
         if (refreshTimeoutId) {
           clearTimeout(refreshTimeoutId);
