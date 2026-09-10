@@ -30,16 +30,36 @@ export interface Subcategoria {
 export interface Pagamento {
   id: string;
   solicitacao_id: string;
+  solicitacao?: {
+    id: string;
+    titulo: string;
+    estado: string;
+  } | null;
   cliente_id: string;
-  valor_total: string;
-  valor_comissao: string;
-  valor_prestador: string;
+  cliente?: {
+    id: string;
+    nome: string;
+    email: string;
+    telefone: string;
+  } | null;
+  valor_total: number | string;
+  valor_comissao: number | string;
+  valor_prestador: number | string;
   metodo_pagamento: string;
   referencia_externa: string | null;
+  comprovativo_path?: string | null;
+  comprovativo_url?: string | null;
   status: string;
   confirmado_em: string | null;
   criado_em: string;
-  atualizado_em: string;
+  atualizado_em?: string;
+}
+
+export interface PagamentosStats {
+  total_transacionado: number;
+  total_pagamentos: number;
+  total_pendentes: number;
+  total_confirmados: number;
 }
 
 export interface Repasse {
@@ -69,5 +89,11 @@ export interface ConfirmarPagamentoRequest {
 export interface PaginatedResponse<T> {
   data: T[];
   links?: Record<string, unknown> | null;
-  meta?: Record<string, unknown> | null;
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  } | null;
+  stats?: PagamentosStats;
 }

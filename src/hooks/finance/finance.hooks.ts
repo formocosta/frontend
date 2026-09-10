@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { AxiosError } from 'axios';
 import { FinanceBackofficeService, CatalogoBackofficeService, PagamentosBackofficeService } from '@/service/backoffice/finance.service';
-import { FinancialSummary, Categoria, Repasse } from '@/shared/types/backoffice/finance.types';
+import { FinancialSummary, Categoria, Repasse, Pagamento, PagamentosStats } from '@/shared/types/backoffice/finance.types';
 
 // Dashboard hook
 export function useFinanceiro() {
@@ -153,8 +153,27 @@ export function useRepasses() {
 
 // Pagamentos hooks
 export function usePagamentos() {
+  const [pagamentos, setPagamentos] = useState<Pagamento[]>([]);
+  const [stats, setStats] = useState<PagamentosStats | null>(null);
+  const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchPagamentos = useCallback(async (params?: { search?: string; status?: string; metodo?: string; page?: number }) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await PagamentosBackofficeService.getPagamentos(params);
+      setPagamentos(response.data || []);
+      setStats(response.stats || null);
+      setMeta(response.meta || null);
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao carregar pagamentos');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const confirmarPagamento = useCallback(async (solicitacaoId: string, referencia?: string): Promise<boolean> => {
     setLoading(true);
@@ -184,7 +203,7 @@ export function usePagamentos() {
       if (contentType.includes('pdf')) filename += '.pdf';
       else if (contentType.includes('png')) filename += '.png';
       else if (contentType.includes('jpeg') || contentType.includes('jpg')) filename += '.jpg';
-      else filename += '.pdf'; // Fallback to pdf as it was the default
+      else filename += '.pdf';
 
       link.setAttribute('download', filename);
       document.body.appendChild(link);
@@ -199,5 +218,5 @@ export function usePagamentos() {
     }
   }, []);
 
-  return { loading, error, confirmarPagamento, downloadComprovativo };
+  return { pagamentos, stats, meta, loading, error, fetchPagamentos, confirmarPagamento, downloadComprovativo };
 }

@@ -70,6 +70,11 @@ export const CatalogoBackofficeService = {
 };
 
 export const PagamentosBackofficeService = {
+  getPagamentos: async (params?: { search?: string; status?: string; metodo?: string; page?: number }) => {
+    const response = await apiClient.get<PaginatedResponse<Pagamento>>('/v1/backoffice/pagamentos', { params });
+    return response.data;
+  },
+
   confirmarPagamento: async (solicitacaoId: string, data?: ConfirmarPagamentoRequest) => {
     const response = await apiClient.post<{ data: Pagamento }>(
       `/v1/solicitacoes/${solicitacaoId}/pagamento/confirmar`,
