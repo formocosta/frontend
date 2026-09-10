@@ -65,8 +65,20 @@ export interface PagamentosStats {
 export interface Repasse {
   id: string;
   pagamento_id: string;
+  pagamento?: {
+    id: string;
+    solicitacao_id: string;
+    valor_total: number;
+    status: string;
+  } | null;
   prestador_id: string;
-  valor_repasse: string;
+  prestador?: {
+    id: string;
+    nome: string;
+    email: string;
+    telefone: string;
+  } | null;
+  valor_repasse: string | number;
   metodo_id: string;
   iban_destino: string | null;
   referencia_repasse: string | null;
@@ -74,7 +86,7 @@ export interface Repasse {
   operador_id: string | null;
   pago_em: string | null;
   criado_em: string;
-  atualizado_em: string;
+  atualizado_em?: string;
 }
 
 export interface ProcessarRepasseRequest {

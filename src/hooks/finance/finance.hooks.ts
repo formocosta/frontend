@@ -122,7 +122,7 @@ export function useRepasses() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRepasses = useCallback(async (params?: { status?: string; page?: number }) => {
+  const fetchRepasses = useCallback(async (params?: { search?: string; status?: string; page?: number }) => {
     setLoading(true);
     setError(null);
     try {

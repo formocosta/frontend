@@ -18,7 +18,7 @@ export const FinanceBackofficeService = {
   },
 
   // Repasses
-  getRepasses: async (params?: { status?: string; page?: number }) => {
+  getRepasses: async (params?: { search?: string; status?: string; page?: number }) => {
     const response = await apiClient.get<PaginatedResponse<Repasse>>('/v1/backoffice/repasses', { params });
     return response.data;
   },
