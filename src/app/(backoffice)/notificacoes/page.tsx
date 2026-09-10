@@ -96,7 +96,7 @@ export default function NotificacoesPage() {
       <PageHeader
         title="Central de Notificações"
         description="Acompanhe alertas, requisições de suporte e movimentações do sistema em tempo real"
-        actions={
+        action={
           totalNaoLidas > 0 ? (
             <Button
               variant="outline"
