@@ -12,8 +12,9 @@ const SEARCH_ROUTES = [
   { title: 'Catálogo', href: '/catalogo', type: 'Tela', icon: Layout },
   { title: 'Pagamentos', href: '/pagamentos', type: 'Tela', icon: Layout },
   { title: 'Repasses', href: '/repasses', type: 'Tela', icon: Layout },
-  { title: 'Definições', href: '/backoffice/definicoes', type: 'Tela', icon: Settings },
-  { title: 'Suporte & Documentação', href: '/backoffice/suporte', type: 'Documentação', icon: FileText },
+  { title: 'Definições', href: '/definicoes', type: 'Tela', icon: Settings },
+  { title: 'Suporte & Documentação', href: '/suporte', type: 'Documentação', icon: FileText },
+  { title: 'Notificações', href: '/notificacoes', type: 'Tela', icon: Bell },
 ];
 
 type HeaderProps = {
@@ -176,7 +177,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         {/* Utility buttons */}
         <div className="flex items-center gap-1.5 border-r border-gray-100 pr-4 hidden lg:flex shrink-0">
           <Link
-            href="/backoffice/suporte"
+            href="/suporte"
             className="w-8 h-8 flex items-center justify-center rounded-md text-gray-400 hover:bg-[#42b883]/10 hover:text-[#42b883] transition-colors"
             title="Suporte e Documentação"
           >
@@ -184,17 +185,21 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           </Link>
 
           <Link
-            href="/backoffice/definicoes"
+            href="/definicoes"
             className="w-8 h-8 flex items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             title="Definições"
           >
             <Settings size={16} />
           </Link>
 
-          <button className="relative w-8 h-8 flex items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+          <Link
+            href="/notificacoes"
+            className="relative w-8 h-8 flex items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            title="Notificações"
+          >
             <Bell size={16} />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-md border-2 border-white shadow-sm" />
-          </button>
+          </Link>
         </div>
 
         {/* User Profile */}
@@ -225,7 +230,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               </div>
               <div className="p-2">
                 <Link
-                  href="/backoffice/definicoes"
+                  href="/definicoes"
                   onClick={() => setShowUserMenu(false)}
                   className="flex items-center gap-3 px-3 py-2.5 text-[13px] font-bold text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900 transition-colors group"
                 >
