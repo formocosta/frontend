@@ -118,7 +118,7 @@ export function useCatalogo() {
 // Repasses hooks
 export function useRepasses() {
   const [repasses, setRepasses] = useState<Repasse[]>([]);
-  const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
+  const [meta, setMeta] = useState<PagamentosMeta | Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -155,7 +155,7 @@ export function useRepasses() {
 export function usePagamentos() {
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([]);
   const [stats, setStats] = useState<PagamentosStats | null>(null);
-  const [meta, setMeta] = useState<PagamentosMeta | null>(null);
+  const [meta, setMeta] = useState<PagamentosMeta | Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
