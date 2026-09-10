@@ -23,8 +23,8 @@ export function FilterBar({
   extraFilters
 }: FilterBarProps) {
   return (
-    <div className="bg-white p-4 rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-gray-200">
-      <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+    <div className="bg-white p-3 sm:p-4 rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-all hover:border-gray-200">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
         <div className="hidden sm:flex items-center gap-2 text-gray-500 bg-gray-50 px-3 py-2.5 rounded-md border border-gray-100">
           <Filter size={16} />
           <span className="text-[11px] font-black uppercase tracking-widest">Filtros</span>

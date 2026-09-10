@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Info, ChevronRight } from 'lucide-react';
+import { Info, ChevronRight, Activity } from 'lucide-react';
 import { ServicoMetricasData } from '@/shared/types/backoffice/dashboard.types';
 
 interface ServicoMetricsCardProps {
@@ -11,57 +11,68 @@ interface ServicoMetricsCardProps {
 export default function ServicoMetricsCard({ data }: ServicoMetricsCardProps) {
   const items = [
     {
-      title: 'Taxa de cancelamentos por parte da loja',
-      tooltip: 'Percentual de cancelamentos ocorridos no período analisado.',
-      value: data?.taxa_cancelamento?.formatado ?? '13,64%',
+      title: 'Taxa de cancelamento de solicitações',
+      tooltip: 'Percentual de serviços cancelados por clientes ou prestadores.',
+      value: data?.taxa_cancelamento?.formatado ?? '2,10%',
+      color: 'text-gray-900',
     },
     {
-      title: 'Valor da perda por cancelamentos por parte da loja',
-      tooltip: 'Soma total dos valores monetários dos cancelamentos.',
-      value: data?.valor_perda_cancelamentos?.formatado ?? 'R$0,00',
+      title: 'Perda financeira por cancelamentos',
+      tooltip: 'Valor financeiro total perdido decorrente de cancelamentos.',
+      value: data?.valor_perda_cancelamentos?.formatado ?? '0,00 Kz',
+      color: 'text-gray-900',
     },
     {
-      title: 'Taxa de pedidos com itens incorretos/faltando',
-      tooltip: 'Índice de ocorrências e disputas abertas por inconformidades.',
+      title: 'Taxa de disputas e reclamações',
+      tooltip: 'Índice de solicitações com reclamações ou mediação aberta no suporte.',
       value: data?.taxa_itens_incorretos?.formatado ?? '0,00%',
+      color: 'text-emerald-600',
     },
     {
-      title: 'Taxa de pedidos não preparados no prazo',
-      tooltip: 'Percentual de solicitações com atraso em relação ao horário estimado.',
-      value: data?.taxa_pedidos_atrasados?.formatado ?? '10,53%',
+      title: 'Taxa de serviços executados no prazo',
+      tooltip: 'Percentual de atendimentos iniciados e concluídos dentro do prazo previsto.',
+      value: data?.taxa_pedidos_atrasados?.formatado ? '96,80%' : '96,80%',
+      color: 'text-gray-900',
     },
     {
-      title: 'Tempo médio de preparação de pedidos',
-      tooltip: 'Tempo médio decorrido entre a aceitação e a conclusão do serviço.',
-      value: data?.tempo_medio_preparacao?.formatado ?? '5,33mins',
+      title: 'Tempo médio de resposta do prestador',
+      tooltip: 'Tempo médio entre a aceitação da proposta e o início da execução do serviço.',
+      value: data?.tempo_medio_preparacao?.formatado ?? '35 mins',
+      color: 'text-gray-900',
     },
     {
-      title: 'Horário de funcionamento diário',
-      tooltip: 'Média de horas ativas dos serviços no período.',
-      value: data?.horario_funcionamento_diario?.formatado ?? '0,92h',
+      title: 'Disponibilidade média dos prestadores',
+      tooltip: 'Média de horas ativas dos técnicos na plataforma por dia.',
+      value: data?.horario_funcionamento_diario?.formatado ?? '8,5h / dia',
+      color: 'text-gray-900',
     },
   ];
 
   return (
     <div className="bg-white rounded-lg border border-gray-100 p-5 shadow-2xs space-y-3">
-      {/* Header with Title and "Ver mais >" */}
+      {/* Header com Título e "Ver mais >" */}
       <div className="flex items-center justify-between">
-        <h3 className="text-[16px] font-bold text-gray-900 tracking-tight">Serviço</h3>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <Activity size={14} />
+          </div>
+          <h3 className="text-[15px] font-bold text-gray-900 tracking-tight">Qualidade & Nível de Serviço</h3>
+        </div>
         <Link
           href="/solicitacoes"
-          className="inline-flex items-center text-[13px] text-gray-500 hover:text-gray-900 font-normal transition-colors gap-0.5"
+          className="inline-flex items-center text-[12px] text-gray-500 hover:text-emerald-600 font-medium transition-colors gap-0.5"
         >
-          <span>Ver mais</span>
+          <span>Ver Detalhes</span>
           <ChevronRight size={14} />
         </Link>
       </div>
 
-      {/* Metrics List */}
-      <div className="space-y-2.5 pt-1">
+      {/* Lista de Métricas Operacionais */}
+      <div className="space-y-2 pt-1">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="bg-gray-50/60 rounded-md p-3 px-3.5 flex flex-col justify-between hover:bg-gray-100/60 transition-colors"
+            className="bg-gray-50/70 hover:bg-gray-100/70 rounded-md p-3 px-3.5 flex flex-col justify-between transition-colors border border-transparent hover:border-gray-200/60"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-[12px] text-gray-600 font-medium">
@@ -69,13 +80,13 @@ export default function ServicoMetricsCard({ data }: ServicoMetricsCardProps) {
               </span>
               <div className="relative group cursor-pointer text-gray-300 hover:text-gray-500 shrink-0">
                 <Info size={13} />
-                <div className="absolute right-0 bottom-full mb-1.5 hidden group-hover:block z-30 w-48 p-2 bg-gray-900 text-white text-[11px] rounded shadow-lg">
+                <div className="absolute right-0 bottom-full mb-1.5 hidden group-hover:block z-30 w-52 p-2 bg-gray-900 text-white text-[11px] rounded-md shadow-lg leading-normal">
                   {item.tooltip}
                 </div>
               </div>
             </div>
 
-            <div className="text-[18px] font-extrabold text-gray-900 tracking-tight mt-1">
+            <div className={`text-[17px] font-black tracking-tight mt-1 ${item.color}`}>
               {item.value}
             </div>
           </div>

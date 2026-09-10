@@ -14,6 +14,7 @@ export interface DashboardAlerta {
 }
 
 export interface MetricComparativoItem {
+  label?: string;
   valor: number;
   comparativo: number;
   texto_comparativo: string;

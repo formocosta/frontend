@@ -1,6 +1,6 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bell, HelpCircle, Settings, LogOut, ChevronRight, Home, Search, Layout, FileText } from 'lucide-react';
+import { Bell, HelpCircle, Settings, LogOut, ChevronRight, Home, Search, Layout, FileText, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '@/shared/store/auth.store';
@@ -16,7 +16,11 @@ const SEARCH_ROUTES = [
   { title: 'Suporte & Documentação', href: '/backoffice/suporte', type: 'Documentação', icon: FileText },
 ];
 
-export default function Header() {
+type HeaderProps = {
+  onToggleSidebar?: () => void;
+};
+
+export default function Header({ onToggleSidebar }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -61,7 +65,17 @@ export default function Header() {
   );
 
   return (
-    <header className="h-[72px] bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 select-none shadow-[0_2px_10px_rgba(0,0,0,0.01)] relative z-10 gap-4">
+    <header className="h-[72px] bg-white border-b border-gray-100 flex items-center justify-between px-4 sm:px-6 shrink-0 select-none shadow-[0_2px_10px_rgba(0,0,0,0.01)] relative z-10 gap-3 sm:gap-4">
+
+      {/* Mobile hamburger */}
+      {onToggleSidebar && (
+        <button
+          onClick={onToggleSidebar}
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors shrink-0"
+        >
+          <Menu size={20} />
+        </button>
+      )}
 
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-[13px] font-bold text-gray-400 flex-1 min-w-0 overflow-hidden">
@@ -88,7 +102,7 @@ export default function Header() {
       </div>
 
       {/* Search Bar Center */}
-      <div className="w-[300px] lg:w-[400px] xl:w-[500px] relative shrink-0" ref={searchRef}>
+      <div className="hidden sm:block w-[200px] md:w-[300px] lg:w-[400px] xl:w-[500px] relative shrink-0" ref={searchRef}>
         <div className={`relative flex items-center transition-all duration-300 rounded-md border ${isSearchFocused ? 'bg-white border-[#42b883] shadow-[0_0_0_3px_rgba(66,184,131,0.1)]' : 'bg-gray-50 border-gray-100 hover:border-gray-200 hover:bg-gray-50/80'}`}>
           <Search size={15} className={`absolute left-3 transition-colors ${isSearchFocused ? 'text-[#42b883]' : 'text-gray-400'}`} />
           <input

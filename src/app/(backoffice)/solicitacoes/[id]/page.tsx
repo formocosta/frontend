@@ -217,7 +217,7 @@ export default function SolicitacaoDetailPage() {
 
       {/* Overview / Resumo */}
       <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
-        <div className="p-6 flex flex-col md:flex-row md:items-center gap-5 border-b border-gray-50 bg-gradient-to-r from-[#42b883]/[0.06] to-transparent">
+        <div className="p-4 sm:p-6 flex flex-col md:flex-row md:items-center gap-4 sm:gap-5 border-b border-gray-50 bg-gradient-to-r from-[#42b883]/[0.06] to-transparent">
           <div className="w-14 h-14 shrink-0 rounded-md bg-white border border-[#42b883]/25 flex items-center justify-center text-[#42b883] shadow-sm">
             <Package size={26} />
           </div>

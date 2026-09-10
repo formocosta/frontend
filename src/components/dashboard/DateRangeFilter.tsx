@@ -13,6 +13,14 @@ interface DateRangeFilterProps {
   formattedRangeLabel?: string;
 }
 
+const labels: Record<DashboardPeriodo, string> = {
+  hoje: 'Hoje',
+  '7d': 'Últimos 7 dias',
+  '30d': 'Últimos 30 dias',
+  '90d': 'Últimos 90 dias',
+  custom: 'Período personalizado',
+};
+
 export default function DateRangeFilter({
   periodo,
   onPeriodoChange,
@@ -23,11 +31,11 @@ export default function DateRangeFilter({
 }: DateRangeFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const displayLabel = formattedRangeLabel || '02/09/2026 - 08/09/2026';
+  const displayLabel = formattedRangeLabel || labels[periodo];
 
   const options: { id: DashboardPeriodo; label: string }[] = [
     { id: 'hoje', label: 'Hoje' },
-    { id: '7d', label: 'Últimos 7 dias (02/09/2026 - 08/09/2026)' },
+    { id: '7d', label: 'Últimos 7 dias' },
     { id: '30d', label: 'Últimos 30 dias' },
     { id: '90d', label: 'Últimos 90 dias' },
   ];
