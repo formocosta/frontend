@@ -114,7 +114,8 @@ export default function ClientesPage() {
       {/* Table Content */}
       {!loading && clientes.length > 0 && (
         <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50/80 border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
@@ -205,6 +206,78 @@ export default function ClientesPage() {
                 })}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards View */}
+          <div className="block md:hidden divide-y divide-gray-100">
+            {clientes.map((c) => {
+              const localizacao = c.cliente
+                ? [c.cliente.provincia, c.cliente.municipio].filter(Boolean).join(', ')
+                : '';
+
+              return (
+                <div key={c.id} className="p-4 space-y-3 bg-white hover:bg-gray-50/50 transition-colors">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
+                        {c.nome_completo.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-bold text-gray-900 truncate">
+                          {c.nome_completo}
+                        </p>
+                        <span className="text-[10px] text-gray-400 font-medium block">
+                          ID: {c.id.substring(0, 8)}...
+                        </span>
+                      </div>
+                    </div>
+                    <StatusBadge status={c.status} />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px] bg-gray-50/80 p-3 rounded-md border border-gray-100">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-gray-600">
+                        <Mail size={12} className="text-gray-400 shrink-0" />
+                        <span className="truncate" title={c.email}>{c.email}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-gray-600">
+                        <Phone size={12} className="text-gray-400 shrink-0" />
+                        <span>{c.telefone}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 border-t sm:border-t-0 border-gray-100 pt-1.5 sm:pt-0">
+                      {c.cliente?.nif && (
+                        <div className="font-bold text-gray-700">NIF: {c.cliente.nif}</div>
+                      )}
+                      {localizacao ? (
+                        <div className="flex items-center gap-1.5 text-gray-600">
+                          <MapPin size={12} className="text-gray-400 shrink-0" />
+                          <span className="truncate" title={localizacao}>{localizacao}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-gray-400 italic">Sem localização</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-1.5 text-[11px] text-gray-500 font-semibold">
+                      <ClipboardList size={13} className="text-gray-400" />
+                      <span>{c.cliente?.total_servicos || 0} serviço(s)</span>
+                      <span className="text-gray-300">•</span>
+                      <span>{new Date(c.created_at).toLocaleDateString('pt-AO')}</span>
+                    </div>
+                    <Link
+                      href={`/clientes/${c.id}`}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] font-bold rounded-md bg-white border border-gray-200 text-gray-700 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                    >
+                      <span>Ver Detalhes</span>
+                      <ChevronRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Pagination */}

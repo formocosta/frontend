@@ -52,34 +52,34 @@ export default function ClienteDetailPage() {
         </Link>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-md p-6 shadow-sm flex flex-col sm:flex-row items-center gap-6">
-        <div className="w-20 h-20 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-3xl shadow-md shrink-0">
+      <div className="bg-white border border-gray-100 rounded-md p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-bold text-2xl sm:text-3xl shadow-md shrink-0">
           {cliente.nome_completo.charAt(0)}
         </div>
-        <div className="flex-1 text-center sm:text-left space-y-1.5">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <h1 className="text-xl font-black text-gray-900 tracking-tight">{cliente.nome_completo}</h1>
-            <div className="self-center sm:self-auto">
+        <div className="flex-1 min-w-0 space-y-1.5">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+            <h1 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight truncate max-w-full">{cliente.nome_completo}</h1>
+            <div className="shrink-0">
               <StatusBadge status={cliente.status} />
             </div>
           </div>
-          <p className="text-xs font-medium text-gray-500">ID da Conta: {cliente.id}</p>
+          <p className="text-xs font-medium text-gray-500 truncate">ID da Conta: {cliente.id}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Access and contacts */}
-        <div className="bg-white border border-gray-100 rounded-md p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-gray-100 rounded-md p-4 sm:p-6 shadow-sm space-y-4">
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-50 pb-2">
             Dados de Acesso e Contato
           </h3>
 
           <div className="space-y-3.5">
             <div className="flex items-start gap-3">
-              <Mail size={16} className="text-gray-400 mt-0.5" />
-              <div className="space-y-0.5">
+              <Mail size={16} className="text-gray-400 mt-0.5 shrink-0" />
+              <div className="space-y-0.5 min-w-0">
                 <span className="text-[11px] font-bold text-gray-400 block uppercase">E-mail</span>
-                <span className="text-xs font-semibold text-gray-700">{cliente.email}</span>
+                <span className="text-xs font-semibold text-gray-700 truncate block" title={cliente.email}>{cliente.email}</span>
                 {cliente.email_verified_at ? (
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md mt-1">
                     <ShieldCheck size={10} /> Verificado em {new Date(cliente.email_verified_at).toLocaleDateString('pt-AO')}
@@ -93,8 +93,8 @@ export default function ClienteDetailPage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <Phone size={16} className="text-gray-400 mt-0.5" />
-              <div className="space-y-0.5">
+              <Phone size={16} className="text-gray-400 mt-0.5 shrink-0" />
+              <div className="space-y-0.5 min-w-0">
                 <span className="text-[11px] font-bold text-gray-400 block uppercase">Telefone</span>
                 <span className="text-xs font-semibold text-gray-700">{cliente.telefone}</span>
                 {cliente.telefone_verificado_at ? (
@@ -110,8 +110,8 @@ export default function ClienteDetailPage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <Calendar size={16} className="text-gray-400 mt-0.5" />
-              <div className="space-y-0.5">
+              <Calendar size={16} className="text-gray-400 mt-0.5 shrink-0" />
+              <div className="space-y-0.5 min-w-0">
                 <span className="text-[11px] font-bold text-gray-400 block uppercase">Membro Desde</span>
                 <span className="text-xs font-semibold text-gray-700">
                   {new Date(cliente.created_at).toLocaleString('pt-AO', {
@@ -128,14 +128,14 @@ export default function ClienteDetailPage() {
         </div>
 
         {/* Client Profile Details */}
-        <div className="bg-white border border-gray-100 rounded-md p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-gray-100 rounded-md p-4 sm:p-6 shadow-sm space-y-4">
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-50 pb-2">
             Perfil de Cliente
           </h3>
 
           {cliente.cliente ? (
             <div className="space-y-3.5">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <span className="text-[11px] font-bold text-gray-400 block uppercase">NIF</span>
                   <span className="text-xs font-semibold text-gray-700">{cliente.cliente.nif || 'Não informado'}</span>
@@ -148,7 +148,7 @@ export default function ClienteDetailPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <span className="text-[11px] font-bold text-gray-400 block uppercase">Gênero</span>
                   <span className="text-xs font-semibold text-gray-700 capitalize">

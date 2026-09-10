@@ -51,8 +51,8 @@ interface SectionCardProps {
 
 function SectionCard({ icon: Icon, title, action, children, className }: SectionCardProps) {
   return (
-    <div className={`bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] ${className || ''}`}>
-      <div className="flex items-center justify-between gap-3 pb-2.5 mb-4 border-b border-gray-50">
+    <div className={`bg-white border border-gray-100 rounded-md p-4 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] ${className || ''}`}>
+      <div className="flex items-center justify-between gap-3 pb-2.5 mb-4 border-b border-gray-50 flex-wrap">
         <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
           <Icon size={15} className="text-[#42b883]" />
           {title}

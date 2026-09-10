@@ -241,8 +241,8 @@ export default function CatalogoPage() {
             const isExpanded = expandedIds.has(cat.id);
             return (
               <div key={cat.id} className="bg-white rounded-md border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden transition-all hover:border-gray-200">
-                <div className="flex items-center justify-between p-4 bg-white group">
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white gap-3 group">
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                     <button
                       onClick={() => toggleExpand(cat.id)}
                       className={`w-9 h-9 rounded-md flex items-center justify-center transition-colors shrink-0 ${isExpanded ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}
@@ -259,26 +259,26 @@ export default function CatalogoPage() {
                           <LayoutGrid size={16} />
                         </div>
                       )}
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="text-[14px] font-black text-gray-900 tracking-tight truncate group-hover:text-[#42b883] transition-colors">{cat.nome}</h3>
                           <Badge variant={cat.activa ? 'success' : 'danger'} size="sm">
                             {cat.activa ? 'Activa' : 'Inactiva'}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5">
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                           <span className="text-[11px] text-gray-500 font-bold bg-gray-50 px-1.5 py-0.5 rounded-md border border-gray-100">
                             {cat.subcategorias?.length || 0} subcategorias
                           </span>
                           {cat.descricao && (
-                            <p className="text-[11px] text-gray-500 font-medium truncate max-w-[300px]">{cat.descricao}</p>
+                            <p className="text-[11px] text-gray-500 font-medium truncate max-w-[250px] sm:max-w-[300px]">{cat.descricao}</p>
                           )}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100 w-full sm:w-auto justify-end">
                     <Button
                       variant="outline"
                       className="h-8 rounded-md bg-white border-gray-200 text-gray-600 font-bold hover:bg-gray-50 hover:text-gray-900 text-[11px] px-2.5"
@@ -318,8 +318,8 @@ export default function CatalogoPage() {
 
                 {/* Subcategorias Expanded View */}
                 {isExpanded && cat.subcategorias && cat.subcategorias.length > 0 && (
-                  <div className="border-t border-gray-100 bg-gray-50/50 p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="border-t border-gray-100 bg-gray-50/50 p-3 sm:p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {cat.subcategorias.map((sub) => (
                         <div key={sub.id} className="flex items-start justify-between p-3 bg-white rounded-md border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] group hover:border-[#42b883]/30 hover:shadow-md transition-all">
                           <div className="flex items-start gap-2.5 min-w-0 pr-2">

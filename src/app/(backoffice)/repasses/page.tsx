@@ -203,7 +203,8 @@ export default function RepassesPage() {
           </p>
 
           <div className="bg-white rounded-md border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
@@ -265,6 +266,62 @@ export default function RepassesPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards View */}
+            <div className="block md:hidden divide-y divide-gray-100">
+              {filteredRepasses.map((rep) => (
+                <div key={rep.id} className="p-4 space-y-3 bg-white hover:bg-gray-50/50 transition-colors">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <span className="text-[16px] text-gray-900 font-black tracking-tight block">
+                        {formatCurrency(Number(rep.valor_repasse))}
+                      </span>
+                      <span className="text-[10px] text-gray-400 font-mono font-bold">
+                        ID: {rep.id.slice(0, 13)}...
+                      </span>
+                    </div>
+                    <Badge
+                      variant={rep.status === 'pago' ? 'success' : rep.status === 'pendente' ? 'warning' : 'danger'}
+                      size="sm"
+                    >
+                      {rep.status === 'pago' ? 'Pago' : rep.status === 'pendente' ? 'Pendente' : 'Falhado'}
+                    </Badge>
+                  </div>
+
+                  <div className="bg-gray-50/80 p-3 rounded-md border border-gray-100 space-y-1 text-[12px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase">IBAN Destino:</span>
+                      <span className="font-mono font-bold text-gray-800">{rep.iban_destino || 'Sem IBAN'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase">Referência:</span>
+                      <span className="font-semibold text-gray-600">{rep.referencia_repasse || 'Sem Referência'}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-gray-500 font-bold">
+                      {new Date(rep.criado_em).toLocaleDateString('pt-AO')}
+                    </span>
+                    {rep.status === 'pendente' ? (
+                      <Button
+                        variant="primary"
+                        className="rounded-md font-bold shadow-sm h-8 text-[12px] px-3"
+                        onClick={() => {
+                          setSelectedRepasse(rep);
+                          setShowProcessarModal(true);
+                        }}
+                        leftIcon={<CheckCircle size={14} strokeWidth={2.5} />}
+                      >
+                        Pagar Agora
+                      </Button>
+                    ) : (
+                      <span className="text-[11px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">Processado</span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

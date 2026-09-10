@@ -202,23 +202,23 @@ export default function PrestadorDetailPage() {
       )}
 
       {/* Main Profile Header Banner */}
-      <div className="bg-white border border-gray-100 rounded-md p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
-        <div className="flex items-center gap-5">
+      <div className="bg-white border border-gray-100 rounded-md p-4 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 justify-between">
+        <div className="flex items-center gap-3 sm:gap-5 min-w-0">
           {p.foto_perfil_url ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={p.foto_perfil_url}
               alt={p.nome_completo}
-              className="w-20 h-20 rounded-md object-cover border border-gray-100 shadow-sm shrink-0"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-md object-cover border border-gray-100 shadow-sm shrink-0"
             />
           ) : (
-            <div className="w-20 h-20 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-3xl shadow-md shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-2xl sm:text-3xl shadow-md shrink-0">
               {p.nome_completo.charAt(0)}
             </div>
           )}
-          <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl font-black text-gray-900 tracking-tight">{p.nome_completo}</h1>
+          <div className="space-y-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight truncate">{p.nome_completo}</h1>
               <StatusBadge status={profile?.status_verificacao || 'pendente'} />
               <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${p.status === 'activo'
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
@@ -228,14 +228,14 @@ export default function PrestadorDetailPage() {
               </span>
             </div>
             {profile?.nome_comercial && (
-              <p className="text-xs font-bold text-[#42b883]">{profile.nome_comercial}</p>
+              <p className="text-xs font-bold text-[#42b883] truncate">{profile.nome_comercial}</p>
             )}
-            <p className="text-[11px] font-medium text-gray-500">ID da Conta: {p.id}</p>
+            <p className="text-[11px] font-medium text-gray-500 truncate">ID: {p.id}</p>
           </div>
         </div>
 
         {/* Quick Stats in Banner */}
-        <div className="flex items-center gap-6 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6 w-full md:w-auto">
+        <div className="flex items-center gap-6 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6 w-full md:w-auto justify-around md:justify-start">
           <div>
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider block">Avaliação</span>
             <div className="flex items-center gap-1 mt-0.5">

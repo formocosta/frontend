@@ -62,10 +62,10 @@ export default function PagamentosPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Confirm payment section */}
-        <div className="bg-white rounded-md border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
-          <div className="w-12 h-12 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <div className="bg-white rounded-md border border-gray-100 p-5 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
+          <div className="w-12 h-12 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CheckCircle size={24} strokeWidth={2.5} />
           </div>
           <h3 className="text-[16px] font-black text-gray-900 tracking-tight mb-2">
@@ -74,7 +74,7 @@ export default function PagamentosPage() {
           <p className="text-[13px] text-gray-500 font-medium mb-6 leading-relaxed">
             Insira o identificador único (ID) da solicitação de serviço para confirmar manualmente a receção do pagamento do cliente.
           </p>
-          <div className="flex flex-col sm:flex-row items-end gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
             <div className="flex-1 w-full">
               <Input
                 label="ID da Solicitação"
@@ -86,7 +86,7 @@ export default function PagamentosPage() {
             </div>
             <Button
               variant="primary"
-              className="rounded-md font-bold shadow-sm w-full sm:w-auto"
+              className="rounded-md font-bold shadow-sm w-full sm:w-auto h-[42px]"
               onClick={() => {
                 if (selectedSolicitacaoId) setShowConfirmarModal(true);
               }}
@@ -99,8 +99,8 @@ export default function PagamentosPage() {
         </div>
 
         {/* Download Receipt section */}
-        <div className="bg-white rounded-md border border-gray-100 p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
-          <div className="w-12 h-12 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <div className="bg-white rounded-md border border-gray-100 p-5 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all hover:border-gray-200 group">
+          <div className="w-12 h-12 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <FileText size={24} strokeWidth={2.5} />
           </div>
           <h3 className="text-[16px] font-black text-gray-900 tracking-tight mb-2">
@@ -109,7 +109,7 @@ export default function PagamentosPage() {
           <p className="text-[13px] text-gray-500 font-medium mb-6 leading-relaxed">
             Necessita da segunda via de um comprovativo? Insira o identificador (ID) do pagamento para descarregar o PDF original.
           </p>
-          <div className="flex flex-col sm:flex-row items-end gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
             <div className="flex-1 w-full">
               <Input
                 label="ID do Pagamento"
@@ -121,7 +121,7 @@ export default function PagamentosPage() {
             </div>
             <Button
               variant="outline"
-              className="rounded-md font-bold shadow-sm w-full sm:w-auto bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+              className="rounded-md font-bold shadow-sm w-full sm:w-auto h-[42px] bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
               onClick={handleDownload}
               disabled={!downloadPagamentoId || loading}
               isLoading={loading && !!downloadPagamentoId}
@@ -134,12 +134,12 @@ export default function PagamentosPage() {
       </div>
 
       {/* Info card */}
-      <div className="bg-gray-50/50 border border-gray-100 rounded-md p-6 shadow-inner">
+      <div className="bg-gray-50/50 border border-gray-100 rounded-md p-4 sm:p-6 shadow-inner">
         <h3 className="text-[14px] font-black text-gray-900 mb-4 tracking-tight flex items-center gap-2">
           <Info size={16} className="text-gray-400" />
           Como funciona o fluxo de pagamentos?
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div className="bg-white p-4 rounded-md border border-gray-100 shadow-sm relative overflow-hidden">
             <div className="absolute -right-4 -bottom-4 text-gray-50 opacity-50 font-black text-7xl select-none">1</div>
             <p className="text-[12px] font-bold text-gray-700 relative z-10">O cliente submete uma solicitação de serviço na app.</p>

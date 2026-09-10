@@ -107,7 +107,8 @@ export default function SolicitacoesPage() {
       {/* Table Content */}
       {!loading && solicitacoes.length > 0 && (
         <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50/80 border-b border-gray-100 text-[11px] font-black text-gray-500 uppercase tracking-widest">
@@ -211,6 +212,90 @@ export default function SolicitacoesPage() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards View */}
+          <div className="block md:hidden divide-y divide-gray-100">
+            {filteredSolicitacoes.length > 0 ? (
+              filteredSolicitacoes.map((solicitacao) => {
+                const localizacao = [solicitacao.provincia, solicitacao.municipio].filter(Boolean).join(', ');
+                const dataFormatada = solicitacao.data_pretendida
+                  ? new Date(solicitacao.data_pretendida).toLocaleDateString('pt-AO', { day: '2-digit', month: 'short', year: 'numeric' })
+                  : null;
+
+                return (
+                  <div key={solicitacao.id} className="p-4 space-y-3 bg-white hover:bg-gray-50/50 transition-colors">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <p className="text-[14px] font-black text-gray-900 tracking-tight">
+                          {solicitacao.servico?.titulo_servico || 'Solicitação'}
+                        </p>
+                        {solicitacao.descricao_cliente && (
+                          <p className="text-[11px] font-semibold text-gray-500 line-clamp-2 leading-relaxed">
+                            {solicitacao.descricao_cliente}
+                          </p>
+                        )}
+                      </div>
+                      <div className="shrink-0">
+                        <StatusBadge status={solicitacao.status_id} />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-bold bg-gray-50/80 p-3 rounded-md border border-gray-100">
+                      <div className="space-y-1.5 text-gray-600">
+                        {(dataFormatada || solicitacao.hora_pretendida) && (
+                          <div className="flex items-center gap-1.5">
+                            <Calendar size={12} className="text-[#42b883] shrink-0" />
+                            <span>{dataFormatada} {solicitacao.hora_pretendida && `às ${solicitacao.hora_pretendida}`}</span>
+                          </div>
+                        )}
+                        {localizacao && (
+                          <div className="flex items-center gap-1.5">
+                            <MapPin size={12} className="text-gray-400 shrink-0" />
+                            <span className="truncate" title={localizacao}>{localizacao}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-1.5 border-t sm:border-t-0 border-gray-100 pt-1.5 sm:pt-0">
+                        {solicitacao.prestador ? (
+                          <div className="flex items-center gap-1.5 text-blue-600">
+                            <User size={12} className="shrink-0" />
+                            <span className="truncate">{solicitacao.prestador.nome}</span>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 font-semibold italic">Sem prestador</span>
+                        )}
+                        {solicitacao.preco_acordado != null && (
+                          <div className="text-[13px] font-black text-[#42b883] tracking-tight">
+                            {Number(solicitacao.preco_acordado).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="text-[10px] text-gray-400 font-semibold flex items-center gap-1">
+                        <Clock size={10} />
+                        <span>Criado em {new Date(solicitacao.created_at).toLocaleDateString('pt-AO')}</span>
+                      </div>
+                      <Link
+                        href={`/solicitacoes/${solicitacao.id}`}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] font-bold rounded-md bg-white border border-gray-200 text-gray-700 hover:text-[#42b883] hover:border-[#42b883] hover:bg-[#42b883]/5 transition-all shadow-sm"
+                      >
+                        <span>Ver Detalhes</span>
+                        <ChevronRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="px-5 py-8 text-center">
+                <p className="text-[12px] text-gray-500 font-bold">
+                  Nenhum resultado encontrado para "{search}"
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Pagination Footer */}

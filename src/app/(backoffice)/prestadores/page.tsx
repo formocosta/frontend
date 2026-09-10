@@ -114,7 +114,8 @@ export default function PrestadoresPage() {
       {/* Table Content */}
       {!loading && prestadores.length > 0 && (
         <div className="bg-white border border-gray-100 rounded-md shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50/80 border-b border-gray-100 text-[11px] font-black text-gray-500 uppercase tracking-wider">
@@ -252,6 +253,120 @@ export default function PrestadoresPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards View */}
+          <div className="block md:hidden divide-y divide-gray-100">
+            {prestadores.map((p) => {
+              const localizacao = p.prestador
+                ? [p.prestador.provincia, p.prestador.municipio].filter(Boolean).join(', ')
+                : '';
+
+              const avaliacao = p.prestador?.avaliacao_media != null
+                ? Number(p.prestador.avaliacao_media).toFixed(1)
+                : null;
+
+              return (
+                <div key={p.id} className="p-4 space-y-3.5 bg-white hover:bg-gray-50/50 transition-colors">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {p.foto_perfil_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={p.foto_perfil_url}
+                          alt={p.nome_completo}
+                          className="w-11 h-11 rounded-md object-cover border border-gray-100 shadow-sm shrink-0"
+                        />
+                      ) : (
+                        <div className="w-11 h-11 rounded-md bg-gradient-to-br from-[#42b883] to-[#3aa374] flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm">
+                          {p.nome_completo.charAt(0)}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-black text-gray-900 truncate">
+                          {p.nome_completo}
+                        </p>
+                        {p.prestador?.nome_comercial && (
+                          <p className="text-[11px] text-gray-500 font-semibold truncate">
+                            {p.prestador.nome_comercial}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <StatusBadge status={p.prestador?.status_verificacao || 'pendente'} />
+                      <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${p.status === 'activo'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-red-50 text-red-700 border-red-200'
+                        }`}>
+                        {p.status === 'activo' ? 'Ativa' : 'Inativa'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px] bg-gray-50/80 p-3 rounded-md border border-gray-100">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-gray-600">
+                        <Mail size={12} className="text-gray-400 shrink-0" />
+                        <span className="truncate" title={p.email}>{p.email}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-gray-600">
+                        <Phone size={12} className="text-gray-400 shrink-0" />
+                        <span>{p.telefone}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 border-t sm:border-t-0 border-gray-100 pt-1.5 sm:pt-0">
+                      {p.prestador?.nif && (
+                        <div className="font-black text-gray-800">NIF: {p.prestador.nif}</div>
+                      )}
+                      {localizacao ? (
+                        <div className="flex items-center gap-1.5 text-gray-600">
+                          <MapPin size={12} className="text-gray-400 shrink-0" />
+                          <span className="truncate" title={localizacao}>{localizacao}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-gray-400 italic">Sem localização</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 flex-wrap gap-2">
+                    <div className="flex items-center gap-3 text-[11px] text-gray-600 font-bold">
+                      {avaliacao ? (
+                        <div className="flex items-center gap-1 text-amber-600 font-black">
+                          <Star size={12} className="fill-amber-500 text-amber-500" />
+                          <span>{avaliacao}</span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 text-[10px]">Sem avaliações</span>
+                      )}
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Briefcase size={12} className="text-gray-400" />
+                        <span>{p.prestador?.total_servicos_concluidos || 0} concl.</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/kyc/${p.id}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold rounded-md bg-white border border-gray-200 text-gray-700 hover:text-[#42b883] hover:border-[#42b883] shadow-sm transition-all"
+                      >
+                        <ShieldCheck size={14} className="text-[#42b883]" />
+                        <span>KYC</span>
+                      </Link>
+                      <Link
+                        href={`/prestadores/${p.id}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold rounded-md bg-white border border-gray-200 text-gray-700 hover:text-[#42b883] hover:border-[#42b883] shadow-sm transition-all"
+                      >
+                        <span>Detalhes</span>
+                        <ChevronRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
 
           {/* Pagination */}
           {meta && meta.last_page > 1 && (
